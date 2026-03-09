@@ -1,0 +1,110 @@
+@use 'sass:math';
+
+// ─── Reset & Base ──────────────────────────────
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0f1117;
+    color: #e4e6f0;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+// ─── PrimeNG Dark Theme Overrides ──────────────
+:root {
+    --p-primary-color: #667eea;
+    --p-primary-hover-color: #8b9ff5;
+    --p-surface-ground: #0f1117;
+    --p-surface-card: rgba(255, 255, 255, 0.03);
+    --p-surface-border: rgba(255, 255, 255, 0.06);
+    --p-text-color: #e4e6f0;
+    --p-text-muted-color: rgba(228, 230, 240, 0.55);
+}
+
+// Input styling overrides for dark theme
+.p-inputtext {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: #e4e6f0 !important;
+    border-radius: 10px !important;
+    padding: 0.75rem 1rem !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+
+    &::placeholder {
+        color: rgba(228, 230, 240, 0.35) !important;
+    }
+
+    &:focus {
+        border-color: #667eea !important;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
+    }
+}
+
+// Password component
+.p-password {
+    width: 100%;
+}
+
+// Button styling
+.p-button {
+    border-radius: 10px !important;
+    font-weight: 600 !important;
+    padding: 0.75rem 1.5rem !important;
+    transition: all 0.2s !important;
+
+    &.p-button-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        border: none !important;
+
+        &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(102, 126, 234, 0.35) !important;
+        }
+
+        &:active {
+            transform: translateY(0);
+        }
+    }
+}
+
+// Message component
+.p-message {
+    border-radius: 10px !important;
+}
+
+// ─── Scrollbar ─────────────────────────────────
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+}
+
+// ─── Utilities ─────────────────────────────────
+.w-full {
+    width: 100% !important;
+}

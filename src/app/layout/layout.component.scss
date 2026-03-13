@@ -1,26 +1,17 @@
-$sidebar-width: 260px;
-$sidebar-collapsed-width: 72px;
-$header-height: 64px;
-$bg-dark: #0f1117;
-$bg-sidebar: #161822;
-$bg-content: #1a1c2e;
-$accent: #667eea;
-$accent-hover: #8b9ff5;
-$text-primary: #e4e6f0;
-$text-secondary: rgba(228, 230, 240, 0.55);
-$border-color: rgba(255, 255, 255, 0.06);
+@use '../variables' as *;
 
 .layout {
     display: flex;
     min-height: 100vh;
-    background: $bg-dark;
+    background: $bg-light;
+    font-family: $font-family;
 }
 
 // ─── Sidebar ───────────────────────────────────
 .sidebar {
     width: $sidebar-width;
-    background: $bg-sidebar;
-    border-right: 1px solid $border-color;
+    background: $white;
+    border-right: 1px solid $border-layout;
     display: flex;
     flex-direction: column;
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -30,6 +21,7 @@ $border-color: rgba(255, 255, 255, 0.06);
     bottom: 0;
     z-index: 100;
     overflow: hidden;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
 }
 
 .sidebar-collapsed .sidebar {
@@ -40,8 +32,8 @@ $border-color: rgba(255, 255, 255, 0.06);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.25rem 1rem;
-    border-bottom: 1px solid $border-color;
+    padding: 1rem;
+    border-bottom: 1px solid $border-layout;
     min-height: $header-height;
 }
 
@@ -49,27 +41,28 @@ $border-color: rgba(255, 255, 255, 0.06);
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    overflow: hidden;
 
-    i {
-        font-size: 1.5rem;
-        color: $accent;
+    img {
+        height: 32px;
+        width: auto;
         flex-shrink: 0;
     }
 
     .logo-text {
         font-size: 1.25rem;
         font-weight: 800;
-        color: $text-primary;
+        color: $primary;
         letter-spacing: 0.04em;
         white-space: nowrap;
     }
 }
 
 .sidebar-toggle {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid $border-color;
+    background: $white;
+    border: 1px solid $border-layout;
     border-radius: 8px;
-    color: $text-secondary;
+    color: $text-muted;
     width: 28px;
     height: 28px;
     display: flex;
@@ -80,8 +73,9 @@ $border-color: rgba(255, 255, 255, 0.06);
     flex-shrink: 0;
 
     &:hover {
-        background: rgba(255, 255, 255, 0.1);
-        color: $text-primary;
+        background: rgba(124, 122, 184, 0.08);
+        color: $primary;
+        border-color: $accent;
     }
 }
 
@@ -100,7 +94,7 @@ $border-color: rgba(255, 255, 255, 0.06);
     gap: 0.875rem;
     padding: 0.75rem 1rem;
     border-radius: 10px;
-    color: $text-secondary;
+    color: $text-muted;
     text-decoration: none;
     font-size: 0.9rem;
     font-weight: 500;
@@ -116,17 +110,21 @@ $border-color: rgba(255, 255, 255, 0.06);
     }
 
     &:hover:not(.disabled) {
-        background: rgba(102, 126, 234, 0.08);
-        color: $text-primary;
+        background: rgba(124, 122, 184, 0.08);
+        color: $primary;
+        
+        i {
+            color: $primary;
+        }
     }
 
     &.active {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.1));
-        color: $accent;
+        background: linear-gradient(135deg, rgba(45, 46, 131, 0.1), rgba(124, 122, 184, 0.08));
+        color: $primary;
         font-weight: 600;
 
         i {
-            color: $accent;
+            color: $primary;
         }
     }
 
@@ -152,8 +150,8 @@ $border-color: rgba(255, 255, 255, 0.06);
 // ─── Header ────────────────────────────────────
 .header {
     height: $header-height;
-    background: $bg-sidebar;
-    border-bottom: 1px solid $border-color;
+    background: $white;
+    border-bottom: 1px solid $border-layout;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -161,12 +159,13 @@ $border-color: rgba(255, 255, 255, 0.06);
     position: sticky;
     top: 0;
     z-index: 50;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .page-title {
     font-size: 1.15rem;
-    font-weight: 600;
-    color: $text-primary;
+    font-weight: 700;
+    color: $primary;
     margin: 0;
 }
 
@@ -179,14 +178,14 @@ $border-color: rgba(255, 255, 255, 0.06);
 .user-avatar {
     width: 36px;
     height: 36px;
-    background: linear-gradient(135deg, $accent, #764ba2);
+    background: linear-gradient(135deg, $primary, $accent);
     border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.8rem;
     font-weight: 700;
-    color: #fff;
+    color: $white;
     letter-spacing: 0.04em;
 }
 
@@ -197,20 +196,50 @@ $border-color: rgba(255, 255, 255, 0.06);
     .user-name {
         font-size: 0.875rem;
         font-weight: 600;
-        color: $text-primary;
+        color: $text-dark;
         line-height: 1.2;
     }
 
     .user-email {
         font-size: 0.75rem;
-        color: $text-secondary;
+        color: $text-muted;
         line-height: 1.2;
+    }
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s;
+    
+    i {
+        font-size: 16px;
+        color: $primary;
+    }
+    
+    span {
+        font-family: $font-family;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 150%;
+        letter-spacing: 0%;
+        color: $primary;
+    }
+    
+    &:hover {
+        background: rgba(45, 46, 131, 0.08);
     }
 }
 
 // ─── Content Area ──────────────────────────────
 .content {
     flex: 1;
-    padding: 2rem;
-    background: $bg-content;
+    padding: 0;
+    background: $bg-light;
 }

@@ -1,11 +1,11 @@
-$text-primary: #e4e6f0;
-$text-secondary: rgba(228, 230, 240, 0.55);
-$border-color: rgba(255, 255, 255, 0.06);
-$card-bg: rgba(255, 255, 255, 0.03);
-$accent: #667eea;
+@use '../../variables' as *;
 
 .dashboard {
+    font-family: $font-family;
     animation: fadeIn 0.4s ease;
+    padding: 2rem;
+    background: #f8f9fc;
+    min-height: 100vh;
 }
 
 @keyframes fadeIn {
@@ -29,13 +29,13 @@ $accent: #667eea;
     h1 {
         font-size: 1.75rem;
         font-weight: 700;
-        color: $text-primary;
+        color: $primary;
         margin: 0 0 0.5rem;
         letter-spacing: -0.02em;
     }
 
     p {
-        color: $text-secondary;
+        color: $text-muted;
         font-size: 1rem;
         margin: 0;
     }
@@ -50,26 +50,27 @@ $accent: #667eea;
 }
 
 .stat-card {
-    background: $card-bg;
-    border: 1px solid $border-color;
-    border-radius: 16px;
+    background: $white;
+    border: 1px solid $border;
+    border-radius: 12px;
     padding: 1.5rem;
     display: flex;
     align-items: center;
     gap: 1.25rem;
     transition: all 0.25s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 
     &:hover {
-        border-color: rgba(102, 126, 234, 0.2);
+        border-color: $accent;
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 8px 24px rgba(45, 46, 131, 0.12);
     }
 }
 
 .stat-icon {
     width: 52px;
     height: 52px;
-    border-radius: 14px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -84,14 +85,14 @@ $accent: #667eea;
     .stat-value {
         font-size: 1.75rem;
         font-weight: 800;
-        color: $text-primary;
+        color: $primary;
         line-height: 1;
         margin-bottom: 0.25rem;
     }
 
     .stat-label {
         font-size: 0.85rem;
-        color: $text-secondary;
+        color: $text-muted;
         font-weight: 500;
     }
 }
@@ -108,10 +109,11 @@ $accent: #667eea;
 }
 
 .card {
-    background: $card-bg;
-    border: 1px solid $border-color;
-    border-radius: 16px;
+    background: $white;
+    border: 1px solid $border;
+    border-radius: 12px;
     padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .card-header {
@@ -123,7 +125,7 @@ $accent: #667eea;
     h3 {
         font-size: 1rem;
         font-weight: 600;
-        color: $text-primary;
+        color: $primary;
         margin: 0;
     }
 }
@@ -135,8 +137,8 @@ $accent: #667eea;
     letter-spacing: 0.05em;
     padding: 0.25rem 0.6rem;
     border-radius: 6px;
-    background: rgba(67, 233, 123, 0.12);
-    color: #43e97b;
+    background: rgba(124, 122, 184, 0.12);
+    color: $accent;
 }
 
 // ─── Activity ──────────────────────────────────
@@ -156,7 +158,7 @@ $accent: #667eea;
     width: 36px;
     height: 36px;
     border-radius: 10px;
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(45, 46, 131, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -170,13 +172,13 @@ $accent: #667eea;
 
     .activity-action {
         font-size: 0.875rem;
-        color: $text-primary;
+        color: $text-dark;
         font-weight: 500;
     }
 
     .activity-time {
         font-size: 0.75rem;
-        color: $text-secondary;
+        color: $text-muted;
     }
 }
 
@@ -194,15 +196,16 @@ $accent: #667eea;
     justify-content: center;
     gap: 0.5rem;
     padding: 1.25rem;
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid $border-color;
+    background: $white;
+    border: 1px solid $border;
     border-radius: 12px;
-    color: $text-secondary;
+    color: $text-dark;
     cursor: pointer;
     transition: all 0.2s;
 
     i {
         font-size: 1.25rem;
+        color: $accent;
     }
 
     span {
@@ -211,9 +214,13 @@ $accent: #667eea;
     }
 
     &:hover:not(:disabled) {
-        background: rgba(102, 126, 234, 0.08);
-        border-color: rgba(102, 126, 234, 0.15);
-        color: $accent;
+        background: rgba(124, 122, 184, 0.08);
+        border-color: $accent;
+        color: $primary;
+        
+        i {
+            color: $primary;
+        }
     }
 
     &:disabled {

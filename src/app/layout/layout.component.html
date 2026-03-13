@@ -3,55 +3,57 @@
     <aside class="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <i class="pi pi-box"></i>
                 @if (!sidebarCollapsed) {
-                <span class="logo-text">CMS</span>
+                <img src="Icon primary.svg" alt="WES Logo" />
+                }
+                @if (sidebarCollapsed) {
+                <span class="logo-text">W</span>
                 }
             </div>
             <button class="sidebar-toggle" (click)="toggleSidebar()">
-                <i class="pi" [class.pi-angle-left]="!sidebarCollapsed" [class.pi-angle-right]="sidebarCollapsed"></i>
+                <i class="bi" [class.bi-chevron-left]="!sidebarCollapsed" [class.bi-chevron-right]="sidebarCollapsed"></i>
             </button>
         </div>
 
         <nav class="sidebar-nav">
             <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
-                <i class="pi pi-th-large"></i>
+                <i class="bi bi-speedometer2"></i>
                 @if (!sidebarCollapsed) {
                 <span>Dashboard</span>
                 }
             </a>
             <a class="nav-item disabled">
-                <i class="pi pi-file"></i>
+                <i class="bi bi-file-earmark-text"></i>
                 @if (!sidebarCollapsed) {
                 <span>Pages</span>
                 }
             </a>
             <a class="nav-item disabled">
-                <i class="pi pi-image"></i>
+                <i class="bi bi-image"></i>
                 @if (!sidebarCollapsed) {
                 <span>Media</span>
                 }
             </a>
             <a class="nav-item disabled">
-                <i class="pi pi-sitemap"></i>
+                <i class="bi bi-diagram-3"></i>
                 @if (!sidebarCollapsed) {
                 <span>Navigation</span>
                 }
             </a>
             <a class="nav-item disabled">
-                <i class="pi pi-users"></i>
+                <i class="bi bi-people"></i>
                 @if (!sidebarCollapsed) {
                 <span>Users</span>
                 }
             </a>
             <a class="nav-item disabled">
-                <i class="pi pi-shield"></i>
+                <i class="bi bi-shield-check"></i>
                 @if (!sidebarCollapsed) {
                 <span>Roles</span>
                 }
             </a>
             <a class="nav-item disabled">
-                <i class="pi pi-cog"></i>
+                <i class="bi bi-gear"></i>
                 @if (!sidebarCollapsed) {
                 <span>Settings</span>
                 }
@@ -75,8 +77,10 @@
                         <span class="user-email">{{ currentUser.email }}</span>
                     </div>
                     }
-                    <p-button icon="pi pi-sign-out" [rounded]="true" [text]="true" severity="secondary"
-                        (click)="logout()" pTooltip="Logout" />
+                    <button class="logout-btn" (click)="logout()">
+                        <i class="pi pi-sign-out"></i>
+                        <span>Logout</span>
+                    </button>
                 </div>
             </div>
         </header>

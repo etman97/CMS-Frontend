@@ -2,26 +2,27 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
-import { ButtonModule } from 'primeng/button';
-import { MessageModule } from 'primeng/message';
 import { AuthService, LoginRequest } from '../../../core/auth/auth.service';
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [CommonModule, FormsModule, RouterLink, InputTextModule, PasswordModule, ButtonModule, MessageModule],
+    imports: [CommonModule, FormsModule, RouterLink],
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss'
 })
 export class LoginComponent {
     email = '';
     password = '';
+    showPassword = false;
     loading = signal(false);
     errorMessage = signal('');
 
     constructor(private authService: AuthService, private router: Router) { }
+
+    togglePassword(): void {
+        this.showPassword = !this.showPassword;
+    }
 
     onSubmit(): void {
         if (!this.email || !this.password) {

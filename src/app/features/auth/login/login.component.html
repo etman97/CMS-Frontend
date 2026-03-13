@@ -1,70 +1,61 @@
-<div class="auth-container">
-  <div class="auth-card">
-    <!-- Logo/Branding -->
-    <div class="auth-header">
-      <div class="auth-logo">
-        <i class="pi pi-box"></i>
-      </div>
-      <h1>Welcome Back</h1>
-      <p>Sign in to your CMS dashboard</p>
-    </div>
+<div class="login-page d-flex align-items-center justify-content-center">
+  <div class="login-card d-flex flex-column justify-content-center">
+
+    <img src="Icon primary.svg" alt="WES Logo" class="logo-img" />
+
+    <h2 class="login-title text-start">Login to WES Website admin</h2>
 
     <!-- Error Message -->
     @if (errorMessage()) {
-      <p-message severity="error" [text]="errorMessage()" styleClass="w-full mb-3" />
+      <div class="error-message">{{ errorMessage() }}</div>
     }
 
-    <!-- Login Form -->
-    <form (ngSubmit)="onSubmit()" class="auth-form">
-      <div class="form-group">
-        <label for="email">Email Address</label>
+    <form (ngSubmit)="onSubmit()">
+      <div class="mb-3">
         <input
-          pInputText
-          id="email"
           type="email"
+          class="form-control"
+          placeholder="Email"
+          aria-label="Email"
           [(ngModel)]="email"
           name="email"
-          placeholder="admin&#64;cms.com"
-          class="w-full"
           autocomplete="email"
         />
       </div>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <p-password
-          id="password"
+      <div class="mb-3 password-wrapper">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          class="form-control pe-5"
+          placeholder="Password"
+          aria-label="Password"
           [(ngModel)]="password"
           name="password"
-          placeholder="Enter your password"
-          [toggleMask]="true"
-          [feedback]="false"
-          styleClass="w-full"
-          inputStyleClass="w-full"
           autocomplete="current-password"
         />
+        <button
+          type="button"
+          class="password-toggle"
+          (click)="togglePassword()"
+          aria-label="Toggle password visibility"
+        >
+          <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+        </button>
       </div>
 
-      <p-button
-        type="submit"
-        label="Sign In"
-        icon="pi pi-sign-in"
-        styleClass="w-full"
-        [loading]="loading()"
-        severity="primary"
-      />
+      <div class="text-center mb-3">
+        <button type="submit" class="btn login-btn" [disabled]="loading()">
+          {{ loading() ? 'Logging in...' : 'Login' }}
+        </button>
+      </div>
+
+      <div class="text-center">
+        <a routerLink="/auth/forgot-password" class="forgot-link">Forgot Password ?</a>
+      </div>
     </form>
 
-    <!-- Register Link -->
     <div class="auth-footer">
       <p>Don't have an account? <a routerLink="/auth/register">Create one</a></p>
     </div>
-  </div>
-
-  <!-- Background decoration -->
-  <div class="auth-bg">
-    <div class="auth-bg-shape shape-1"></div>
-    <div class="auth-bg-shape shape-2"></div>
-    <div class="auth-bg-shape shape-3"></div>
   </div>
 </div>

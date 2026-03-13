@@ -18,14 +18,14 @@ export class DashboardComponent {
     }
 
     statCards = [
-        { title: 'Total Pages', value: 0, icon: 'pi pi-file', color: '#667eea', bgColor: 'rgba(102, 126, 234, 0.12)' },
-        { title: 'Media Files', value: 0, icon: 'pi pi-image', color: '#f093fb', bgColor: 'rgba(240, 147, 251, 0.12)' },
-        { title: 'Total Users', value: 1, icon: 'pi pi-users', color: '#4facfe', bgColor: 'rgba(79, 172, 254, 0.12)' },
-        { title: 'Published', value: 0, icon: 'pi pi-check-circle', color: '#43e97b', bgColor: 'rgba(67, 233, 123, 0.12)' }
+        { title: 'Total Pages', value: 0, icon: 'bi bi-file-earmark-text', color: '#2D2E83', bgColor: 'rgba(45, 46, 131, 0.12)' },
+        { title: 'Media Files', value: 0, icon: 'bi bi-image', color: '#7C7AB8', bgColor: 'rgba(124, 122, 184, 0.12)' },
+        { title: 'Total Users', value: 1, icon: 'bi bi-people', color: '#2D2E83', bgColor: 'rgba(45, 46, 131, 0.12)' },
+        { title: 'Published', value: 0, icon: 'bi bi-check-circle', color: '#7C7AB8', bgColor: 'rgba(124, 122, 184, 0.12)' }
     ];
 
     recentActivity = [
-        { action: 'Account created', time: 'Just now', icon: 'pi pi-user-plus', color: '#667eea' },
-        { action: 'Logged in to dashboard', time: 'Just now', icon: 'pi pi-sign-in', color: '#43e97b' }
+        { action: 'Account created', time: 'Just now', icon: 'bi bi-person-plus', color: '#2D2E83' },
+        { action: 'Logged in to dashboard', time: 'Just now', icon: 'bi bi-box-arrow-in-right', color: '#7C7AB8' }
     ];
 }

@@ -1,4 +1,5 @@
 @use 'sass:math';
+@use 'app/variables' as *;
 
 // ─── Reset & Base ──────────────────────────────
 *,
@@ -16,41 +17,59 @@ html {
 }
 
 body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: #0f1117;
-    color: #e4e6f0;
+    font-family: $font-family;
+    background: $bg-body;
+    color: $text-dark;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
-// ─── PrimeNG Dark Theme Overrides ──────────────
+// ─── PrimeNG Theme Overrides ───────────────────
 :root {
-    --p-primary-color: #667eea;
-    --p-primary-hover-color: #8b9ff5;
-    --p-surface-ground: #0f1117;
-    --p-surface-card: rgba(255, 255, 255, 0.03);
-    --p-surface-border: rgba(255, 255, 255, 0.06);
-    --p-text-color: #e4e6f0;
-    --p-text-muted-color: rgba(228, 230, 240, 0.55);
+    --p-primary-color: #{$primary};
+    --p-primary-hover-color: #{$accent};
+    --p-surface-ground: #{$primary};
+    --p-surface-card: #{$white};
+    --p-surface-border: #{$border};
+    --p-text-color: #{$text-dark};
+    --p-text-muted-color: #{$text-muted};
 }
 
-// Input styling overrides for dark theme
+// Input styling overrides
 .p-inputtext {
-    background: rgba(255, 255, 255, 0.06) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    color: #e4e6f0 !important;
-    border-radius: 10px !important;
+    background: $white !important;
+    border: 1px solid $border-input !important;
+    color: $text-dark !important;
+    border-radius: 4px !important;
     padding: 0.75rem 1rem !important;
     transition: border-color 0.2s, box-shadow 0.2s !important;
 
     &::placeholder {
-        color: rgba(228, 230, 240, 0.35) !important;
+        color: $text-placeholder !important;
     }
 
     &:focus {
-        border-color: #667eea !important;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
+        border-color: $primary !important;
+        box-shadow: 0 0 0 0.15rem rgba(45, 46, 131, 0.15) !important;
     }
+}
+
+// Force light color scheme on inputs so Chrome uses dark text for autofill
+input,
+textarea,
+select {
+    color-scheme: light;
+}
+
+// Remove browser autofill background color
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px $white inset !important;
+    -webkit-text-fill-color: $text-dark !important;
+    color: $text-dark !important;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 // Password component
@@ -60,48 +79,66 @@ body {
 
 // Button styling
 .p-button {
-    border-radius: 10px !important;
-    font-weight: 600 !important;
-    padding: 0.75rem 1.5rem !important;
-    transition: all 0.2s !important;
+    border-radius: 6px !important;
+    font-weight: 500 !important;
+    padding: 0.5rem 1.5rem !important;
+    transition: all 0.3s ease !important;
 
     &.p-button-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        background: $accent !important;
         border: none !important;
+        color: $white !important;
 
         &:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 24px rgba(102, 126, 234, 0.35) !important;
+            background: $primary !important;
         }
 
         &:active {
-            transform: translateY(0);
+            background: $primary !important;
         }
     }
 }
 
 // Message component
 .p-message {
-    border-radius: 10px !important;
+    border-radius: 4px !important;
 }
 
 // ─── Scrollbar ─────────────────────────────────
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 10px;
+    height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-    background: transparent;
+    background: linear-gradient(180deg, $border 0%, #E8E8E8 100%);
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.05);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 3px;
+    background: linear-gradient(180deg, $accent 0%, $accent-dark 100%);
+    border-radius: 10px;
+    border: 2px solid $border;
+    box-shadow: 0 2px 6px rgba(124, 122, 184, 0.3);
+    transition: all 0.3s ease;
 
     &:hover {
-        background: rgba(255, 255, 255, 0.2);
+        background: linear-gradient(180deg, $primary 0%, $primary-dark 100%);
+        box-shadow: 0 4px 12px rgba(45, 46, 131, 0.5);
+        border-color: $white;
     }
+
+    &:active {
+        background: linear-gradient(180deg, $primary-dark 0%, $primary 100%);
+        box-shadow: 0 2px 8px rgba(45, 46, 131, 0.6);
+    }
+}
+
+// Firefox scrollbar
+* {
+    scrollbar-width: thin;
+    scrollbar-color: $accent $border;
 }
 
 // ─── Utilities ─────────────────────────────────

@@ -212,6 +212,12 @@
 
 .password-wrapper {
   position: relative;
+
+  // Hide browser native password reveal eye (Edge/IE/Chrome)
+  input[type='password']::-ms-reveal,
+  input[type='password']::-ms-clear {
+    display: none !important;
+  }
 }
 
 .pe-5 {

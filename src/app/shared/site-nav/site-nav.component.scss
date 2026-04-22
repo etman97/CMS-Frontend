@@ -37,6 +37,15 @@
   }
 }
 
+.wes-nav-list {
+  margin-inline-start: auto;
+  gap: 0.5rem;
+}
+
+.nav-item--language {
+  margin-inline-start: 0.5rem;
+}
+
 .btn-language {
   border: 1px solid $gray;
   color: $gray;
@@ -68,6 +77,14 @@
     margin-top: 16px;
     border-radius: 12px;
     padding: 16px;
+  }
+
+  .wes-nav-list {
+    gap: 0;
+  }
+
+  .nav-item--language {
+    margin-inline-start: 0;
   }
 }
 

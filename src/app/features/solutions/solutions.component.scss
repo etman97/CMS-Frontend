@@ -1,0 +1,257 @@
+@use '../../variables' as v;
+
+:host {
+  display: block;
+}
+
+.solutions-page {
+  position: relative;
+  font-family: v.$font-family;
+  background: var(--color-primary, #2d2e83);
+}
+
+/* Hero */
+.hero {
+  position: relative;
+  min-height: 341px;
+  overflow: hidden;
+  background: var(--color-primary, #2d2e83);
+}
+
+.hero__bg {
+  position: absolute;
+  pointer-events: none;
+}
+
+.hero__bg--left-glow {
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 400px;
+  opacity: 0.5;
+  filter: blur(120px);
+  border-radius: 0 200px 200px 0;
+  background: #4544e7;
+}
+
+.hero__bg--right-glow {
+  top: 369px;
+  right: 0;
+  width: 500px;
+  height: 500px;
+  opacity: 0.1;
+  filter: blur(120px);
+  background: #eeeeff;
+  transform: rotate(180deg) scaleY(-1);
+}
+
+.hero__bg--bottom-glow {
+  bottom: -145px;
+  left: 0;
+  width: 300px;
+  height: 300px;
+  opacity: 0.07;
+  filter: blur(120px);
+  background: #eeeeff;
+}
+
+.hero__lamp-wrap {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 341.333px;
+  overflow: hidden;
+}
+
+.hero__lamp {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 341.333px;
+  object-fit: cover;
+}
+
+.hero__lamp--half {
+  left: 50%;
+  top: -47.51%;
+  width: 50%;
+  height: 140.64%;
+  object-fit: cover;
+}
+
+.hero__lamp-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 25%, #000000 100%);
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 164px 80px 45px;
+}
+
+.hero__title {
+  margin: 0 0 24px;
+  font-family: v.$font-family;
+  font-size: 32px;
+  line-height: 1.2;
+  font-weight: 700;
+  background: linear-gradient(90deg, #f2f2f2 0%, #a0a0ff 17.539%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero__text {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+// ─── Solutions Grid ──────────────────────────────
+.solutions-section {
+  position: relative;
+}
+
+.solution-card {
+  position: relative;
+  display: block;
+  height: 341px;
+  overflow: hidden;
+  text-decoration: none;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.05);
+  }
+}
+
+.solution-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 25%, #000 100%);
+}
+
+.solution-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 80px 24px;
+  z-index: 2;
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 0 0 16px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #d9d9d9;
+
+    span {
+      font-size: 28px;
+      color: v.$white;
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: v.$white;
+    max-width: 520px;
+  }
+}
+
+/* Responsive */
+@media (max-width: 1199.98px) {
+  .hero__content {
+    padding: 130px 40px 36px;
+  }
+
+  .solution-content {
+    padding: 0 40px 24px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .solution-card {
+    height: 300px;
+  }
+}
+
+@media (max-width: 767px) {
+  .hero {
+    min-height: auto;
+  }
+
+  .hero__lamp-wrap,
+  .hero__lamp,
+  .hero__lamp-overlay {
+    height: 280px;
+  }
+
+  .hero__content {
+    padding-top: 150px;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .hero__title {
+    font-size: 28px;
+  }
+
+  .hero__text {
+    font-size: 16px;
+  }
+
+  .solution-card {
+    height: 260px;
+  }
+
+  .solution-content {
+    padding: 0 20px 20px;
+
+    h3 {
+      font-size: 20px;
+      gap: 12px;
+    }
+
+    p {
+      font-size: 14px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .hero__content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .hero__title {
+    font-size: 26px;
+  }
+}
+
+// ─── 1920px Desktop ──────────────────────────────
+@media (min-width: 1920px) {
+  .hero__content {
+    max-width: 1760px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

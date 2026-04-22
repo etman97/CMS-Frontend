@@ -4,8 +4,34 @@ import { authGuard, guestGuard } from './core/auth/auth.guard';
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'dashboard',
-        pathMatch: 'full'
+        loadComponent: () => import('./layout/public-layout/public-layout.component').then(m => m.PublicLayoutComponent),
+        children: [
+            {
+                path: '',
+                pathMatch: 'full',
+                loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
+            },
+            {
+                path: 'about',
+                loadComponent: () => import('./features/about/about.component').then(m => m.AboutComponent)
+            },
+            {
+                path: 'solutions',
+                loadComponent: () => import('./features/solutions/solutions.component').then(m => m.SolutionsComponent)
+            },
+            {
+                path: 'services',
+                loadComponent: () => import('./features/services/services.component').then(m => m.ServicesComponent)
+            },
+            {
+                path: 'partners',
+                loadComponent: () => import('./features/partners/partners.component').then(m => m.PartnersComponent)
+            },
+            {
+                path: 'contact',
+                loadComponent: () => import('./features/contact/contact.component').then(m => m.ContactComponent)
+            }
+        ]
     },
     {
         path: 'auth',
@@ -39,6 +65,6 @@ export const routes: Routes = [
     },
     {
         path: '**',
-        redirectTo: 'dashboard'
+        redirectTo: ''
     }
 ];

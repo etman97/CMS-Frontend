@@ -1,0 +1,79 @@
+@use 'variables' as *;
+
+.btn-language .lang-icon {
+  color: #949494;
+  font-size: 1.2em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.wes-navbar {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  padding: 12px 0;
+}
+
+.wes-logo {
+  width: 80px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.wes-navbar .nav-link {
+  color: $gray;
+  font-size: 14px;
+  font-weight: 400;
+  padding: 8px 14px;
+  transition: color 0.3s ease;
+
+  &:hover,
+  &.active {
+    color: $white;
+  }
+
+  &.active {
+    border-bottom: 2px solid $white;
+  }
+}
+
+.btn-language {
+  border: 1px solid $gray;
+  color: $gray;
+  border-radius: 8px;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: 300;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: 0.3s ease;
+
+  &:hover {
+    color: $white;
+    border-color: $white;
+  }
+}
+
+.lang-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    background: rgba(20, 20, 40, 0.95);
+    margin-top: 16px;
+    border-radius: 12px;
+    padding: 16px;
+  }
+}
+
+// ─── 1920px Desktop ──────────────────────────────
+@media (min-width: 1920px) {
+  .wes-navbar .container {
+    max-width: 1760px;
+  }
+}

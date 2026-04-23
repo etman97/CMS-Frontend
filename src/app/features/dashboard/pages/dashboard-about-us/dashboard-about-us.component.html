@@ -1,0 +1,278 @@
+﻿<div class="dashboard-about-us-page">
+    <div class="page-header">
+        <div class="title-group">
+            <h1>About Us</h1>
+            <div class="active-switch">
+                <label class="form-check form-switch">
+                    <input
+                        #activeSwitch
+                        class="form-check-input"
+                        type="checkbox"
+                        [(ngModel)]="isActive"
+                        (change)="onActiveToggle(activeSwitch)"
+                    />
+                </label>
+                <span>Active</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button type="button" class="btn preview-btn">
+                <i class="bi bi-eye"></i>
+                <span>Preview</span>
+            </button>
+            <button type="button" class="btn save-btn">Save</button>
+        </div>
+    </div>
+
+    <p-tabs [(value)]="activeTab" class="about-tabs">
+        <p-tablist>
+            <p-tab value="en">English version</p-tab>
+            <p-tab value="ar">Arabic version</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+            <p-tabpanel value="en">
+                <section class="editor-card">
+                    <div class="editor-top">
+                        <div class="panel-tools">
+                            <button type="button" class="icon-btn" aria-label="Upload image">
+                                <i class="bi bi-upload"></i>
+                            </button>
+                            <button type="button" class="icon-btn" aria-label="Add link">
+                                <i class="bi bi-link-45deg"></i>
+                            </button>
+                        </div>
+
+                        <article class="text-box">
+                            <h2>About Us</h2>
+                            <textarea class="content-input" rows="3" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                        </article>
+                    </div>
+
+                    <div class="editor-bottom">
+                        <div class="row row-two-columns">
+                            <article class="text-box text-box--large">
+                                <h2>Why WES</h2>
+                                <textarea class="content-input" rows="4" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                            </article>
+
+                            <article class="text-box text-box--numbers">
+                                <h2>WES in numbers</h2>
+                                <div class="numbers-grid">
+                                    <label class="metric-field">
+                                        <span>Number of employees</span>
+                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                    </label>
+                                    <label class="metric-field">
+                                        <span>Number of products</span>
+                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                    </label>
+                                    <label class="metric-field">
+                                        <span>Number of clients</span>
+                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                    </label>
+                                    <label class="metric-field">
+                                        <span>Number of partners</span>
+                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                    </label>
+                                </div>
+                            </article>
+                        </div>
+
+                        <div class="row row-three-columns">
+                            <article class="text-box text-box--media">
+                                <div class="box-head">
+                                    <h2>Our Mission</h2>
+                                    <button type="button" class="edit-btn" aria-label="Edit mission" (click)="openEditSectionDialog('mission')">
+                                        <i class="bi bi-pen"></i>
+                                    </button>
+                                </div>
+                                <textarea class="content-input" rows="4" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <div class="upload-area">
+                                    <i class="bi bi-camera"></i>
+                                    <span>Upload images, PNG and JPEG formats are accepted.</span>
+                                </div>
+                            </article>
+
+                            <article class="text-box text-box--media">
+                                <div class="box-head">
+                                    <h2>Our Vision</h2>
+                                    <button type="button" class="edit-btn" aria-label="Edit vision" (click)="openEditSectionDialog('vision')">
+                                        <i class="bi bi-pen"></i>
+                                    </button>
+                                </div>
+                                <textarea class="content-input" rows="4" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <div class="upload-area">
+                                    <i class="bi bi-camera"></i>
+                                    <span>Upload images, PNG and JPEG formats are accepted.</span>
+                                </div>
+                            </article>
+
+                            <article class="text-box text-box--media">
+                                <div class="box-head">
+                                    <h2>Leadership</h2>
+                                    <button type="button" class="edit-btn" aria-label="Edit leadership" (click)="openEditSectionDialog('leadership')">
+                                        <i class="bi bi-pen"></i>
+                                    </button>
+                                </div>
+                                <textarea class="content-input" rows="4" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <div class="upload-area">
+                                    <i class="bi bi-camera"></i>
+                                    <span>Upload images, PNG and JPEG formats are accepted.</span>
+                                </div>
+                            </article>
+                        </div>
+
+                        <section class="team-block">
+                            <h2>Our Team</h2>
+
+                            <div class="team-list">
+                                @for (member of teamMembers; track member.name) {
+                                <article class="team-card">
+                                    <div class="team-head">
+                                        <div>
+                                            <h3>{{ member.name }}</h3>
+                                            <p>{{ member.role }}</p>
+                                        </div>
+                                        <button type="button" class="team-more" aria-label="Team member actions">
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </button>
+                                    </div>
+                                    <img [src]="member.image" [alt]="member.name" />
+                                </article>
+                                }
+
+                                <button type="button" class="add-member" (click)="openAddMemberDialog()">
+                                    <span class="add-member__plus" aria-hidden="true"></span>
+                                    <span>Add member</span>
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </p-tabpanel>
+
+            <p-tabpanel value="ar">
+                <section class="editor-card" dir="rtl">
+                    <div class="editor-top">
+                        <div class="panel-tools">
+                            <button type="button" class="icon-btn" aria-label="Upload image">
+                                <i class="bi bi-upload"></i>
+                            </button>
+                            <button type="button" class="icon-btn" aria-label="Add link">
+                                <i class="bi bi-link-45deg"></i>
+                            </button>
+                        </div>
+
+                        <article class="text-box">
+                            <h2>من نحن</h2>
+                            <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
+                        </article>
+                    </div>
+
+                    <div class="editor-bottom">
+                        <div class="row row-two-columns">
+                            <article class="text-box text-box--large">
+                                <h2>لماذا WES</h2>
+                                <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
+                            </article>
+
+                            <article class="text-box text-box--numbers">
+                                <h2>WES بالأرقام</h2>
+                                <div class="numbers-grid">
+                                    <label class="metric-field">
+                                        <span>عدد الموظفين</span>
+                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                    </label>
+                                    <label class="metric-field">
+                                        <span>عدد المنتجات</span>
+                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                    </label>
+                                    <label class="metric-field">
+                                        <span>عدد العملاء</span>
+                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                    </label>
+                                    <label class="metric-field">
+                                        <span>عدد الشركاء</span>
+                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                    </label>
+                                </div>
+                            </article>
+                        </div>
+
+                        <div class="row row-three-columns">
+                            <article class="text-box text-box--media">
+                                <div class="box-head box-head--title-right">
+                                    <h2>مهمتنا</h2>
+                                    <button type="button" class="edit-btn" aria-label="Edit mission" (click)="openEditSectionDialog('mission')">
+                                        <i class="bi bi-pen"></i>
+                                    </button>
+                                </div>
+                                <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
+                                <div class="upload-area">
+                                    <i class="bi bi-camera"></i>
+                                    <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
+                                </div>
+                            </article>
+
+                            <article class="text-box text-box--media">
+                                <div class="box-head box-head--title-right">
+                                    <h2>رؤيتنا</h2>
+                                    <button type="button" class="edit-btn" aria-label="Edit vision" (click)="openEditSectionDialog('vision')">
+                                        <i class="bi bi-pen"></i>
+                                    </button>
+                                </div>
+                                <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
+                                <div class="upload-area">
+                                    <i class="bi bi-camera"></i>
+                                    <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
+                                </div>
+                            </article>
+
+                            <article class="text-box text-box--media">
+                                <div class="box-head box-head--title-right">
+                                    <h2>القيادة</h2>
+                                    <button type="button" class="edit-btn" aria-label="Edit leadership" (click)="openEditSectionDialog('leadership')">
+                                        <i class="bi bi-pen"></i>
+                                    </button>
+                                </div>
+                                <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
+                                <div class="upload-area">
+                                    <i class="bi bi-camera"></i>
+                                    <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
+                                </div>
+                            </article>
+                        </div>
+
+                        <section class="team-block">
+                            <h2>فريقنا</h2>
+
+                            <div class="team-list">
+                                @for (member of teamMembers; track member.name) {
+                                <article class="team-card">
+                                    <div class="team-head">
+                                        <div>
+                                            <h3>{{ member.name }}</h3>
+                                            <p>{{ member.role }}</p>
+                                        </div>
+                                        <button type="button" class="team-more" aria-label="Team member actions">
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </button>
+                                    </div>
+                                    <img [src]="member.image" [alt]="member.name" />
+                                </article>
+                                }
+
+                                <button type="button" class="add-member" (click)="openAddMemberDialog()">
+                                    <span class="add-member__plus" aria-hidden="true"></span>
+                                    <span>إضافة عضو</span>
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+                </section>
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+</div>

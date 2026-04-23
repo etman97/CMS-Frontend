@@ -24,6 +24,21 @@
 
     <!-- Content Grid -->
     <div class="content-grid">
+        <!-- Website Sections -->
+        <div class="card sections-card">
+            <div class="card-header">
+                <h3>Website Sections</h3>
+            </div>
+            <div class="sections-grid">
+                @for (section of websiteSections; track section.name) {
+                <div class="section-item">
+                    <i [class]="section.icon"></i>
+                    <span>{{ section.name }}</span>
+                </div>
+                }
+            </div>
+        </div>
+
         <!-- Recent Activity -->
         <div class="card activity-card">
             <div class="card-header">
@@ -42,31 +57,6 @@
                     </div>
                 </div>
                 }
-            </div>
-        </div>
-
-        <!-- Quick Actions -->
-        <div class="card quick-actions-card">
-            <div class="card-header">
-                <h3>Quick Actions</h3>
-            </div>
-            <div class="actions-grid">
-                <button class="action-btn" disabled>
-                    <i class="bi bi-plus-circle"></i>
-                    <span>New Page</span>
-                </button>
-                <button class="action-btn" disabled>
-                    <i class="bi bi-upload"></i>
-                    <span>Upload Media</span>
-                </button>
-                <button class="action-btn" disabled>
-                    <i class="bi bi-person-plus"></i>
-                    <span>Add User</span>
-                </button>
-                <button class="action-btn" disabled>
-                    <i class="bi bi-diagram-3"></i>
-                    <span>Edit Nav</span>
-                </button>
             </div>
         </div>
     </div>

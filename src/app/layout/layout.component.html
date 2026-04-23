@@ -16,46 +16,46 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+            <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-item">
                 <i class="bi bi-speedometer2"></i>
                 @if (!sidebarCollapsed) {
                 <span>Dashboard</span>
                 }
             </a>
-            <a class="nav-item disabled">
-                <i class="bi bi-file-earmark-text"></i>
+            <a routerLink="/dashboard/home" routerLinkActive="active" class="nav-item">
+                <i class="bi bi-house-door"></i>
                 @if (!sidebarCollapsed) {
-                <span>Pages</span>
+                <span>Home</span>
                 }
             </a>
-            <a class="nav-item disabled">
-                <i class="bi bi-image"></i>
+            <a routerLink="/dashboard/about-us" routerLinkActive="active" class="nav-item">
+                <i class="bi bi-info-circle"></i>
                 @if (!sidebarCollapsed) {
-                <span>Media</span>
+                <span>About Us</span>
                 }
             </a>
             <a class="nav-item disabled">
                 <i class="bi bi-diagram-3"></i>
                 @if (!sidebarCollapsed) {
-                <span>Navigation</span>
+                <span>Solutions</span>
+                }
+            </a>
+            <a class="nav-item disabled">
+                <i class="bi bi-briefcase"></i>
+                @if (!sidebarCollapsed) {
+                <span>Services</span>
                 }
             </a>
             <a class="nav-item disabled">
                 <i class="bi bi-people"></i>
                 @if (!sidebarCollapsed) {
-                <span>Users</span>
+                <span>Partners</span>
                 }
             </a>
-            <a class="nav-item disabled">
-                <i class="bi bi-shield-check"></i>
+            <a routerLink="/dashboard/contact-us" routerLinkActive="active" class="nav-item">
+                <i class="bi bi-envelope"></i>
                 @if (!sidebarCollapsed) {
-                <span>Roles</span>
-                }
-            </a>
-            <a class="nav-item disabled">
-                <i class="bi bi-gear"></i>
-                @if (!sidebarCollapsed) {
-                <span>Settings</span>
+                <span>Contact Us</span>
                 }
             </a>
         </nav>

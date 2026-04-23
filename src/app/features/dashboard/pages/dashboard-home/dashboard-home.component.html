@@ -1,0 +1,136 @@
+﻿<div class="dashboard-home-page">
+    <div class="page-header">
+        <div class="title-group">
+            <h1>Home</h1>
+            <div class="active-switch">
+                <label class="form-check form-switch">
+                    <input
+                        #activeSwitch
+                        class="form-check-input"
+                        type="checkbox"
+                        [(ngModel)]="isActive"
+                        (change)="onActiveToggle(activeSwitch)"
+                    />
+                </label>
+                <span>Active</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button type="button" class="btn preview-btn">
+                <i class="bi bi-eye"></i>
+                <span>Preview</span>
+            </button>
+            <button type="button" class="btn save-btn">Save</button>
+        </div>
+    </div>
+
+    <p-tabs [(value)]="activeTab" class="home-tabs">
+        <p-tablist>
+            <p-tab value="en">English version</p-tab>
+            <p-tab value="ar">Arabic version</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+            <p-tabpanel value="en">
+                <div class="editor-card">
+                    <div class="panel-tools">
+                        <button type="button" class="icon-btn" aria-label="Upload image">
+                            <i class="bi bi-upload"></i>
+                        </button>
+                        <button type="button" class="icon-btn" aria-label="Add link">
+                            <i class="bi bi-link-45deg"></i>
+                        </button>
+                    </div>
+
+
+                    <div class="hero-fields">
+                        <input
+                            type="text"
+                            class="form-control"
+                            [(ngModel)]="heroTitle"
+                            placeholder="Enter hero section title, for ex: Welcome at WES"
+                        />
+
+                        <textarea
+                            class="form-control"
+                            rows="2"
+                            [(ngModel)]="heroContent"
+                            placeholder="Enter hero section content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"
+                        ></textarea>
+
+                        <div class="buttons-row">
+                            <div class="button-item">
+                                <input
+                                    type="text"
+                                    class="form-control button-label-input"
+                                    [(ngModel)]="primaryButtonText"
+                                    placeholder="Primary button"
+                                />
+                                <button type="button" class="icon-btn" aria-label="Edit primary button text">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </div>
+
+                            <div class="button-item">
+                                <input
+                                    type="text"
+                                    class="form-control button-label-input"
+                                    [(ngModel)]="secondaryButtonText"
+                                    placeholder="Secondary button"
+                                />
+                                <button type="button" class="icon-btn" aria-label="Edit secondary button text">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-tabpanel>
+
+            <p-tabpanel value="ar">
+                <div class="editor-card">
+                    <div class="panel-tools">
+                        <button type="button" class="icon-btn" aria-label="Upload image">
+                            <i class="bi bi-upload"></i>
+                        </button>
+                        <button type="button" class="icon-btn" aria-label="Add link">
+                            <i class="bi bi-link-45deg"></i>
+                        </button>
+                    </div>
+
+
+                    <div class="hero-fields" dir="rtl">
+                        <input
+                            type="text"
+                            class="form-control"
+                            placeholder="ادخل عنوان قسم الهيرو، مثال: مرحباً بكم في WES"
+                        />
+
+                        <textarea
+                            class="form-control"
+                            rows="2"
+                            placeholder="ادخل محتوى قسم الهيرو، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"
+                        ></textarea>
+
+                        <div class="buttons-row">
+                            <div class="button-item">
+                                <input type="text" class="form-control button-label-input" placeholder="الزر الأساسي" />
+                                <button type="button" class="icon-btn" aria-label="Edit primary button text">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </div>
+
+                            <div class="button-item">
+                                <input type="text" class="form-control button-label-input" placeholder="الزر الثانوي" />
+                                <button type="button" class="icon-btn" aria-label="Edit secondary button text">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+</div>

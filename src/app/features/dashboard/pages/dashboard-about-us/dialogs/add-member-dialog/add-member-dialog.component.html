@@ -1,0 +1,63 @@
+<div class="add-member-dialog" [dir]="dir">
+    <div class="dialog-body">
+
+        <div class="row g-3">
+            <div class="col-6">
+                <label class="field">
+                    <span class="field-label">{{ 'Name' | translate }}</span>
+                    <input
+                        type="text"
+                        class="field-input"
+                        [(ngModel)]="name"
+                        [placeholder]="'Enter name' | translate"
+                    />
+                </label>
+            </div>
+
+            <div class="col-6">
+                <label class="field">
+                    <span class="field-label">{{ 'Job Title' | translate }}</span>
+                    <input
+                        type="text"
+                        class="field-input"
+                        [(ngModel)]="jobTitle"
+                        [placeholder]="'Enter job title' | translate"
+                    />
+                </label>
+            </div>
+
+            <div class="col-12">
+                <label class="field">
+                    <span class="field-label">{{ 'Brief' | translate }}</span>
+                    <textarea
+                        class="field-input field-input--textarea"
+                        rows="4"
+                        [(ngModel)]="brief"
+                        [placeholder]="'Enter a brief description' | translate"
+                    ></textarea>
+                </label>
+            </div>
+
+            <div class="col-12">
+                <div class="field">
+                    <span class="field-label">{{ 'Upload Image' | translate }}</span>
+                    <label class="upload-area" [class.upload-area--preview]="imagePreview">
+                        @if (imagePreview) {
+                            <img [src]="imagePreview" alt="preview" class="image-preview" />
+                        } @else {
+                            <i class="bi bi-camera"></i>
+                            <span>{{ 'Upload image, PNG format is accepted.' | translate }}</span>
+                        }
+                        <input type="file" accept="image/png" class="file-input" (change)="onFileChange($event)" />
+                    </label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="dialog-footer">
+        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ 'Cancel' | translate }}</button>
+        <button type="button" class="btn save-btn" (click)="save()">{{ 'Save' | translate }}</button>
+    </div>
+</div>

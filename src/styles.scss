@@ -35,6 +35,21 @@ body {
     --p-text-muted-color: #{$text-muted};
 }
 
+// Dialog header title color
+.p-dialog-title {
+    color: #2d2e83 !important;
+}
+
+// Dialog close button - remove hover effect
+.p-dialog-close-button {
+    &:hover,
+    &:focus {
+        background: transparent !important;
+        box-shadow: none !important;
+        color: inherit !important;
+    }
+}
+
 // Input styling overrides
 .p-inputtext {
     background: $white !important;

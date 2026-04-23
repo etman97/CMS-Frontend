@@ -20,7 +20,6 @@
     }
 }
 
-// ─── Welcome ───────────────────────────────────
 .welcome-section {
     margin-bottom: 2rem;
 }
@@ -41,7 +40,6 @@
     }
 }
 
-// ─── Stat Cards ────────────────────────────────
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -97,7 +95,6 @@
     }
 }
 
-// ─── Content Grid ──────────────────────────────
 .content-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -141,7 +138,6 @@
     color: $accent;
 }
 
-// ─── Activity ──────────────────────────────────
 .activity-list {
     display: flex;
     flex-direction: column;
@@ -182,14 +178,13 @@
     }
 }
 
-// ─── Quick Actions ─────────────────────────────
-.actions-grid {
+.sections-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 0.75rem;
 }
 
-.action-btn {
+.section-item {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -200,7 +195,6 @@
     border: 1px solid $border;
     border-radius: 12px;
     color: $text-dark;
-    cursor: pointer;
     transition: all 0.2s;
 
     i {
@@ -213,18 +207,13 @@
         font-weight: 500;
     }
 
-    &:hover:not(:disabled) {
+    &:hover {
         background: rgba(124, 122, 184, 0.08);
         border-color: $accent;
         color: $primary;
-        
+
         i {
             color: $primary;
         }
-    }
-
-    &:disabled {
-        opacity: 0.35;
-        cursor: not-allowed;
     }
 }

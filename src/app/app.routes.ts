@@ -54,12 +54,35 @@ export const routes: Routes = [
     },
     {
         path: '',
-        canActivate: [authGuard],
         loadComponent: () => import('./layout/layout.component').then(m => m.LayoutComponent),
         children: [
             {
                 path: 'dashboard',
                 loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent)
+            },
+            {
+                path: 'dashboard/home',
+                loadComponent: () => import('./features/dashboard/pages/dashboard-home/dashboard-home.component').then(m => m.DashboardHomeComponent)
+            },
+            {
+                path: 'dashboard/about-us',
+                loadComponent: () => import('./features/dashboard/pages/dashboard-about-us/dashboard-about-us.component').then(m => m.DashboardAboutUsComponent)
+            },
+            {
+                path: 'dashboard/solutions',
+                loadComponent: () => import('./features/dashboard/pages/dashboard-solutions/dashboard-solutions.component').then(m => m.DashboardSolutionsComponent)
+            },
+            {
+                path: 'dashboard/services',
+                loadComponent: () => import('./features/dashboard/pages/dashboard-services/dashboard-services.component').then(m => m.DashboardServicesComponent)
+            },
+            {
+                path: 'dashboard/partners',
+                loadComponent: () => import('./features/dashboard/pages/dashboard-partners/dashboard-partners.component').then(m => m.DashboardPartnersComponent)
+            },
+            {
+                path: 'dashboard/contact-us',
+                loadComponent: () => import('./features/dashboard/pages/dashboard-contact-us/dashboard-contact-us.component').then(m => m.DashboardContactUsComponent)
             }
         ]
     },

@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/auth/auth.service';
 
@@ -27,5 +27,14 @@ export class DashboardComponent {
     recentActivity = [
         { action: 'Account created', time: 'Just now', icon: 'bi bi-person-plus', color: '#2D2E83' },
         { action: 'Logged in to dashboard', time: 'Just now', icon: 'bi bi-box-arrow-in-right', color: '#7C7AB8' }
+    ];
+
+    websiteSections = [
+        { name: 'Home', icon: 'bi bi-house-door' },
+        { name: 'About Us', icon: 'bi bi-info-circle' },
+        { name: 'Solutions', icon: 'bi bi-diagram-3' },
+        { name: 'Services', icon: 'bi bi-briefcase' },
+        { name: 'Partners', icon: 'bi bi-people' },
+        { name: 'Contact Us', icon: 'bi bi-envelope' }
     ];
 }

@@ -1,0 +1,21 @@
+<div class="edit-section-dialog" [dir]="dir">
+    <div class="dialog-body">
+        <textarea
+            class="content-input"
+            rows="6"
+            [(ngModel)]="content"
+            [placeholder]="'Enter content...' | translate"
+        ></textarea>
+
+        <div class="upload-area">
+            <i class="bi bi-camera"></i>
+            <span>{{ 'Upload images, PNG and JPEG formats are accepted.' | translate }}</span>
+            <input type="file" accept="image/png,image/jpeg" class="file-input" />
+        </div>
+    </div>
+
+    <div class="dialog-footer">
+        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ 'Cancel' | translate }}</button>
+        <button type="button" class="btn save-btn" (click)="save()">{{ 'Save' | translate }}</button>
+    </div>
+</div>

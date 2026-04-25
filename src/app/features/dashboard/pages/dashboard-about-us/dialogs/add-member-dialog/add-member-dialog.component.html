@@ -5,13 +5,13 @@
             <div class="col-6">
                 <label class="field">
                     <span class="field-label">{{ dir === 'rtl' ? 'الاسم (EN)' : 'Name (EN)' }}</span>
-                    <input type="text" class="field-input" [(ngModel)]="nameEn" [placeholder]="dir === 'rtl' ? 'أدخل الاسم' : 'Enter name'" />
+                    <input type="text" class="field-input" [(ngModel)]="nameEn" [placeholder]="dir === 'rtl' ? 'أدخل الاسم' : 'Enter name'"  [disabled]="isUploading" />
                 </label>
             </div>
             <div class="col-6">
                 <label class="field">
                     <span class="field-label">{{ dir === 'rtl' ? 'المسمى الوظيفي (EN)' : 'Job Title (EN)' }}</span>
-                    <input type="text" class="field-input" [(ngModel)]="jobTitleEn" [placeholder]="dir === 'rtl' ? 'أدخل المسمى الوظيفي' : 'Enter job title'" />
+                    <input type="text" class="field-input" [(ngModel)]="jobTitleEn" [placeholder]="dir === 'rtl' ? 'أدخل المسمى الوظيفي' : 'Enter job title'"  [disabled]="isUploading" />
                 </label>
             </div>
             <div class="col-12">
@@ -22,7 +22,7 @@
                         rows="3"
                         [(ngModel)]="briefEn"
                         [placeholder]="dir === 'rtl' ? 'أدخل نبذة مختصرة' : 'Enter a brief description'"
-                    ></textarea>
+                     [disabled]="isUploading"></textarea>
                 </label>
             </div>
 
@@ -30,19 +30,19 @@
             <div class="col-6" dir="rtl">
                 <label class="field">
                     <span class="field-label">الاسم (AR)</span>
-                    <input type="text" class="field-input" [(ngModel)]="nameAr" placeholder="أدخل الاسم" />
+                    <input type="text" class="field-input" [(ngModel)]="nameAr" placeholder="أدخل الاسم"  [disabled]="isUploading" />
                 </label>
             </div>
             <div class="col-6" dir="rtl">
                 <label class="field">
                     <span class="field-label">المسمى الوظيفي (AR)</span>
-                    <input type="text" class="field-input" [(ngModel)]="jobTitleAr" placeholder="أدخل المسمى الوظيفي" />
+                    <input type="text" class="field-input" [(ngModel)]="jobTitleAr" placeholder="أدخل المسمى الوظيفي"  [disabled]="isUploading" />
                 </label>
             </div>
             <div class="col-12" dir="rtl">
                 <label class="field">
                     <span class="field-label">نبذة (AR)</span>
-                    <textarea class="field-input field-input--textarea" rows="3" [(ngModel)]="briefAr" placeholder="أدخل نبذة مختصرة"></textarea>
+                    <textarea class="field-input field-input--textarea" rows="3" [(ngModel)]="briefAr" placeholder="أدخل نبذة مختصرة" [disabled]="isUploading"></textarea>
                 </label>
             </div>
 
@@ -50,12 +50,12 @@
             <div class="col-12">
                 <div class="field">
                     <span class="field-label">{{ dir === 'rtl' ? 'رفع صورة' : 'Upload Image' }}</span>
-                    <div class="upload-area" (click)="fileInput.click()">
+                    <div class="upload-area" (click)="!isUploading && fileInput.click()">
                         <input #fileInput type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onFileChange($event)" />
-                        @if (isUploading) {
-                            <span>{{ dir === 'rtl' ? 'جاري الرفع...' : 'Uploading...' }}</span>
-                        } @else if (imagePreview) {
+                        @if (imagePreview) {
                             <img [src]="imagePreview" alt="preview" class="upload-preview" />
+                        } @else if (isUploading) {
+                            <span>{{ dir === 'rtl' ? 'جاري الرفع...' : 'Uploading...' }}</span>
                         } @else {
                             <i class="bi bi-camera"></i>
                             <span>{{ dir === 'rtl' ? 'ارفع صورة، يتم قبول صيغ PNG و JPEG.' : 'Upload image, PNG and JPEG formats are accepted.' }}</span>
@@ -67,7 +67,9 @@
     </div>
 
     <div class="dialog-footer">
-        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ dir === 'rtl' ? 'إلغاء' : 'Cancel' }}</button>
+        <button type="button" class="btn cancel-btn" (click)="cancel()" [disabled]="isUploading">{{ dir === 'rtl' ? 'إلغاء' : 'Cancel' }}</button>
         <button type="button" class="btn save-btn" (click)="save()" [disabled]="isUploading">{{ dir === 'rtl' ? 'حفظ' : 'Save' }}</button>
     </div>
 </div>
+
+

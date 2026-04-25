@@ -25,7 +25,9 @@ export interface AboutPageDto {
     visionContentEn: string;
     leadershipContentEn: string;
     aboutUsContentAr: string;
+    subContentAr: string;
     whyUsContentAr: string;
+    numbersSubtitleAr: string;
     missionContentAr: string;
     visionContentAr: string;
     leadershipContentAr: string;

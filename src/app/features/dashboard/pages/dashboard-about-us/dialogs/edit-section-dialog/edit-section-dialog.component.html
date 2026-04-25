@@ -5,16 +5,16 @@
             rows="6"
             [(ngModel)]="content"
             [placeholder]="placeholder"
-        ></textarea>
+         [disabled]="isUploading"></textarea>
 
         <div class="field">
             <span class="field-label">{{ lang === 'ar' ? 'رفع صورة' : 'Upload Image' }}</span>
-            <div class="upload-area" (click)="fileInput.click()">
+            <div class="upload-area" (click)="!isUploading && fileInput.click()">
                 <input #fileInput type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onFileChange($event)" />
-                @if (isUploading) {
-                    <span>{{ lang === 'ar' ? 'جارٍ الرفع...' : 'Uploading...' }}</span>
-                } @else if (imageUrl) {
+                @if (imageUrl) {
                     <img [src]="imageUrl" alt="Section image" class="upload-preview" />
+                } @else if (isUploading) {
+                    <span>{{ lang === 'ar' ? 'جارٍ الرفع...' : 'Uploading...' }}</span>
                 } @else {
                     <i class="bi bi-camera"></i>
                     <span>{{ uploadHint }}</span>
@@ -24,7 +24,8 @@
     </div>
 
     <div class="dialog-footer">
-        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ lang === 'ar' ? 'إلغاء' : 'Cancel' }}</button>
+        <button type="button" class="btn cancel-btn" (click)="cancel()" [disabled]="isUploading">{{ lang === 'ar' ? 'إلغاء' : 'Cancel' }}</button>
         <button type="button" class="btn save-btn" (click)="save()" [disabled]="isUploading">{{ lang === 'ar' ? 'حفظ' : 'Save' }}</button>
     </div>
 </div>
+

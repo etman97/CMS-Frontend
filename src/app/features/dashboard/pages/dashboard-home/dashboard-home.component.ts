@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { MessageService } from 'primeng/api';
@@ -13,7 +13,7 @@ import { DashboardPageHeaderComponent } from '../../components/dashboard-page-he
     templateUrl: './dashboard-home.component.html',
     styleUrl: './dashboard-home.component.scss'
 })
-export class DashboardHomeComponent implements OnInit {
+export class DashboardHomeComponent implements OnInit, OnDestroy {
     private readonly homePageService = inject(HomePageService);
     private readonly mediaService = inject(MediaService);
     private readonly messageService = inject(MessageService);
@@ -36,6 +36,8 @@ export class DashboardHomeComponent implements OnInit {
     secondaryButtonTextAr = '';
 
     heroImageUrl: string | null = null;
+    private persistedHeroImageUrl: string | null = null;
+    private localPreviewUrl: string | null = null;
 
     ngOnInit(): void {
         this.homePageService.get().subscribe({
@@ -54,6 +56,10 @@ export class DashboardHomeComponent implements OnInit {
         });
     }
 
+    ngOnDestroy(): void {
+        this.revokeLocalPreviewUrl();
+    }
+
     private populate(data: HomePageDto): void {
         this.isActive = data.isActive;
         this.heroTitleEn = data.heroTitleEn;
@@ -65,6 +71,7 @@ export class DashboardHomeComponent implements OnInit {
         this.primaryButtonTextAr = data.primaryButtonTextAr;
         this.secondaryButtonTextAr = data.secondaryButtonTextAr;
         this.heroImageUrl = data.heroImageUrl;
+        this.persistedHeroImageUrl = data.heroImageUrl;
     }
 
     onTopImageSelected(event: Event): void {
@@ -72,20 +79,54 @@ export class DashboardHomeComponent implements OnInit {
         const file = input.files?.[0];
         if (!file) return;
 
+        const previousImageUrl = this.heroImageUrl;
+
         this.isUploadingImage = true;
-        this.heroImageUrl = URL.createObjectURL(file);
+        this.revokeLocalPreviewUrl();
+        this.localPreviewUrl = URL.createObjectURL(file);
+        this.heroImageUrl = this.localPreviewUrl;
+        this.cdr.detectChanges();
 
         this.mediaService.upload(file, 'cms/home').subscribe({
             next: (res) => {
-                this.heroImageUrl = res.url;
+                this.persistedHeroImageUrl = res.url;
                 this.isUploadingImage = false;
+                input.value = '';
+                this.messageService.add({ severity: 'success', summary: 'Uploaded', detail: 'Image uploaded successfully.' });
+                this.swapToRemoteImageWhenReady(res.url);
+                this.cdr.detectChanges();
             },
             error: () => {
-                this.heroImageUrl = null;
+                this.revokeLocalPreviewUrl();
+                this.heroImageUrl = previousImageUrl;
+                this.persistedHeroImageUrl = previousImageUrl;
                 this.isUploadingImage = false;
+                input.value = '';
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Image upload failed.' });
+                this.cdr.detectChanges();
             }
         });
+    }
+
+    private swapToRemoteImageWhenReady(url: string): void {
+        const img = new Image();
+        img.onload = () => {
+            this.heroImageUrl = url;
+            this.revokeLocalPreviewUrl();
+            this.cdr.detectChanges();
+        };
+        img.onerror = () => {
+            this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Image uploaded but preview is not ready yet.' });
+            this.cdr.detectChanges();
+        };
+        img.src = url;
+    }
+
+    private revokeLocalPreviewUrl(): void {
+        if (this.localPreviewUrl) {
+            URL.revokeObjectURL(this.localPreviewUrl);
+            this.localPreviewUrl = null;
+        }
     }
 
     save(): void {
@@ -101,7 +142,7 @@ export class DashboardHomeComponent implements OnInit {
             heroContentAr: this.heroContentAr,
             primaryButtonTextAr: this.primaryButtonTextAr,
             secondaryButtonTextAr: this.secondaryButtonTextAr,
-            heroImageUrl: this.heroImageUrl
+            heroImageUrl: this.persistedHeroImageUrl
         };
 
         this.isSaving = true;

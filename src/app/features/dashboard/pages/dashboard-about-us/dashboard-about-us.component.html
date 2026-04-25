@@ -89,10 +89,10 @@
                                 <textarea class="content-input" rows="4" [(ngModel)]="missionContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
                                 <div class="upload-area" (click)="missionInputEn.click()">
                                     <input #missionInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'mission')" />
-                                    @if (uploadingSectionImage === 'mission') {
-                                        <span>Uploading...</span>
-                                    } @else if (sectionImages.mission) {
+                                    @if (sectionImages.mission) {
                                         <img [src]="sectionImages.mission" alt="Mission image" class="upload-preview" />
+                                    } @else if (uploadingSectionImage === 'mission') {
+                                        <span>Uploading...</span>
                                     } @else {
                                         <i class="bi bi-camera"></i>
                                         <span>Upload images, PNG and JPEG formats are accepted.</span>
@@ -110,10 +110,10 @@
                                 <textarea class="content-input" rows="4" [(ngModel)]="visionContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
                                 <div class="upload-area" (click)="visionInputEn.click()">
                                     <input #visionInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'vision')" />
-                                    @if (uploadingSectionImage === 'vision') {
-                                        <span>Uploading...</span>
-                                    } @else if (sectionImages.vision) {
+                                    @if (sectionImages.vision) {
                                         <img [src]="sectionImages.vision" alt="Vision image" class="upload-preview" />
+                                    } @else if (uploadingSectionImage === 'vision') {
+                                        <span>Uploading...</span>
                                     } @else {
                                         <i class="bi bi-camera"></i>
                                         <span>Upload images, PNG and JPEG formats are accepted.</span>
@@ -131,10 +131,10 @@
                                 <textarea class="content-input" rows="4" [(ngModel)]="leadershipContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
                                 <div class="upload-area" (click)="leadershipInputEn.click()">
                                     <input #leadershipInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'leadership')" />
-                                    @if (uploadingSectionImage === 'leadership') {
-                                        <span>Uploading...</span>
-                                    } @else if (sectionImages.leadership) {
+                                    @if (sectionImages.leadership) {
                                         <img [src]="sectionImages.leadership" alt="Leadership image" class="upload-preview" />
+                                    } @else if (uploadingSectionImage === 'leadership') {
+                                        <span>Uploading...</span>
                                     } @else {
                                         <i class="bi bi-camera"></i>
                                         <span>Upload images, PNG and JPEG formats are accepted.</span>
@@ -212,7 +212,7 @@
                     <div class="editor-bottom">
                         <div class="row">
                             <article class="text-box">
-                                <textarea class="content-input" rows="2" [(ngModel)]="whyUsContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                <textarea class="content-input" rows="2" [(ngModel)]="subContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
                             </article>
                         </div>
 
@@ -224,6 +224,7 @@
 
                             <article class="text-box text-box--numbers">
                                 <h2>WES بالأرقام</h2>
+                                <textarea class="content-input" rows="2" [(ngModel)]="numbersSubtitleAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
                                 <div class="numbers-grid">
                                     <label class="metric-field">
                                         <span>عدد الموظفين</span>
@@ -256,10 +257,10 @@
                                 <textarea class="content-input" rows="4" [(ngModel)]="missionContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
                                 <div class="upload-area" (click)="missionInputAr.click()">
                                     <input #missionInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'mission')" />
-                                    @if (uploadingSectionImage === 'mission') {
-                                        <span>جارٍ الرفع...</span>
-                                    } @else if (sectionImages.mission) {
+                                    @if (sectionImages.mission) {
                                         <img [src]="sectionImages.mission" alt="Mission image" class="upload-preview" />
+                                    } @else if (uploadingSectionImage === 'mission') {
+                                        <span>جارٍ الرفع...</span>
                                     } @else {
                                         <i class="bi bi-camera"></i>
                                         <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
@@ -277,10 +278,10 @@
                                 <textarea class="content-input" rows="4" [(ngModel)]="visionContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
                                 <div class="upload-area" (click)="visionInputAr.click()">
                                     <input #visionInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'vision')" />
-                                    @if (uploadingSectionImage === 'vision') {
-                                        <span>جارٍ الرفع...</span>
-                                    } @else if (sectionImages.vision) {
+                                    @if (sectionImages.vision) {
                                         <img [src]="sectionImages.vision" alt="Vision image" class="upload-preview" />
+                                    } @else if (uploadingSectionImage === 'vision') {
+                                        <span>جارٍ الرفع...</span>
                                     } @else {
                                         <i class="bi bi-camera"></i>
                                         <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
@@ -298,10 +299,10 @@
                                 <textarea class="content-input" rows="4" [(ngModel)]="leadershipContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
                                 <div class="upload-area" (click)="leadershipInputAr.click()">
                                     <input #leadershipInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'leadership')" />
-                                    @if (uploadingSectionImage === 'leadership') {
-                                        <span>جارٍ الرفع...</span>
-                                    } @else if (sectionImages.leadership) {
+                                    @if (sectionImages.leadership) {
                                         <img [src]="sectionImages.leadership" alt="Leadership image" class="upload-preview" />
+                                    } @else if (uploadingSectionImage === 'leadership') {
+                                        <span>جارٍ الرفع...</span>
                                     } @else {
                                         <i class="bi bi-camera"></i>
                                         <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
@@ -357,4 +358,5 @@
         </p-tabpanels>
     </p-tabs>
 </div>
+
 

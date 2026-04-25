@@ -1,4 +1,4 @@
-import { Component, ChangeDetectorRef, inject, OnInit } from '@angular/core';
+import { Component, ChangeDetectorRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -20,7 +20,7 @@ import { DashboardPageHeaderComponent } from '../../components/dashboard-page-he
     templateUrl: './dashboard-about-us.component.html',
     styleUrl: './dashboard-about-us.component.scss'
 })
-export class DashboardAboutUsComponent implements OnInit {
+export class DashboardAboutUsComponent implements OnInit, OnDestroy {
     private readonly dialogService = inject(DialogService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly aboutPageService = inject(AboutPageService);
@@ -45,7 +45,9 @@ export class DashboardAboutUsComponent implements OnInit {
 
     // AR fields
     aboutUsContentAr = '';
+    subContentAr = '';
     whyUsContentAr = '';
+    numbersSubtitleAr = '';
     missionContentAr = '';
     visionContentAr = '';
     leadershipContentAr = '';
@@ -59,6 +61,18 @@ export class DashboardAboutUsComponent implements OnInit {
     // Images
     heroImageUrl: string | null = null;
     sectionImages: Record<AboutSection, string | null> = {
+        mission: null,
+        vision: null,
+        leadership: null
+    };
+    private persistedHeroImageUrl: string | null = null;
+    private persistedSectionImages: Record<AboutSection, string | null> = {
+        mission: null,
+        vision: null,
+        leadership: null
+    };
+    private localHeroPreviewUrl: string | null = null;
+    private localSectionPreviewUrls: Record<AboutSection, string | null> = {
         mission: null,
         vision: null,
         leadership: null
@@ -84,6 +98,11 @@ export class DashboardAboutUsComponent implements OnInit {
         });
     }
 
+    ngOnDestroy(): void {
+        this.revokeLocalHeroPreviewUrl();
+        this.revokeAllLocalSectionPreviewUrls();
+    }
+
     private populate(data: AboutPageDto): void {
         this.isActive = data.isActive;
         this.aboutUsContentEn = data.aboutUsContentEn;
@@ -94,7 +113,9 @@ export class DashboardAboutUsComponent implements OnInit {
         this.visionContentEn = data.visionContentEn;
         this.leadershipContentEn = data.leadershipContentEn;
         this.aboutUsContentAr = data.aboutUsContentAr;
+        this.subContentAr = data.subContentAr;
         this.whyUsContentAr = data.whyUsContentAr;
+        this.numbersSubtitleAr = data.numbersSubtitleAr;
         this.missionContentAr = data.missionContentAr;
         this.visionContentAr = data.visionContentAr;
         this.leadershipContentAr = data.leadershipContentAr;
@@ -106,6 +127,10 @@ export class DashboardAboutUsComponent implements OnInit {
         this.sectionImages.mission = data.missionImageUrl;
         this.sectionImages.vision = data.visionImageUrl;
         this.sectionImages.leadership = data.leadershipImageUrl;
+        this.persistedHeroImageUrl = data.heroImageUrl;
+        this.persistedSectionImages.mission = data.missionImageUrl;
+        this.persistedSectionImages.vision = data.visionImageUrl;
+        this.persistedSectionImages.leadership = data.leadershipImageUrl;
         this.teamMembers = [...data.teamMembers];
     }
 
@@ -114,18 +139,40 @@ export class DashboardAboutUsComponent implements OnInit {
         const file = input.files?.[0];
         if (!file) return;
 
+        const previousImageUrl = this.heroImageUrl;
+        const previousPersistedImageUrl = this.persistedHeroImageUrl;
+
         this.isUploadingHero = true;
-        this.heroImageUrl = URL.createObjectURL(file);
+        this.revokeLocalHeroPreviewUrl();
+        this.localHeroPreviewUrl = URL.createObjectURL(file);
+        this.heroImageUrl = this.localHeroPreviewUrl;
+        this.cdr.detectChanges();
 
         this.mediaService.upload(file, 'cms/about').subscribe({
             next: (res) => {
-                this.heroImageUrl = res.url;
+                this.persistedHeroImageUrl = res.url;
                 this.isUploadingHero = false;
+                input.value = '';
+                this.swapHeroToRemoteImageWhenReady(res.url);
+                this.cdr.detectChanges();
+                this.messageService.add({
+                    severity: 'success',
+                    summary: this.activeTab === 'ar' ? 'تم' : 'Uploaded',
+                    detail: this.activeTab === 'ar' ? 'تم رفع صورة الغلاف بنجاح.' : 'Hero image uploaded successfully.'
+                });
             },
             error: () => {
-                this.heroImageUrl = null;
+                this.revokeLocalHeroPreviewUrl();
+                this.heroImageUrl = previousImageUrl;
+                this.persistedHeroImageUrl = previousPersistedImageUrl;
                 this.isUploadingHero = false;
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Hero image upload failed.' });
+                input.value = '';
+                this.cdr.detectChanges();
+                this.messageService.add({
+                    severity: 'error',
+                    summary: this.activeTab === 'ar' ? 'خطأ' : 'Error',
+                    detail: this.activeTab === 'ar' ? 'فشل رفع صورة الغلاف.' : 'Hero image upload failed.'
+                });
             }
         });
     }
@@ -135,20 +182,104 @@ export class DashboardAboutUsComponent implements OnInit {
         const file = input.files?.[0];
         if (!file) return;
 
+        const previousImageUrl = this.sectionImages[section];
+        const previousPersistedImageUrl = this.persistedSectionImages[section];
+
         this.uploadingSectionImage = section;
-        this.sectionImages[section] = URL.createObjectURL(file);
+        this.revokeLocalSectionPreviewUrl(section);
+        this.localSectionPreviewUrls[section] = URL.createObjectURL(file);
+        this.sectionImages[section] = this.localSectionPreviewUrls[section];
+        this.cdr.detectChanges();
 
         this.mediaService.upload(file, 'cms/about').subscribe({
             next: (res) => {
-                this.sectionImages[section] = res.url;
+                this.persistedSectionImages[section] = res.url;
                 this.uploadingSectionImage = null;
+                input.value = '';
+                this.swapSectionToRemoteImageWhenReady(section, res.url);
+                this.cdr.detectChanges();
+                this.messageService.add({
+                    severity: 'success',
+                    summary: this.activeTab === 'ar' ? 'تم' : 'Uploaded',
+                    detail: this.activeTab === 'ar'
+                        ? `تم رفع صورة ${this.getSectionLabel(section, 'ar')} بنجاح.`
+                        : `${this.getSectionLabel(section, 'en')} image uploaded successfully.`
+                });
             },
             error: () => {
-                this.sectionImages[section] = null;
+                this.revokeLocalSectionPreviewUrl(section);
+                this.sectionImages[section] = previousImageUrl;
+                this.persistedSectionImages[section] = previousPersistedImageUrl;
                 this.uploadingSectionImage = null;
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: `${section} image upload failed.` });
+                input.value = '';
+                this.cdr.detectChanges();
+                this.messageService.add({
+                    severity: 'error',
+                    summary: this.activeTab === 'ar' ? 'خطأ' : 'Error',
+                    detail: this.activeTab === 'ar'
+                        ? `فشل رفع صورة ${this.getSectionLabel(section, 'ar')}.`
+                        : `${this.getSectionLabel(section, 'en')} image upload failed.`
+                });
             }
         });
+    }
+
+    private getSectionLabel(section: AboutSection, lang: SectionLang): string {
+        const labels: Record<SectionLang, Record<AboutSection, string>> = {
+            en: {
+                mission: 'Mission',
+                vision: 'Vision',
+                leadership: 'Leadership'
+            },
+            ar: {
+                mission: 'المهمة',
+                vision: 'الرؤية',
+                leadership: 'القيادة'
+            }
+        };
+
+        return labels[lang][section];
+    }
+
+    private swapHeroToRemoteImageWhenReady(url: string): void {
+        const img = new Image();
+        img.onload = () => {
+            this.heroImageUrl = url;
+            this.revokeLocalHeroPreviewUrl();
+            this.cdr.detectChanges();
+        };
+        img.src = url;
+    }
+
+    private swapSectionToRemoteImageWhenReady(section: AboutSection, url: string): void {
+        const img = new Image();
+        img.onload = () => {
+            this.sectionImages[section] = url;
+            this.revokeLocalSectionPreviewUrl(section);
+            this.cdr.detectChanges();
+        };
+        img.src = url;
+    }
+
+    private revokeLocalHeroPreviewUrl(): void {
+        if (this.localHeroPreviewUrl) {
+            URL.revokeObjectURL(this.localHeroPreviewUrl);
+            this.localHeroPreviewUrl = null;
+        }
+    }
+
+    private revokeLocalSectionPreviewUrl(section: AboutSection): void {
+        const previewUrl = this.localSectionPreviewUrls[section];
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+            this.localSectionPreviewUrls[section] = null;
+        }
+    }
+
+    private revokeAllLocalSectionPreviewUrls(): void {
+        this.revokeLocalSectionPreviewUrl('mission');
+        this.revokeLocalSectionPreviewUrl('vision');
+        this.revokeLocalSectionPreviewUrl('leadership');
     }
 
     protected openAddMemberDialog(): void {
@@ -271,6 +402,7 @@ export class DashboardAboutUsComponent implements OnInit {
                     else this.leadershipContentAr = result.content;
                 }
                 this.sectionImages[section] = result.imageUrl;
+                this.persistedSectionImages[section] = result.imageUrl;
             }
         });
     }
@@ -302,7 +434,9 @@ export class DashboardAboutUsComponent implements OnInit {
             visionContentEn: this.visionContentEn,
             leadershipContentEn: this.leadershipContentEn,
             aboutUsContentAr: this.aboutUsContentAr,
+            subContentAr: this.subContentAr,
             whyUsContentAr: this.whyUsContentAr,
+            numbersSubtitleAr: this.numbersSubtitleAr,
             missionContentAr: this.missionContentAr,
             visionContentAr: this.visionContentAr,
             leadershipContentAr: this.leadershipContentAr,
@@ -310,10 +444,10 @@ export class DashboardAboutUsComponent implements OnInit {
             numberOfProducts: this.numberOfProducts,
             numberOfClients: this.numberOfClients,
             numberOfPartners: this.numberOfPartners,
-            heroImageUrl: this.heroImageUrl,
-            missionImageUrl: this.sectionImages.mission,
-            visionImageUrl: this.sectionImages.vision,
-            leadershipImageUrl: this.sectionImages.leadership,
+            heroImageUrl: this.persistedHeroImageUrl,
+            missionImageUrl: this.persistedSectionImages.mission,
+            visionImageUrl: this.persistedSectionImages.vision,
+            leadershipImageUrl: this.persistedSectionImages.leadership,
             teamMembers: this.teamMembers.map((m, i) => ({ ...m, displayOrder: i }))
         };
 

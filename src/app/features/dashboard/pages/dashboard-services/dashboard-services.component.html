@@ -1,1 +1,208 @@
-<div class="dashboard-page"></div>
+<div class="dashboard-services-page">
+    <div class="page-header">
+        <div class="title-group">
+            <h1>Services</h1>
+            <div class="active-switch">
+                <label class="form-check form-switch">
+                    <input
+                        #activeSwitch
+                        class="form-check-input"
+                        type="checkbox"
+                        [(ngModel)]="isActive"
+                        (change)="onActiveToggle(activeSwitch)"
+                    />
+                </label>
+                <span>Active</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button type="button" class="btn preview-btn">
+                <i class="bi bi-eye"></i>
+                <span>Preview</span>
+            </button>
+            <button type="button" class="btn save-btn">Save</button>
+        </div>
+    </div>
+
+    <p-tabs [(value)]="activeTab" class="services-tabs">
+        <p-tablist>
+            <p-tab value="en">English version</p-tab>
+            <p-tab value="ar">Arabic version</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+            <p-tabpanel value="en">
+                <section class="editor-card">
+                    <div
+                        class="editor-top"
+                        [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
+                        [class.editor-top--has-image]="topImageUrl"
+                    >
+                        <div class="panel-tools">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputEn.click()">
+                                <i class="bi bi-upload"></i>
+                            </button>
+                            <input #topImageInputEn type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <button type="button" class="icon-btn" aria-label="Add link">
+                                <i class="bi bi-link-45deg"></i>
+                            </button>
+                        </div>
+
+                        <article class="text-box text-box--intro">
+                            <h2>{{ introByLang.en.title }}</h2>
+                            <textarea
+                                class="content-input"
+                                rows="2"
+                                [(ngModel)]="introByLang.en.description"
+                                placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"
+                            ></textarea>
+                        </article>
+                    </div>
+
+                    <div class="editor-bottom">
+                        @for (section of serviceSections; track section.id; let i = $index) {
+                            <article class="service-row" [class.service-row--reverse]="i % 2 === 1">
+                                <div class="service-row__menu" (click)="closeSectionMenu()">
+                                    <button type="button" class="menu-btn" aria-label="Section actions" (click)="toggleSectionMenu(section.id, $event)">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    @if (openMenuSectionId === section.id) {
+                                        <div class="section-actions-menu" (click)="$event.stopPropagation()">
+                                            <button type="button" (click)="openEditSectionDialog(section.id)">
+                                                <i class="bi bi-pen"></i>
+                                                <span>Edit</span>
+                                            </button>
+                                            <button type="button" class="section-actions-menu__delete" (click)="removeSection(section.id)">
+                                                <i class="bi bi-trash3"></i>
+                                                <span>Delete</span>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="service-row__content">
+                                    <div class="service-row__text">
+                                        <input type="text" class="service-title" [(ngModel)]="section.titleByLang.en" placeholder="Service title" />
+                                        <textarea
+                                            class="service-description"
+                                            rows="3"
+                                            [(ngModel)]="section.descriptionByLang.en"
+                                            placeholder="Service description"
+                                        ></textarea>
+                                    </div>
+
+                                    <div class="service-row__media" (click)="sectionImageInputEn.click()">
+                                        <input
+                                            #sectionImageInputEn
+                                            type="file"
+                                            accept="image/png,image/jpeg"
+                                            hidden
+                                            (change)="onSectionImageSelected($event, section.id)"
+                                        />
+                                        @if (section.imageUrl) {
+                                            <img [src]="section.imageUrl" [alt]="section.titleByLang.en" />
+                                        } @else {
+                                            <span>Upload image</span>
+                                        }
+                                    </div>
+                                </div>
+                            </article>
+                        }
+
+                        <button type="button" class="add-section-btn" (click)="openAddSectionDialog()">
+                            <i class="bi bi-plus-lg"></i>
+                            <span>Add section</span>
+                        </button>
+                    </div>
+                </section>
+            </p-tabpanel>
+
+            <p-tabpanel value="ar">
+                <section class="editor-card" dir="rtl">
+                    <div
+                        class="editor-top"
+                        [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
+                        [class.editor-top--has-image]="topImageUrl"
+                    >
+                        <div class="panel-tools">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputAr.click()">
+                                <i class="bi bi-upload"></i>
+                            </button>
+                            <input #topImageInputAr type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <button type="button" class="icon-btn" aria-label="Add link">
+                                <i class="bi bi-link-45deg"></i>
+                            </button>
+                        </div>
+
+                        <article class="text-box text-box--intro">
+                            <h2>{{ introByLang.ar.title }}</h2>
+                            <textarea
+                                class="content-input"
+                                rows="2"
+                                [(ngModel)]="introByLang.ar.description"
+                                placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"
+                            ></textarea>
+                        </article>
+                    </div>
+
+                    <div class="editor-bottom">
+                        @for (section of serviceSections; track section.id; let i = $index) {
+                            <article class="service-row" [class.service-row--reverse]="i % 2 === 1">
+                                <div class="service-row__menu" (click)="closeSectionMenu()">
+                                    <button type="button" class="menu-btn" aria-label="Section actions" (click)="toggleSectionMenu(section.id, $event)">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    @if (openMenuSectionId === section.id) {
+                                        <div class="section-actions-menu" (click)="$event.stopPropagation()">
+                                            <button type="button" (click)="openEditSectionDialog(section.id)">
+                                                <i class="bi bi-pen"></i>
+                                                <span>تعديل</span>
+                                            </button>
+                                            <button type="button" class="section-actions-menu__delete" (click)="removeSection(section.id)">
+                                                <i class="bi bi-trash3"></i>
+                                                <span>حذف</span>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="service-row__content">
+                                    <div class="service-row__text">
+                                        <input type="text" class="service-title" [(ngModel)]="section.titleByLang.ar" placeholder="عنوان الخدمة" />
+                                        <textarea
+                                            class="service-description"
+                                            rows="3"
+                                            [(ngModel)]="section.descriptionByLang.ar"
+                                            placeholder="وصف الخدمة"
+                                        ></textarea>
+                                    </div>
+
+                                    <div class="service-row__media" (click)="sectionImageInputAr.click()">
+                                        <input
+                                            #sectionImageInputAr
+                                            type="file"
+                                            accept="image/png,image/jpeg"
+                                            hidden
+                                            (change)="onSectionImageSelected($event, section.id)"
+                                        />
+                                        @if (section.imageUrl) {
+                                            <img [src]="section.imageUrl" [alt]="section.titleByLang.ar" />
+                                        } @else {
+                                            <span>ارفع صورة</span>
+                                        }
+                                    </div>
+                                </div>
+                            </article>
+                        }
+
+                        <button type="button" class="add-section-btn" (click)="openAddSectionDialog()">
+                            <i class="bi bi-plus-lg"></i>
+                            <span>إضافة قسم</span>
+                        </button>
+                    </div>
+                </section>
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+</div>

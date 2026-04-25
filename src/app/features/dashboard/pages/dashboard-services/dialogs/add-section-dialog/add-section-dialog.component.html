@@ -1,0 +1,73 @@
+<div class="add-section-dialog" [dir]="dir">
+    <div class="dialog-body">
+        <div class="row g-3">
+            <div class="col-6">
+                <label class="field">
+                    <span class="field-label">{{ labels.groupNameEn }}</span>
+                    <input
+                        type="text"
+                        class="field-input"
+                        [(ngModel)]="groupNameEn"
+                        [placeholder]="labels.enterGroupNameEn"
+                    />
+                </label>
+            </div>
+
+            <div class="col-6">
+                <label class="field">
+                    <span class="field-label">{{ labels.groupNameAr }}</span>
+                    <input
+                        type="text"
+                        class="field-input"
+                        [(ngModel)]="groupNameAr"
+                        [placeholder]="labels.enterGroupNameAr"
+                    />
+                </label>
+            </div>
+
+            <div class="col-6">
+                <label class="field">
+                    <span class="field-label">{{ labels.briefEn }}</span>
+                    <textarea
+                        class="field-input field-input--textarea"
+                        rows="4"
+                        [(ngModel)]="briefEn"
+                        [placeholder]="labels.enterBriefEn"
+                    ></textarea>
+                </label>
+            </div>
+
+            <div class="col-6">
+                <label class="field">
+                    <span class="field-label">{{ labels.briefAr }}</span>
+                    <textarea
+                        class="field-input field-input--textarea"
+                        rows="4"
+                        [(ngModel)]="briefAr"
+                        [placeholder]="labels.enterBriefAr"
+                    ></textarea>
+                </label>
+            </div>
+
+            <div class="col-12">
+                <div class="field">
+                    <span class="field-label">{{ labels.uploadImage }}</span>
+                    <div class="upload-area" (click)="fileInput.click()">
+                        <input #fileInput type="file" accept="image/png,image/jpeg" hidden (change)="onFileChange($event)" />
+                        @if (imagePreview) {
+                            <img [src]="imagePreview" alt="preview" class="upload-preview" />
+                        } @else {
+                            <i class="bi bi-camera"></i>
+                            <span>{{ labels.uploadHint }}</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dialog-footer">
+        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ labels.cancel }}</button>
+        <button type="button" class="btn save-btn" (click)="save()">{{ labels.save }}</button>
+    </div>
+</div>

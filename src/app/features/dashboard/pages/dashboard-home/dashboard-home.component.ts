@@ -22,7 +22,7 @@ export class DashboardHomeComponent implements OnInit {
 
     activeTab = 'en';
     isLoading = true;
-    isActive = false;
+    isActive = true;
     isSaving = false;
     isUploadingImage = false;
 

@@ -1,16 +1,15 @@
 import { Component, ChangeDetectorRef, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
-import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { HomePageService, HomePageDto } from '../../../../core/services/home-page.service';
 import { MediaService } from '../../../../core/services/media.service';
+import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
 
 @Component({
     selector: 'app-dashboard-home',
     standalone: true,
-    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, Toast],
-    providers: [MessageService],
+    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DashboardPageHeaderComponent],
     templateUrl: './dashboard-home.component.html',
     styleUrl: './dashboard-home.component.scss'
 })
@@ -66,10 +65,6 @@ export class DashboardHomeComponent implements OnInit {
         this.primaryButtonTextAr = data.primaryButtonTextAr;
         this.secondaryButtonTextAr = data.secondaryButtonTextAr;
         this.heroImageUrl = data.heroImageUrl;
-    }
-
-    onActiveToggle(input: HTMLInputElement): void {
-        input.blur();
     }
 
     onTopImageSelected(event: Event): void {

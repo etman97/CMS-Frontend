@@ -5,6 +5,7 @@ import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dy
 import { PRIME_NG_CONFIGS } from '../../../../shared/prime-ng-configs';
 import { AddSectionDialogComponent } from './dialogs/add-section-dialog/add-section-dialog.component';
 import { AddSectionDialogResult } from './dialogs/add-section-dialog/add-section-dialog.model';
+import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
 
 type ServicesLang = 'en' | 'ar';
 
@@ -22,7 +23,7 @@ interface ServicesIntroContent {
 
 @Component({
     selector: 'app-dashboard-services',
-    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DynamicDialogModule],
+    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DynamicDialogModule, DashboardPageHeaderComponent],
     providers: [DialogService],
     standalone: true,
     templateUrl: './dashboard-services.component.html',
@@ -51,10 +52,6 @@ export class DashboardServicesComponent {
     openMenuSectionId: number | null = null;
 
     private nextSectionId = 1;
-
-    onActiveToggle(input: HTMLInputElement): void {
-        input.blur();
-    }
 
     onTopImageSelected(event: Event): void {
         const input = event.target as HTMLInputElement;
@@ -107,10 +104,10 @@ export class DashboardServicesComponent {
         dialogRef?.onClose.subscribe((result?: AddSectionDialogResult) => {
             if (!result) return;
 
-            section.titleByLang.en = result.groupNameEn.trim() || section.titleByLang.en;
-            section.titleByLang.ar = result.groupNameAr.trim() || section.titleByLang.ar;
-            section.descriptionByLang.en = result.briefEn.trim() || section.descriptionByLang.en;
-            section.descriptionByLang.ar = result.briefAr.trim() || section.descriptionByLang.ar;
+            section.titleByLang.en = result.groupNameEn.trim();
+            section.titleByLang.ar = result.groupNameAr.trim();
+            section.descriptionByLang.en = result.briefEn.trim();
+            section.descriptionByLang.ar = result.briefAr.trim();
             if (result.imageFile) {
                 section.imageUrl = URL.createObjectURL(result.imageFile);
             }
@@ -152,14 +149,16 @@ export class DashboardServicesComponent {
         return {
             id: this.nextSectionId++,
             titleByLang: {
-                en: result.groupNameEn.trim() || 'New service',
-                ar: result.groupNameAr.trim() || 'خدمة جديدة'
+                en: result.groupNameEn.trim(),
+                ar: result.groupNameAr.trim()
             },
             descriptionByLang: {
-                en: result.briefEn.trim() || 'Enter content for this service section',
-                ar: result.briefAr.trim() || 'أدخل المحتوى لهذا القسم'
+                en: result.briefEn.trim(),
+                ar: result.briefAr.trim()
             },
             imageUrl: result.imageFile ? URL.createObjectURL(result.imageFile) : null
         };
     }
 }
+
+

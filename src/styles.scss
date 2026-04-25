@@ -119,6 +119,106 @@ input:-webkit-autofill:active {
     border-radius: 4px !important;
 }
 
+// Global toast design
+.p-toast {
+    width: min(24rem, calc(100vw - 1.5rem)) !important;
+}
+
+.p-toast .p-toast-message {
+    backdrop-filter: blur(10px);
+    border: 0 !important;
+    border-left: 4px solid transparent !important;
+    border-radius: 12px !important;
+    box-shadow: 0 14px 36px rgba(13, 19, 44, 0.18) !important;
+    color: #1f2736 !important;
+    margin: 0 0 0.75rem !important;
+    overflow: hidden;
+}
+
+.p-toast .p-toast-message-content {
+    align-items: flex-start !important;
+    gap: 0.6rem;
+    padding: 0.8rem 0.85rem !important;
+}
+
+.p-toast .p-toast-summary {
+    color: #1f2736 !important;
+    font-size: 0.92rem !important;
+    font-weight: 700 !important;
+    line-height: 1.2;
+}
+
+.p-toast .p-toast-detail {
+    color: #4a5468 !important;
+    font-size: 0.86rem !important;
+    line-height: 1.35;
+    margin-top: 0.25rem !important;
+}
+
+.p-toast .p-toast-message-icon {
+    font-size: 1rem !important;
+    margin-top: 0.06rem;
+}
+
+.p-toast .p-toast-icon-close-button {
+    border-radius: 6px !important;
+    height: 1.6rem !important;
+    width: 1.6rem !important;
+}
+
+.p-toast .p-toast-icon-close-button:hover {
+    background: rgba(45, 46, 131, 0.08) !important;
+}
+
+.p-toast .p-toast-message-success {
+    background: rgba(237, 253, 244, 0.96) !important;
+    border-left-color: #2e9d56 !important;
+}
+
+.p-toast .p-toast-message-success .p-toast-message-icon {
+    color: #2e9d56 !important;
+}
+
+.p-toast .p-toast-message-error {
+    background: rgba(255, 241, 241, 0.97) !important;
+    border-left-color: #cf3f4f !important;
+}
+
+.p-toast .p-toast-message-error .p-toast-message-icon {
+    color: #cf3f4f !important;
+}
+
+.p-toast .p-toast-message-warn {
+    background: rgba(255, 248, 235, 0.97) !important;
+    border-left-color: #d48a0f !important;
+}
+
+.p-toast .p-toast-message-warn .p-toast-message-icon {
+    color: #d48a0f !important;
+}
+
+.p-toast .p-toast-message-info {
+    background: rgba(238, 246, 255, 0.97) !important;
+    border-left-color: #2d2e83 !important;
+}
+
+.p-toast .p-toast-message-info .p-toast-message-icon {
+    color: #2d2e83 !important;
+}
+
+@media (max-width: 768px) {
+    .p-toast {
+        right: 0.65rem !important;
+        left: 0.65rem !important;
+        top: 0.7rem !important;
+        width: auto !important;
+    }
+
+    .p-toast .p-toast-message-content {
+        padding: 0.72rem 0.75rem !important;
+    }
+}
+
 // ─── Scrollbar ─────────────────────────────────
 ::-webkit-scrollbar {
     width: 10px;

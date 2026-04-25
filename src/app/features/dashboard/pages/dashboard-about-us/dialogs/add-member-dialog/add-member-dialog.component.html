@@ -4,20 +4,25 @@
             <!-- English fields -->
             <div class="col-6">
                 <label class="field">
-                    <span class="field-label">Name (EN)</span>
-                    <input type="text" class="field-input" [(ngModel)]="nameEn" placeholder="Enter name" />
+                    <span class="field-label">{{ dir === 'rtl' ? 'الاسم (EN)' : 'Name (EN)' }}</span>
+                    <input type="text" class="field-input" [(ngModel)]="nameEn" [placeholder]="dir === 'rtl' ? 'أدخل الاسم' : 'Enter name'" />
                 </label>
             </div>
             <div class="col-6">
                 <label class="field">
-                    <span class="field-label">Job Title (EN)</span>
-                    <input type="text" class="field-input" [(ngModel)]="jobTitleEn" placeholder="Enter job title" />
+                    <span class="field-label">{{ dir === 'rtl' ? 'المسمى الوظيفي (EN)' : 'Job Title (EN)' }}</span>
+                    <input type="text" class="field-input" [(ngModel)]="jobTitleEn" [placeholder]="dir === 'rtl' ? 'أدخل المسمى الوظيفي' : 'Enter job title'" />
                 </label>
             </div>
             <div class="col-12">
                 <label class="field">
-                    <span class="field-label">Brief (EN)</span>
-                    <textarea class="field-input field-input--textarea" rows="3" [(ngModel)]="briefEn" placeholder="Enter a brief description"></textarea>
+                    <span class="field-label">{{ dir === 'rtl' ? 'نبذة (EN)' : 'Brief (EN)' }}</span>
+                    <textarea
+                        class="field-input field-input--textarea"
+                        rows="3"
+                        [(ngModel)]="briefEn"
+                        [placeholder]="dir === 'rtl' ? 'أدخل نبذة مختصرة' : 'Enter a brief description'"
+                    ></textarea>
                 </label>
             </div>
 
@@ -44,16 +49,16 @@
             <!-- Shared image -->
             <div class="col-12">
                 <div class="field">
-                    <span class="field-label">Upload Image</span>
+                    <span class="field-label">{{ dir === 'rtl' ? 'رفع صورة' : 'Upload Image' }}</span>
                     <div class="upload-area" (click)="fileInput.click()">
                         <input #fileInput type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onFileChange($event)" />
                         @if (isUploading) {
-                            <span>Uploading...</span>
+                            <span>{{ dir === 'rtl' ? 'جاري الرفع...' : 'Uploading...' }}</span>
                         } @else if (imagePreview) {
                             <img [src]="imagePreview" alt="preview" class="upload-preview" />
                         } @else {
                             <i class="bi bi-camera"></i>
-                            <span>Upload image, PNG and JPEG formats are accepted.</span>
+                            <span>{{ dir === 'rtl' ? 'ارفع صورة، يتم قبول صيغ PNG و JPEG.' : 'Upload image, PNG and JPEG formats are accepted.' }}</span>
                         }
                     </div>
                 </div>
@@ -62,7 +67,7 @@
     </div>
 
     <div class="dialog-footer">
-        <button type="button" class="btn cancel-btn" (click)="cancel()">Cancel</button>
-        <button type="button" class="btn save-btn" (click)="save()" [disabled]="isUploading">Save</button>
+        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ dir === 'rtl' ? 'إلغاء' : 'Cancel' }}</button>
+        <button type="button" class="btn save-btn" (click)="save()" [disabled]="isUploading">{{ dir === 'rtl' ? 'حفظ' : 'Save' }}</button>
     </div>
 </div>

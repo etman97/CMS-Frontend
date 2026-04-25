@@ -33,6 +33,18 @@ export class AddMemberDialogComponent implements OnInit {
     ngOnInit(): void {
         const lang = this.config.data?.lang ?? 'en';
         this.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+        const member = this.config.data?.member;
+        if (member) {
+            this.nameEn = member.nameEn;
+            this.jobTitleEn = member.jobTitleEn;
+            this.briefEn = member.briefEn;
+            this.nameAr = member.nameAr;
+            this.jobTitleAr = member.jobTitleAr;
+            this.briefAr = member.briefAr;
+            this.imageUrl = member.imageUrl;
+            this.imagePreview = member.imageUrl;
+        }
     }
 
     onFileChange(event: Event): void {

@@ -1,29 +1,8 @@
 <div class="dashboard-solutions-page">
-    <div class="page-header">
-        <div class="title-group">
-            <h1>Solutions</h1>
-            <div class="active-switch">
-                <label class="form-check form-switch">
-                    <input
-                        #activeSwitch
-                        class="form-check-input"
-                        type="checkbox"
-                        [(ngModel)]="isActive"
-                        (change)="onActiveToggle(activeSwitch)"
-                    />
-                </label>
-                <span>Active</span>
-            </div>
-        </div>
-
-        <div class="header-actions">
-            <button type="button" class="btn preview-btn">
-                <i class="bi bi-eye"></i>
-                <span>Preview</span>
-            </button>
-            <button type="button" class="btn save-btn">Save</button>
-        </div>
-    </div>
+    <app-dashboard-page-header
+        title="Solutions"
+        [(active)]="isActive"
+    />
 
     <p-tabs [(value)]="activeTab" class="solutions-tabs">
         <p-tablist>
@@ -50,9 +29,9 @@
                             </button>
                         </div>
 
-                        <article class="text-box text-box--intro">
+                        <article class="text-box">
                             <h2>{{ introByLang.en.title }}</h2>
-                            <textarea class="content-input" rows="2" [(ngModel)]="introContentByLang.en" [placeholder]="introByLang.en.placeholder"></textarea>
+                            <textarea class="content-input" rows="3" [(ngModel)]="introContentByLang.en" [placeholder]="introByLang.en.placeholder"></textarea>
                         </article>
                     </div>
 
@@ -115,9 +94,9 @@
                             </button>
                         </div>
 
-                        <article class="text-box text-box--intro">
+                        <article class="text-box">
                             <h2>{{ introByLang.ar.title }}</h2>
-                            <textarea class="content-input" rows="2" [(ngModel)]="introContentByLang.ar" [placeholder]="introByLang.ar.placeholder"></textarea>
+                            <textarea class="content-input" rows="3" [(ngModel)]="introContentByLang.ar" [placeholder]="introByLang.ar.placeholder"></textarea>
                         </article>
                     </div>
 

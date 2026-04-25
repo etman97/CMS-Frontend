@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
+import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
 
 type ContactLang = 'en' | 'ar';
 
@@ -20,7 +21,7 @@ interface SharedContactFields {
 
 @Component({
     selector: 'app-dashboard-contact-us',
-    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel],
+    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DashboardPageHeaderComponent],
     standalone: true,
     templateUrl: './dashboard-contact-us.component.html',
     styleUrl: './dashboard-contact-us.component.scss'
@@ -52,10 +53,6 @@ export class DashboardContactUsComponent {
         address: '',
         locationUrl: ''
     };
-
-    onActiveToggle(input: HTMLInputElement): void {
-        input.blur();
-    }
 
     onTopImageSelected(event: Event): void {
         const input = event.target as HTMLInputElement;

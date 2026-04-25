@@ -1,5 +1,6 @@
 export interface AddMemberDialogData {
     lang: 'en' | 'ar';
+    member?: AddMemberDialogResult;
 }
 
 export interface AddMemberDialogResult {

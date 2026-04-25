@@ -1,29 +1,8 @@
 <div class="dashboard-contact-us-page">
-    <div class="page-header">
-        <div class="title-group">
-            <h1>Contact Us</h1>
-            <div class="active-switch">
-                <label class="form-check form-switch">
-                    <input
-                        #activeSwitch
-                        class="form-check-input"
-                        type="checkbox"
-                        [(ngModel)]="isActive"
-                        (change)="onActiveToggle(activeSwitch)"
-                    />
-                </label>
-                <span>Active</span>
-            </div>
-        </div>
-
-        <div class="header-actions">
-            <button type="button" class="btn preview-btn">
-                <i class="bi bi-eye"></i>
-                <span>Preview</span>
-            </button>
-            <button type="button" class="btn save-btn">Save</button>
-        </div>
-    </div>
+    <app-dashboard-page-header
+        title="Contact Us"
+        [(active)]="isActive"
+    />
 
     <p-tabs [(value)]="activeTab" class="contact-tabs">
         <p-tablist>
@@ -49,11 +28,11 @@
                             </button>
                         </div>
 
-                        <article class="text-box text-box--intro">
+                        <article class="text-box">
                             <h2>{{ contentByLang.en.introTitle }}</h2>
                             <textarea
                                 class="content-input"
-                                rows="2"
+                                rows="3"
                                 [(ngModel)]="contentByLang.en.introDescription"
                                 placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"
                             ></textarea>
@@ -117,11 +96,11 @@
                             </button>
                         </div>
 
-                        <article class="text-box text-box--intro">
+                        <article class="text-box">
                             <h2>{{ contentByLang.ar.introTitle }}</h2>
                             <textarea
                                 class="content-input"
-                                rows="2"
+                                rows="3"
                                 [(ngModel)]="contentByLang.ar.introDescription"
                                 placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"
                             ></textarea>

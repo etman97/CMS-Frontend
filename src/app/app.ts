@@ -1,13 +1,23 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { Toast } from 'primeng/toast';
 import { DirectionService } from './core/i18n/direction.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
-  template: '<router-outlet />'
+  imports: [RouterOutlet, Toast],
+  template: `
+    <p-toast
+      position="top-right"
+      [baseZIndex]="12000"
+      [preventOpenDuplicates]="true"
+      [showTransformOptions]="'translateY(8px)'"
+      [hideTransformOptions]="'translateY(-8px)'"
+    />
+    <router-outlet />
+  `
 })
 export class AppComponent {
   private readonly translate = inject(TranslateService);

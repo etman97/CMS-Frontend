@@ -1,0 +1,32 @@
+<div class="page-header">
+    <div class="title-group">
+        <h1>{{ title }}</h1>
+
+        <div class="active-switch">
+            <label class="form-check form-switch">
+                <input
+                    class="form-check-input"
+                    type="checkbox"
+                    [checked]="active"
+                    (change)="onActiveChange($event)"
+                />
+            </label>
+            <span>{{ activeLabel }}</span>
+        </div>
+    </div>
+
+    <div class="header-actions">
+        @if (showPreview) {
+            <button type="button" class="btn preview-btn" (click)="onPreview()">
+                <i class="bi bi-eye"></i>
+                <span>Preview</span>
+            </button>
+        }
+
+        @if (showSave) {
+            <button type="button" class="btn save-btn" [disabled]="saveDisabled" (click)="onSave()">
+                {{ isSaving ? savingLabel : saveLabel }}
+            </button>
+        }
+    </div>
+</div>

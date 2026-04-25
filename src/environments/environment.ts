@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:5149/api'
+    apiUrl: 'https://cms-backend-production-efd8.up.railway.app'
 };

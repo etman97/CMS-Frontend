@@ -2,7 +2,6 @@ import { Component, ChangeDetectorRef, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { Toast } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { PRIME_NG_CONFIGS } from '../../../../shared/prime-ng-configs';
 import { EditSectionDialogComponent } from './dialogs/edit-section-dialog/edit-section-dialog.component';
@@ -11,12 +10,13 @@ import { AddMemberDialogComponent } from './dialogs/add-member-dialog/add-member
 import { AddMemberDialogData, AddMemberDialogResult } from './dialogs/add-member-dialog/add-member-dialog.model';
 import { AboutPageService, AboutPageDto, TeamMemberDto } from '../../../../core/services/about-page.service';
 import { MediaService } from '../../../../core/services/media.service';
+import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
 
 @Component({
     selector: 'app-dashboard-about-us',
     standalone: true,
-    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DynamicDialogModule, Toast],
-    providers: [DialogService, MessageService],
+    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DynamicDialogModule, DashboardPageHeaderComponent],
+    providers: [DialogService],
     templateUrl: './dashboard-about-us.component.html',
     styleUrl: './dashboard-about-us.component.scss'
 })
@@ -65,6 +65,7 @@ export class DashboardAboutUsComponent implements OnInit {
     };
 
     teamMembers: TeamMemberDto[] = [];
+    openTeamMenuIndex: number | null = null;
 
     ngOnInit(): void {
         this.aboutPageService.get().subscribe({
@@ -106,10 +107,6 @@ export class DashboardAboutUsComponent implements OnInit {
         this.sectionImages.vision = data.visionImageUrl;
         this.sectionImages.leadership = data.leadershipImageUrl;
         this.teamMembers = [...data.teamMembers];
-    }
-
-    onActiveToggle(input: HTMLInputElement): void {
-        input.blur();
     }
 
     onTopImageSelected(event: Event): void {
@@ -185,6 +182,49 @@ export class DashboardAboutUsComponent implements OnInit {
         });
     }
 
+    protected openEditMemberDialog(index: number): void {
+        const lang = this.activeTab as SectionLang;
+        const isRtl = lang === 'ar';
+        const member = this.teamMembers[index];
+        if (!member) return;
+
+        const header = lang === 'ar' ? 'طھط¹ط¯ظٹظ„ ط¹ط¶ظˆ ظپط±ظٹظ‚' : 'Edit Team Member';
+        const dialogRef: DynamicDialogRef | null = this.dialogService.open(AddMemberDialogComponent, {
+            header,
+            data: {
+                lang,
+                member: {
+                    nameEn: member.nameEn,
+                    jobTitleEn: member.jobTitleEn,
+                    briefEn: member.briefEn,
+                    nameAr: member.nameAr,
+                    jobTitleAr: member.jobTitleAr,
+                    briefAr: member.briefAr,
+                    imageUrl: member.imageUrl
+                }
+            } as AddMemberDialogData,
+            style: { direction: isRtl ? 'rtl' : 'ltr' },
+            ...PRIME_NG_CONFIGS.dynamicDialog
+        });
+
+        dialogRef?.onClose.subscribe((result?: AddMemberDialogResult) => {
+            if (!result) return;
+
+            this.teamMembers[index] = {
+                ...member,
+                nameEn: result.nameEn,
+                jobTitleEn: result.jobTitleEn,
+                briefEn: result.briefEn,
+                nameAr: result.nameAr,
+                jobTitleAr: result.jobTitleAr,
+                briefAr: result.briefAr,
+                imageUrl: result.imageUrl
+            };
+            this.closeTeamMenu();
+            this.cdr.detectChanges();
+        });
+    }
+
     protected openEditSectionDialog(section: AboutSection): void {
         const lang = this.activeTab as SectionLang;
         const isRtl = lang === 'ar';
@@ -237,6 +277,16 @@ export class DashboardAboutUsComponent implements OnInit {
 
     removeMember(index: number): void {
         this.teamMembers.splice(index, 1);
+        this.closeTeamMenu();
+    }
+
+    toggleTeamMenu(index: number, event: MouseEvent): void {
+        event.stopPropagation();
+        this.openTeamMenuIndex = this.openTeamMenuIndex === index ? null : index;
+    }
+
+    closeTeamMenu(): void {
+        this.openTeamMenuIndex = null;
     }
 
     save(): void {

@@ -21,7 +21,7 @@
 
     h1 {
         color: $primary;
-        font-size: 2rem;
+        font-size: 1.5rem;
         font-weight: 700;
         line-height: 1.5;
         margin: 0;
@@ -140,7 +140,7 @@
 
 .editor-top {
     background: #f2f2f2;
-    border-bottom: 1px solid #949494;
+    border-bottom: 1px solid #ced4da;
     padding: 1.5rem;
 
     &--has-image {
@@ -155,7 +155,7 @@
     display: flex;
     gap: 0.6rem;
     justify-content: flex-end;
-    margin-bottom: 2.25rem;
+    margin-bottom: 1.25rem;
 }
 
 .icon-btn {
@@ -182,13 +182,9 @@
         color: $primary;
         font-size: 1rem;
         font-weight: 400;
-        line-height: 1.5;
-        margin: 0;
+        line-height: 1.2;
+        margin: 0 0 0.25rem;
     }
-}
-
-.text-box--intro {
-    min-height: 78px;
 }
 
 .content-input {
@@ -199,7 +195,7 @@
     font-size: 1rem;
     line-height: 1.5;
     padding: 0;
-    resize: none;
+    resize: vertical;
     width: 100%;
 
     &:focus {

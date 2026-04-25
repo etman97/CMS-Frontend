@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
+import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
 
 type SolutionsLang = 'en' | 'ar';
 
@@ -14,7 +15,7 @@ interface SolutionCard {
 @Component({
     selector: 'app-dashboard-solutions',
     standalone: true,
-    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel],
+    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DashboardPageHeaderComponent],
     templateUrl: './dashboard-solutions.component.html',
     styleUrl: './dashboard-solutions.component.scss'
 })
@@ -83,10 +84,6 @@ export class DashboardSolutionsComponent {
         en: 'Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age',
         ar: 'ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي'
     };
-
-    onActiveToggle(input: HTMLInputElement): void {
-        input.blur();
-    }
 
     onTopImageSelected(event: Event): void {
         const input = event.target as HTMLInputElement;

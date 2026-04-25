@@ -1,29 +1,8 @@
 <div class="dashboard-services-page">
-    <div class="page-header">
-        <div class="title-group">
-            <h1>Services</h1>
-            <div class="active-switch">
-                <label class="form-check form-switch">
-                    <input
-                        #activeSwitch
-                        class="form-check-input"
-                        type="checkbox"
-                        [(ngModel)]="isActive"
-                        (change)="onActiveToggle(activeSwitch)"
-                    />
-                </label>
-                <span>Active</span>
-            </div>
-        </div>
-
-        <div class="header-actions">
-            <button type="button" class="btn preview-btn">
-                <i class="bi bi-eye"></i>
-                <span>Preview</span>
-            </button>
-            <button type="button" class="btn save-btn">Save</button>
-        </div>
-    </div>
+    <app-dashboard-page-header
+        title="Services"
+        [(active)]="isActive"
+    />
 
     <p-tabs [(value)]="activeTab" class="services-tabs">
         <p-tablist>
@@ -83,23 +62,11 @@
 
                                 <div class="service-row__content">
                                     <div class="service-row__text">
-                                        <input type="text" class="service-title" [(ngModel)]="section.titleByLang.en" placeholder="Service title" />
-                                        <textarea
-                                            class="service-description"
-                                            rows="3"
-                                            [(ngModel)]="section.descriptionByLang.en"
-                                            placeholder="Service description"
-                                        ></textarea>
+                                        <h3 class="service-title">{{ section.titleByLang.en || 'Service title' }}</h3>
+                                        <p class="service-description">{{ section.descriptionByLang.en || 'Service description' }}</p>
                                     </div>
 
-                                    <div class="service-row__media" (click)="sectionImageInputEn.click()">
-                                        <input
-                                            #sectionImageInputEn
-                                            type="file"
-                                            accept="image/png,image/jpeg"
-                                            hidden
-                                            (change)="onSectionImageSelected($event, section.id)"
-                                        />
+                                    <div class="service-row__media">
                                         @if (section.imageUrl) {
                                             <img [src]="section.imageUrl" [alt]="section.titleByLang.en" />
                                         } @else {
@@ -169,23 +136,11 @@
 
                                 <div class="service-row__content">
                                     <div class="service-row__text">
-                                        <input type="text" class="service-title" [(ngModel)]="section.titleByLang.ar" placeholder="عنوان الخدمة" />
-                                        <textarea
-                                            class="service-description"
-                                            rows="3"
-                                            [(ngModel)]="section.descriptionByLang.ar"
-                                            placeholder="وصف الخدمة"
-                                        ></textarea>
+                                        <h3 class="service-title">{{ section.titleByLang.ar || '����� ������' }}</h3>
+                                        <p class="service-description">{{ section.descriptionByLang.ar || '��� ������' }}</p>
                                     </div>
 
-                                    <div class="service-row__media" (click)="sectionImageInputAr.click()">
-                                        <input
-                                            #sectionImageInputAr
-                                            type="file"
-                                            accept="image/png,image/jpeg"
-                                            hidden
-                                            (change)="onSectionImageSelected($event, section.id)"
-                                        />
+                                    <div class="service-row__media">
                                         @if (section.imageUrl) {
                                             <img [src]="section.imageUrl" [alt]="section.titleByLang.ar" />
                                         } @else {
@@ -206,3 +161,5 @@
         </p-tabpanels>
     </p-tabs>
 </div>
+
+

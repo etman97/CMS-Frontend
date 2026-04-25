@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DynamicDialogRef, DynamicDialogConfig } from 'primeng/dynamicdialog';
-import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AddMemberDialogData, AddMemberDialogResult } from './add-member-dialog.model';
 
 @Component({
@@ -14,7 +14,6 @@ import { AddMemberDialogData, AddMemberDialogResult } from './add-member-dialog.
 export class AddMemberDialogComponent implements OnInit {
     private readonly ref = inject(DynamicDialogRef);
     private readonly config = inject(DynamicDialogConfig<AddMemberDialogData>);
-    private readonly translate = inject(TranslateService);
 
     name = '';
     jobTitle = '';
@@ -26,20 +25,13 @@ export class AddMemberDialogComponent implements OnInit {
     ngOnInit(): void {
         const lang = this.config.data?.lang ?? 'en';
         this.dir = lang === 'ar' ? 'rtl' : 'ltr';
-        this.translate.use(lang);
     }
 
     onFileChange(event: Event): void {
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0] ?? null;
         this.imageFile = file;
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => { this.imagePreview = reader.result as string; };
-            reader.readAsDataURL(file);
-        } else {
-            this.imagePreview = null;
-        }
+        this.imagePreview = file ? URL.createObjectURL(file) : null;
     }
 
     save(): void {

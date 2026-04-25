@@ -149,6 +149,13 @@
     background: #f2f2f2;
     border-bottom: 1px solid #ced4da;
     padding: 1.5rem;
+
+    &--has-image {
+        background-color: transparent;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }
 }
 
 .panel-tools {
@@ -323,6 +330,7 @@
     align-items: center;
     background: #949494;
     color: #f2f2f2;
+    cursor: pointer;
     display: flex;
     flex: 1;
     flex-direction: column;
@@ -335,6 +343,14 @@
 
     i {
         font-size: 1rem;
+    }
+
+    .upload-preview {
+        display: block;
+        width: 100%;
+        height: auto;
+        max-height: 220px;
+        object-fit: contain;
     }
 }
 

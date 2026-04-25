@@ -41,15 +41,15 @@
             <div class="col-12">
                 <div class="field">
                     <span class="field-label">{{ 'Upload Image' | translate }}</span>
-                    <label class="upload-area" [class.upload-area--preview]="imagePreview">
+                    <div class="upload-area" (click)="fileInput.click()">
+                        <input #fileInput type="file" accept="image/png,image/jpeg" hidden (change)="onFileChange($event)" />
                         @if (imagePreview) {
-                            <img [src]="imagePreview" alt="preview" class="image-preview" />
+                            <img [src]="imagePreview" alt="preview" class="upload-preview" />
                         } @else {
                             <i class="bi bi-camera"></i>
-                            <span>{{ 'Upload image, PNG format is accepted.' | translate }}</span>
+                            <span>{{ 'Upload image, PNG and JPEG formats are accepted.' | translate }}</span>
                         }
-                        <input type="file" accept="image/png" class="file-input" (change)="onFileChange($event)" />
-                    </label>
+                    </div>
                 </div>
             </div>
         </div>

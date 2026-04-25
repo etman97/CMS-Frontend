@@ -7,10 +7,17 @@
             [placeholder]="'Enter content...' | translate"
         ></textarea>
 
-        <div class="upload-area">
-            <i class="bi bi-camera"></i>
-            <span>{{ 'Upload images, PNG and JPEG formats are accepted.' | translate }}</span>
-            <input type="file" accept="image/png,image/jpeg" class="file-input" />
+        <div class="field">
+            <span class="field-label">{{ 'Upload Image' | translate }}</span>
+            <div class="upload-area" (click)="fileInput.click()">
+                <input #fileInput type="file" accept="image/png,image/jpeg" hidden (change)="onFileChange($event)" />
+                @if (imageUrl) {
+                    <img [src]="imageUrl" alt="Section image" class="upload-preview" />
+                } @else {
+                    <i class="bi bi-camera"></i>
+                    <span>{{ 'Upload images, PNG and JPEG formats are accepted.' | translate }}</span>
+                }
+            </div>
         </div>
     </div>
 

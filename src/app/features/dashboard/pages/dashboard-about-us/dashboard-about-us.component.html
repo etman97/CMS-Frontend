@@ -34,11 +34,14 @@
         <p-tabpanels>
             <p-tabpanel value="en">
                 <section class="editor-card">
-                    <div class="editor-top">
+                    <div class="editor-top"
+                         [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
+                         [class.editor-top--has-image]="topImageUrl">
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInput.click()">
                                 <i class="bi bi-upload"></i>
                             </button>
+                            <input #topImageInput type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
                             <button type="button" class="icon-btn" aria-label="Add link">
                                 <i class="bi bi-link-45deg"></i>
                             </button>
@@ -69,19 +72,19 @@
                                 <div class="numbers-grid">
                                     <label class="metric-field">
                                         <span>Number of employees</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.employees" />
                                     </label>
                                     <label class="metric-field">
                                         <span>Number of products</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.products" />
                                     </label>
                                     <label class="metric-field">
                                         <span>Number of clients</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.clients" />
                                     </label>
                                     <label class="metric-field">
                                         <span>Number of partners</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.partners" />
                                     </label>
                                 </div>
                             </article>
@@ -96,9 +99,14 @@
                                     </button>
                                 </div>
                                 <textarea class="content-input" rows="4" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
-                                <div class="upload-area">
-                                    <i class="bi bi-camera"></i>
-                                    <span>Upload images, PNG and JPEG formats are accepted.</span>
+                                <div class="upload-area" (click)="missionInput.click()">
+                                    <input #missionInput type="file" accept="image/png,image/jpeg" hidden (change)="onImageSelected($event, 'mission')" />
+                                    @if (sectionImages.mission) {
+                                        <img [src]="sectionImages.mission" alt="Mission image" class="upload-preview" />
+                                    } @else {
+                                        <i class="bi bi-camera"></i>
+                                        <span>Upload images, PNG and JPEG formats are accepted.</span>
+                                    }
                                 </div>
                             </article>
 
@@ -110,9 +118,14 @@
                                     </button>
                                 </div>
                                 <textarea class="content-input" rows="4" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
-                                <div class="upload-area">
-                                    <i class="bi bi-camera"></i>
-                                    <span>Upload images, PNG and JPEG formats are accepted.</span>
+                                <div class="upload-area" (click)="visionInput.click()">
+                                    <input #visionInput type="file" accept="image/png,image/jpeg" hidden (change)="onImageSelected($event, 'vision')" />
+                                    @if (sectionImages.vision) {
+                                        <img [src]="sectionImages.vision" alt="Vision image" class="upload-preview" />
+                                    } @else {
+                                        <i class="bi bi-camera"></i>
+                                        <span>Upload images, PNG and JPEG formats are accepted.</span>
+                                    }
                                 </div>
                             </article>
 
@@ -124,9 +137,14 @@
                                     </button>
                                 </div>
                                 <textarea class="content-input" rows="4" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
-                                <div class="upload-area">
-                                    <i class="bi bi-camera"></i>
-                                    <span>Upload images, PNG and JPEG formats are accepted.</span>
+                                <div class="upload-area" (click)="leadershipInput.click()">
+                                    <input #leadershipInput type="file" accept="image/png,image/jpeg" hidden (change)="onImageSelected($event, 'leadership')" />
+                                    @if (sectionImages.leadership) {
+                                        <img [src]="sectionImages.leadership" alt="Leadership image" class="upload-preview" />
+                                    } @else {
+                                        <i class="bi bi-camera"></i>
+                                        <span>Upload images, PNG and JPEG formats are accepted.</span>
+                                    }
                                 </div>
                             </article>
                         </div>
@@ -140,7 +158,7 @@
                                     <div class="team-head">
                                         <div>
                                             <h3>{{ member.name }}</h3>
-                                            <p>{{ member.role }}</p>
+                                            <p>{{ member.jobTitle }}</p>
                                         </div>
                                         <button type="button" class="team-more" aria-label="Team member actions">
                                             <i class="bi bi-three-dots-vertical"></i>
@@ -162,9 +180,11 @@
 
             <p-tabpanel value="ar">
                 <section class="editor-card" dir="rtl">
-                    <div class="editor-top">
+                    <div class="editor-top"
+                         [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
+                         [class.editor-top--has-image]="topImageUrl">
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInput.click()">
                                 <i class="bi bi-upload"></i>
                             </button>
                             <button type="button" class="icon-btn" aria-label="Add link">
@@ -179,6 +199,12 @@
                     </div>
 
                     <div class="editor-bottom">
+                        <div class="row">
+                            <article class="text-box">
+                                <textarea class="content-input" rows="2" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                            </article>
+                        </div>
+
                         <div class="row row-two-columns">
                             <article class="text-box text-box--large">
                                 <h2>لماذا WES</h2>
@@ -190,19 +216,19 @@
                                 <div class="numbers-grid">
                                     <label class="metric-field">
                                         <span>عدد الموظفين</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.employees" />
                                     </label>
                                     <label class="metric-field">
                                         <span>عدد المنتجات</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.products" />
                                     </label>
                                     <label class="metric-field">
                                         <span>عدد العملاء</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.clients" />
                                     </label>
                                     <label class="metric-field">
                                         <span>عدد الشركاء</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.partners" />
                                     </label>
                                 </div>
                             </article>
@@ -218,8 +244,12 @@
                                 </div>
                                 <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
                                 <div class="upload-area">
-                                    <i class="bi bi-camera"></i>
-                                    <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
+                                    @if (sectionImages.mission) {
+                                        <img [src]="sectionImages.mission" alt="Mission image" class="upload-preview" />
+                                    } @else {
+                                        <i class="bi bi-camera"></i>
+                                        <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
+                                    }
                                 </div>
                             </article>
 
@@ -232,8 +262,12 @@
                                 </div>
                                 <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
                                 <div class="upload-area">
-                                    <i class="bi bi-camera"></i>
-                                    <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
+                                    @if (sectionImages.vision) {
+                                        <img [src]="sectionImages.vision" alt="Vision image" class="upload-preview" />
+                                    } @else {
+                                        <i class="bi bi-camera"></i>
+                                        <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
+                                    }
                                 </div>
                             </article>
 
@@ -246,8 +280,12 @@
                                 </div>
                                 <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
                                 <div class="upload-area">
-                                    <i class="bi bi-camera"></i>
-                                    <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
+                                    @if (sectionImages.leadership) {
+                                        <img [src]="sectionImages.leadership" alt="Leadership image" class="upload-preview" />
+                                    } @else {
+                                        <i class="bi bi-camera"></i>
+                                        <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
+                                    }
                                 </div>
                             </article>
                         </div>
@@ -261,7 +299,7 @@
                                     <div class="team-head">
                                         <div>
                                             <h3>{{ member.name }}</h3>
-                                            <p>{{ member.role }}</p>
+                                            <p>{{ member.jobTitle }}</p>
                                         </div>
                                         <button type="button" class="team-more" aria-label="Team member actions">
                                             <i class="bi bi-three-dots-vertical"></i>

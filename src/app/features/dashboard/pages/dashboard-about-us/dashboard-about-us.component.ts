@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, ChangeDetectorRef, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
@@ -11,7 +11,7 @@ import { AddMemberDialogData, AddMemberDialogResult } from './dialogs/add-member
 
 interface TeamMember {
     name: string;
-    role: string;
+    jobTitle: string;
     image: string;
 }
 
@@ -26,25 +26,52 @@ interface TeamMember {
 export class DashboardAboutUsComponent {
     private readonly dialogService = inject(DialogService);
     private readonly translate = inject(TranslateService);
+    private readonly cdr = inject(ChangeDetectorRef);
 
     activeTab = 'en';
     isActive = true;
+
 
     sectionContent: Record<SectionLang, Record<AboutSection, string>> = {
         en: { mission: '', vision: '', leadership: '' },
         ar: { mission: '', vision: '', leadership: '' }
     };
 
-    teamMembers: TeamMember[] = [
-        {
-            name: 'Taha Mohamed',
-            role: 'CEO',
-            image: 'https://www.figma.com/api/mcp/asset/534bcc2c-0089-4358-8cec-d3b8394081fa'
-        }
-    ];
+    sectionImages: Record<AboutSection, string | null> = {
+        mission: null,
+        vision: null,
+        leadership: null
+    };
+
+    topImageUrl: string | null = null;
+
+    teamMembers: TeamMember[] = [];
+
+    wesNumbers = {
+        employees: 0,
+        products: 0,
+        clients: 0,
+        partners: 0
+    };
 
     onActiveToggle(input: HTMLInputElement): void {
         input.blur();
+    }
+
+    onImageSelected(event: Event, section: AboutSection): void {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+        if (file) {
+            this.sectionImages[section] = URL.createObjectURL(file);
+        }
+    }
+
+    onTopImageSelected(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+        if (file) {
+            this.topImageUrl = URL.createObjectURL(file);
+        }
     }
 
     protected openAddMemberDialog(): void {
@@ -63,9 +90,10 @@ export class DashboardAboutUsComponent {
             if (result) {
                 this.teamMembers.push({
                     name: result.name,
-                    role: result.jobTitle,
+                    jobTitle: result.jobTitle,
                     image: result.imageFile ? URL.createObjectURL(result.imageFile) : ''
                 });
+                this.cdr.detectChanges();
             }
         });
     }

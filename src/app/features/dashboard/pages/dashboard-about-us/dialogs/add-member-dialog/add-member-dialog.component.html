@@ -1,63 +1,68 @@
-<div class="add-member-dialog" [dir]="dir">
+<div class="add-member-dialog">
     <div class="dialog-body">
-
         <div class="row g-3">
+            <!-- English fields -->
             <div class="col-6">
                 <label class="field">
-                    <span class="field-label">{{ labels.name }}</span>
-                    <input
-                        type="text"
-                        class="field-input"
-                        [(ngModel)]="name"
-                        [placeholder]="labels.enterName"
-                    />
+                    <span class="field-label">Name (EN)</span>
+                    <input type="text" class="field-input" [(ngModel)]="nameEn" placeholder="Enter name" />
                 </label>
             </div>
-
             <div class="col-6">
                 <label class="field">
-                    <span class="field-label">{{ labels.jobTitle }}</span>
-                    <input
-                        type="text"
-                        class="field-input"
-                        [(ngModel)]="jobTitle"
-                        [placeholder]="labels.enterJobTitle"
-                    />
+                    <span class="field-label">Job Title (EN)</span>
+                    <input type="text" class="field-input" [(ngModel)]="jobTitleEn" placeholder="Enter job title" />
                 </label>
             </div>
-
             <div class="col-12">
                 <label class="field">
-                    <span class="field-label">{{ labels.brief }}</span>
-                    <textarea
-                        class="field-input field-input--textarea"
-                        rows="4"
-                        [(ngModel)]="brief"
-                        [placeholder]="labels.enterBrief"
-                    ></textarea>
+                    <span class="field-label">Brief (EN)</span>
+                    <textarea class="field-input field-input--textarea" rows="3" [(ngModel)]="briefEn" placeholder="Enter a brief description"></textarea>
                 </label>
             </div>
 
+            <!-- Arabic fields -->
+            <div class="col-6" dir="rtl">
+                <label class="field">
+                    <span class="field-label">الاسم (AR)</span>
+                    <input type="text" class="field-input" [(ngModel)]="nameAr" placeholder="أدخل الاسم" />
+                </label>
+            </div>
+            <div class="col-6" dir="rtl">
+                <label class="field">
+                    <span class="field-label">المسمى الوظيفي (AR)</span>
+                    <input type="text" class="field-input" [(ngModel)]="jobTitleAr" placeholder="أدخل المسمى الوظيفي" />
+                </label>
+            </div>
+            <div class="col-12" dir="rtl">
+                <label class="field">
+                    <span class="field-label">نبذة (AR)</span>
+                    <textarea class="field-input field-input--textarea" rows="3" [(ngModel)]="briefAr" placeholder="أدخل نبذة مختصرة"></textarea>
+                </label>
+            </div>
+
+            <!-- Shared image -->
             <div class="col-12">
                 <div class="field">
-                    <span class="field-label">{{ labels.uploadImage }}</span>
+                    <span class="field-label">Upload Image</span>
                     <div class="upload-area" (click)="fileInput.click()">
-                        <input #fileInput type="file" accept="image/png,image/jpeg" hidden (change)="onFileChange($event)" />
-                        @if (imagePreview) {
+                        <input #fileInput type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onFileChange($event)" />
+                        @if (isUploading) {
+                            <span>Uploading...</span>
+                        } @else if (imagePreview) {
                             <img [src]="imagePreview" alt="preview" class="upload-preview" />
                         } @else {
                             <i class="bi bi-camera"></i>
-                            <span>{{ labels.uploadHint }}</span>
+                            <span>Upload image, PNG and JPEG formats are accepted.</span>
                         }
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <div class="dialog-footer">
-        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ labels.cancel }}</button>
-        <button type="button" class="btn save-btn" (click)="save()">{{ labels.save }}</button>
+        <button type="button" class="btn cancel-btn" (click)="cancel()">Cancel</button>
+        <button type="button" class="btn save-btn" (click)="save()" [disabled]="isUploading">Save</button>
     </div>
 </div>

@@ -160,3 +160,30 @@ input:-webkit-autofill:active {
 .w-full {
     width: 100% !important;
 }
+
+// ─── Page Loader ────────────────────────────────
+.page-loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(124, 122, 184, 0.25);
+    border-top-color: #7C7AB8;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.page-hidden {
+    visibility: hidden;
+    height: 0;
+    overflow: hidden;
+}

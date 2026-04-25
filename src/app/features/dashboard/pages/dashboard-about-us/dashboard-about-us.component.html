@@ -1,4 +1,12 @@
-﻿<div class="dashboard-about-us-page">
+<p-toast />
+
+@if (isLoading) {
+    <div class="page-loader">
+        <div class="spinner"></div>
+    </div>
+}
+
+<div class="dashboard-about-us-page" [class.page-hidden]="isLoading">
     <div class="page-header">
         <div class="title-group">
             <h1>About Us</h1>
@@ -21,7 +29,9 @@
                 <i class="bi bi-eye"></i>
                 <span>Preview</span>
             </button>
-            <button type="button" class="btn save-btn">Save</button>
+            <button type="button" class="btn save-btn" (click)="save()" [disabled]="isSaving || isUploadingHero || !!uploadingSectionImage">
+                {{ isSaving ? 'Saving...' : 'Save' }}
+            </button>
         </div>
     </div>
 
@@ -35,13 +45,13 @@
             <p-tabpanel value="en">
                 <section class="editor-card">
                     <div class="editor-top"
-                         [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
-                         [class.editor-top--has-image]="topImageUrl">
+                         [style.background-image]="heroImageUrl ? 'url(' + heroImageUrl + ')' : null"
+                         [class.editor-top--has-image]="heroImageUrl">
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInput.click()">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputEn.click()" [disabled]="isUploadingHero">
                                 <i class="bi bi-upload"></i>
                             </button>
-                            <input #topImageInput type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <input #topImageInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onTopImageSelected($event)" />
                             <button type="button" class="icon-btn" aria-label="Add link">
                                 <i class="bi bi-link-45deg"></i>
                             </button>
@@ -49,42 +59,42 @@
 
                         <article class="text-box">
                             <h2>About Us</h2>
-                            <textarea class="content-input" rows="3" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                            <textarea class="content-input" rows="3" [(ngModel)]="aboutUsContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
                         </article>
                     </div>
 
                     <div class="editor-bottom">
                         <div class="row">
                             <article class="text-box">
-                                <textarea class="content-input" rows="2" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <textarea class="content-input" rows="2" [(ngModel)]="subContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
                             </article>
                         </div>
 
                         <div class="row row-two-columns">
                             <article class="text-box text-box--large">
                                 <h2>Why WES</h2>
-                                <textarea class="content-input" rows="4" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <textarea class="content-input" rows="4" [(ngModel)]="whyUsContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
                             </article>
 
                             <article class="text-box text-box--numbers">
                                 <h2>WES in numbers</h2>
-                                <textarea class="content-input" rows="2" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <textarea class="content-input" rows="2" [(ngModel)]="numbersSubtitleEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
                                 <div class="numbers-grid">
                                     <label class="metric-field">
                                         <span>Number of employees</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.employees" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfEmployees" />
                                     </label>
                                     <label class="metric-field">
                                         <span>Number of products</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.products" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfProducts" />
                                     </label>
                                     <label class="metric-field">
                                         <span>Number of clients</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.clients" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfClients" />
                                     </label>
                                     <label class="metric-field">
                                         <span>Number of partners</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.partners" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfPartners" />
                                     </label>
                                 </div>
                             </article>
@@ -98,10 +108,12 @@
                                         <i class="bi bi-pen"></i>
                                     </button>
                                 </div>
-                                <textarea class="content-input" rows="4" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
-                                <div class="upload-area" (click)="missionInput.click()">
-                                    <input #missionInput type="file" accept="image/png,image/jpeg" hidden (change)="onImageSelected($event, 'mission')" />
-                                    @if (sectionImages.mission) {
+                                <textarea class="content-input" rows="4" [(ngModel)]="missionContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <div class="upload-area" (click)="missionInputEn.click()">
+                                    <input #missionInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'mission')" />
+                                    @if (uploadingSectionImage === 'mission') {
+                                        <span>Uploading...</span>
+                                    } @else if (sectionImages.mission) {
                                         <img [src]="sectionImages.mission" alt="Mission image" class="upload-preview" />
                                     } @else {
                                         <i class="bi bi-camera"></i>
@@ -117,10 +129,12 @@
                                         <i class="bi bi-pen"></i>
                                     </button>
                                 </div>
-                                <textarea class="content-input" rows="4" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
-                                <div class="upload-area" (click)="visionInput.click()">
-                                    <input #visionInput type="file" accept="image/png,image/jpeg" hidden (change)="onImageSelected($event, 'vision')" />
-                                    @if (sectionImages.vision) {
+                                <textarea class="content-input" rows="4" [(ngModel)]="visionContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <div class="upload-area" (click)="visionInputEn.click()">
+                                    <input #visionInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'vision')" />
+                                    @if (uploadingSectionImage === 'vision') {
+                                        <span>Uploading...</span>
+                                    } @else if (sectionImages.vision) {
                                         <img [src]="sectionImages.vision" alt="Vision image" class="upload-preview" />
                                     } @else {
                                         <i class="bi bi-camera"></i>
@@ -136,10 +150,12 @@
                                         <i class="bi bi-pen"></i>
                                     </button>
                                 </div>
-                                <textarea class="content-input" rows="4" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
-                                <div class="upload-area" (click)="leadershipInput.click()">
-                                    <input #leadershipInput type="file" accept="image/png,image/jpeg" hidden (change)="onImageSelected($event, 'leadership')" />
-                                    @if (sectionImages.leadership) {
+                                <textarea class="content-input" rows="4" [(ngModel)]="leadershipContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <div class="upload-area" (click)="leadershipInputEn.click()">
+                                    <input #leadershipInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'leadership')" />
+                                    @if (uploadingSectionImage === 'leadership') {
+                                        <span>Uploading...</span>
+                                    } @else if (sectionImages.leadership) {
                                         <img [src]="sectionImages.leadership" alt="Leadership image" class="upload-preview" />
                                     } @else {
                                         <i class="bi bi-camera"></i>
@@ -153,18 +169,20 @@
                             <h2>Our Team</h2>
 
                             <div class="team-list">
-                                @for (member of teamMembers; track member.name) {
+                                @for (member of teamMembers; track member.nameEn; let i = $index) {
                                 <article class="team-card">
                                     <div class="team-head">
                                         <div>
-                                            <h3>{{ member.name }}</h3>
-                                            <p>{{ member.jobTitle }}</p>
+                                            <h3>{{ member.nameEn }}</h3>
+                                            <p>{{ member.jobTitleEn }}</p>
                                         </div>
-                                        <button type="button" class="team-more" aria-label="Team member actions">
-                                            <i class="bi bi-three-dots-vertical"></i>
+                                        <button type="button" class="team-more" aria-label="Remove member" (click)="removeMember(i)">
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
-                                    <img [src]="member.image" [alt]="member.name" />
+                                    @if (member.imageUrl) {
+                                        <img [src]="member.imageUrl" [alt]="member.nameEn" />
+                                    }
                                 </article>
                                 }
 
@@ -181,12 +199,13 @@
             <p-tabpanel value="ar">
                 <section class="editor-card" dir="rtl">
                     <div class="editor-top"
-                         [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
-                         [class.editor-top--has-image]="topImageUrl">
+                         [style.background-image]="heroImageUrl ? 'url(' + heroImageUrl + ')' : null"
+                         [class.editor-top--has-image]="heroImageUrl">
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInput.click()">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputAr.click()" [disabled]="isUploadingHero">
                                 <i class="bi bi-upload"></i>
                             </button>
+                            <input #topImageInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onTopImageSelected($event)" />
                             <button type="button" class="icon-btn" aria-label="Add link">
                                 <i class="bi bi-link-45deg"></i>
                             </button>
@@ -194,21 +213,21 @@
 
                         <article class="text-box">
                             <h2>من نحن</h2>
-                            <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
+                            <textarea class="content-input" rows="3" [(ngModel)]="aboutUsContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
                         </article>
                     </div>
 
                     <div class="editor-bottom">
                         <div class="row">
                             <article class="text-box">
-                                <textarea class="content-input" rows="2" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                <textarea class="content-input" rows="2" [(ngModel)]="whyUsContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
                             </article>
                         </div>
 
                         <div class="row row-two-columns">
                             <article class="text-box text-box--large">
                                 <h2>لماذا WES</h2>
-                                <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
+                                <textarea class="content-input" rows="4" [(ngModel)]="whyUsContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
                             </article>
 
                             <article class="text-box text-box--numbers">
@@ -216,19 +235,19 @@
                                 <div class="numbers-grid">
                                     <label class="metric-field">
                                         <span>عدد الموظفين</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.employees" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfEmployees" />
                                     </label>
                                     <label class="metric-field">
                                         <span>عدد المنتجات</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.products" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfProducts" />
                                     </label>
                                     <label class="metric-field">
                                         <span>عدد العملاء</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.clients" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfClients" />
                                     </label>
                                     <label class="metric-field">
                                         <span>عدد الشركاء</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="wesNumbers.partners" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfPartners" />
                                     </label>
                                 </div>
                             </article>
@@ -242,9 +261,12 @@
                                         <i class="bi bi-pen"></i>
                                     </button>
                                 </div>
-                                <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
-                                <div class="upload-area">
-                                    @if (sectionImages.mission) {
+                                <textarea class="content-input" rows="4" [(ngModel)]="missionContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                <div class="upload-area" (click)="missionInputAr.click()">
+                                    <input #missionInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'mission')" />
+                                    @if (uploadingSectionImage === 'mission') {
+                                        <span>جارٍ الرفع...</span>
+                                    } @else if (sectionImages.mission) {
                                         <img [src]="sectionImages.mission" alt="Mission image" class="upload-preview" />
                                     } @else {
                                         <i class="bi bi-camera"></i>
@@ -260,9 +282,12 @@
                                         <i class="bi bi-pen"></i>
                                     </button>
                                 </div>
-                                <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
-                                <div class="upload-area">
-                                    @if (sectionImages.vision) {
+                                <textarea class="content-input" rows="4" [(ngModel)]="visionContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                <div class="upload-area" (click)="visionInputAr.click()">
+                                    <input #visionInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'vision')" />
+                                    @if (uploadingSectionImage === 'vision') {
+                                        <span>جارٍ الرفع...</span>
+                                    } @else if (sectionImages.vision) {
                                         <img [src]="sectionImages.vision" alt="Vision image" class="upload-preview" />
                                     } @else {
                                         <i class="bi bi-camera"></i>
@@ -278,9 +303,12 @@
                                         <i class="bi bi-pen"></i>
                                     </button>
                                 </div>
-                                <p>ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي</p>
-                                <div class="upload-area">
-                                    @if (sectionImages.leadership) {
+                                <textarea class="content-input" rows="4" [(ngModel)]="leadershipContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                <div class="upload-area" (click)="leadershipInputAr.click()">
+                                    <input #leadershipInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'leadership')" />
+                                    @if (uploadingSectionImage === 'leadership') {
+                                        <span>جارٍ الرفع...</span>
+                                    } @else if (sectionImages.leadership) {
                                         <img [src]="sectionImages.leadership" alt="Leadership image" class="upload-preview" />
                                     } @else {
                                         <i class="bi bi-camera"></i>
@@ -294,18 +322,20 @@
                             <h2>فريقنا</h2>
 
                             <div class="team-list">
-                                @for (member of teamMembers; track member.name) {
+                                @for (member of teamMembers; track member.nameAr; let i = $index) {
                                 <article class="team-card">
                                     <div class="team-head">
                                         <div>
-                                            <h3>{{ member.name }}</h3>
-                                            <p>{{ member.jobTitle }}</p>
+                                            <h3>{{ member.nameAr }}</h3>
+                                            <p>{{ member.jobTitleAr }}</p>
                                         </div>
-                                        <button type="button" class="team-more" aria-label="Team member actions">
-                                            <i class="bi bi-three-dots-vertical"></i>
+                                        <button type="button" class="team-more" aria-label="Remove member" (click)="removeMember(i)">
+                                            <i class="bi bi-trash"></i>
                                         </button>
                                     </div>
-                                    <img [src]="member.image" [alt]="member.name" />
+                                    @if (member.imageUrl) {
+                                        <img [src]="member.imageUrl" [alt]="member.nameAr" />
+                                    }
                                 </article>
                                 }
 

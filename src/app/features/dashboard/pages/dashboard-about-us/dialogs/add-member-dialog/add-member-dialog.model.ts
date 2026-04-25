@@ -3,8 +3,11 @@ export interface AddMemberDialogData {
 }
 
 export interface AddMemberDialogResult {
-    name: string;
-    jobTitle: string;
-    brief: string;
-    imageFile: File | null;
+    nameEn: string;
+    jobTitleEn: string;
+    briefEn: string;
+    nameAr: string;
+    jobTitleAr: string;
+    briefAr: string;
+    imageUrl: string | null;
 }

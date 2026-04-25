@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "postbuild": "node -e \"const fs=require('fs'),path=require('path'),src=path.join(__dirname,'dist/CMS-Frontend/browser'),dest=path.resolve(__dirname,'../../../');if(fs.existsSync(dest)&&fs.existsSync(path.join(dest,'.builds'))){fs.cpSync(src,dest,{recursive:true,force:true});console.log('Deployed to public_html');}\"",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

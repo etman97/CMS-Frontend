@@ -76,15 +76,67 @@ select {
     color-scheme: light;
 }
 
-// Remove browser autofill background color
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-    -webkit-box-shadow: 0 0 0 1000px $white inset !important;
-    -webkit-text-fill-color: $text-dark !important;
-    color: $text-dark !important;
-    transition: background-color 5000s ease-in-out 0s;
+// Autofill: blue by default
+:where(input, textarea, select):-webkit-autofill,
+:where(input, textarea, select):-webkit-autofill:hover {
+    -webkit-box-shadow: 0 0 0 1000px rgba($primary, 0.14) inset !important;
+    box-shadow: 0 0 0 1000px rgba($primary, 0.14) inset !important;
+    -webkit-text-fill-color: currentColor !important;
+    caret-color: currentColor !important;
+    background-color: rgba($primary, 0.14) !important;
+    background-clip: padding-box !important;
+    border-color: $primary !important;
+    color: inherit !important;
+    font: inherit !important;
+    transition:
+        background-color 200ms ease,
+        box-shadow 200ms ease,
+        border-color 200ms ease !important;
+}
+
+// On interaction, return to default field style
+:where(input, textarea, select):-webkit-autofill:focus,
+:where(input, textarea, select):-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    box-shadow: 0 0 0 1000px transparent inset !important;
+    background-color: transparent !important;
+    border-color: inherit !important;
+}
+
+// Firefox autofill: blue default
+:where(input, textarea, select):-moz-autofill {
+    box-shadow: 0 0 0 1000px rgba($primary, 0.14) inset !important;
+    border-color: $primary !important;
+    color: inherit !important;
+    font: inherit !important;
+}
+
+// Firefox autofill on interaction: default
+:where(input, textarea, select):-moz-autofill:focus {
+    box-shadow: 0 0 0 1000px transparent inset !important;
+    border-color: inherit !important;
+    color: inherit !important;
+    font: inherit !important;
+}
+
+// About Us dashboard: keep autofill exactly like local input styles (no blue tint)
+.dashboard-about-us-page :where(input, textarea, select):-webkit-autofill,
+.dashboard-about-us-page :where(input, textarea, select):-webkit-autofill:hover,
+.dashboard-about-us-page :where(input, textarea, select):-webkit-autofill:focus,
+.dashboard-about-us-page :where(input, textarea, select):-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+    box-shadow: 0 0 0 1000px transparent inset !important;
+    -webkit-text-fill-color: inherit !important;
+    background-color: transparent !important;
+    border-color: inherit !important;
+    color: inherit !important;
+}
+
+.dashboard-about-us-page :where(input, textarea, select):-moz-autofill,
+.dashboard-about-us-page :where(input, textarea, select):-moz-autofill:focus {
+    box-shadow: 0 0 0 1000px transparent inset !important;
+    border-color: inherit !important;
+    color: inherit !important;
 }
 
 // Password component

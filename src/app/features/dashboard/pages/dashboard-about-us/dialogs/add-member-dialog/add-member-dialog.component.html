@@ -4,50 +4,50 @@
         <div class="row g-3">
             <div class="col-6">
                 <label class="field">
-                    <span class="field-label">{{ 'Name' | translate }}</span>
+                    <span class="field-label">{{ labels.name }}</span>
                     <input
                         type="text"
                         class="field-input"
                         [(ngModel)]="name"
-                        [placeholder]="'Enter name' | translate"
+                        [placeholder]="labels.enterName"
                     />
                 </label>
             </div>
 
             <div class="col-6">
                 <label class="field">
-                    <span class="field-label">{{ 'Job Title' | translate }}</span>
+                    <span class="field-label">{{ labels.jobTitle }}</span>
                     <input
                         type="text"
                         class="field-input"
                         [(ngModel)]="jobTitle"
-                        [placeholder]="'Enter job title' | translate"
+                        [placeholder]="labels.enterJobTitle"
                     />
                 </label>
             </div>
 
             <div class="col-12">
                 <label class="field">
-                    <span class="field-label">{{ 'Brief' | translate }}</span>
+                    <span class="field-label">{{ labels.brief }}</span>
                     <textarea
                         class="field-input field-input--textarea"
                         rows="4"
                         [(ngModel)]="brief"
-                        [placeholder]="'Enter a brief description' | translate"
+                        [placeholder]="labels.enterBrief"
                     ></textarea>
                 </label>
             </div>
 
             <div class="col-12">
                 <div class="field">
-                    <span class="field-label">{{ 'Upload Image' | translate }}</span>
+                    <span class="field-label">{{ labels.uploadImage }}</span>
                     <div class="upload-area" (click)="fileInput.click()">
                         <input #fileInput type="file" accept="image/png,image/jpeg" hidden (change)="onFileChange($event)" />
                         @if (imagePreview) {
                             <img [src]="imagePreview" alt="preview" class="upload-preview" />
                         } @else {
                             <i class="bi bi-camera"></i>
-                            <span>{{ 'Upload image, PNG and JPEG formats are accepted.' | translate }}</span>
+                            <span>{{ labels.uploadHint }}</span>
                         }
                     </div>
                 </div>
@@ -57,7 +57,7 @@
     </div>
 
     <div class="dialog-footer">
-        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ 'Cancel' | translate }}</button>
-        <button type="button" class="btn save-btn" (click)="save()">{{ 'Save' | translate }}</button>
+        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ labels.cancel }}</button>
+        <button type="button" class="btn save-btn" (click)="save()">{{ labels.save }}</button>
     </div>
 </div>

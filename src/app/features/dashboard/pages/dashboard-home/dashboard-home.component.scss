@@ -154,6 +154,13 @@
     min-height: 660px;
     padding: 1.5rem;
     position: relative;
+
+    &--has-image {
+        background-color: transparent;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 }
 
 .panel-tools {
@@ -179,6 +186,11 @@
         background: $primary-dark;
         border-color: $primary-dark;
     }
+}
+
+.rtl-flip {
+    display: inline-block;
+    transform: scaleX(-1);
 }
 
 .hero-fields {

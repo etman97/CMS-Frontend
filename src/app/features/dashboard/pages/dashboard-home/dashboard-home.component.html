@@ -33,11 +33,16 @@
 
         <p-tabpanels>
             <p-tabpanel value="en">
-                <div class="editor-card">
+                <div
+                    class="editor-card"
+                    [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
+                    [class.editor-card--has-image]="topImageUrl"
+                >
                     <div class="panel-tools">
-                        <button type="button" class="icon-btn" aria-label="Upload image">
+                        <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputEn.click()">
                             <i class="bi bi-upload"></i>
                         </button>
+                        <input #topImageInputEn type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
                         <button type="button" class="icon-btn" aria-label="Add link">
                             <i class="bi bi-link-45deg"></i>
                         </button>
@@ -68,7 +73,7 @@
                                     placeholder="Primary button"
                                 />
                                 <button type="button" class="icon-btn" aria-label="Edit primary button text">
-                                    <i class="bi bi-pencil"></i>
+                                    <i class="bi bi-pen"></i>
                                 </button>
                             </div>
 
@@ -80,7 +85,7 @@
                                     placeholder="Secondary button"
                                 />
                                 <button type="button" class="icon-btn" aria-label="Edit secondary button text">
-                                    <i class="bi bi-pencil"></i>
+                                    <i class="bi bi-pen"></i>
                                 </button>
                             </div>
                         </div>
@@ -89,13 +94,18 @@
             </p-tabpanel>
 
             <p-tabpanel value="ar">
-                <div class="editor-card">
+                <div
+                    class="editor-card"
+                    [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
+                    [class.editor-card--has-image]="topImageUrl"
+                >
                     <div class="panel-tools">
-                        <button type="button" class="icon-btn" aria-label="Upload image">
-                            <i class="bi bi-upload"></i>
+                        <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputAr.click()">
+                            <i class="bi bi-upload rtl-flip"></i>
                         </button>
+                        <input #topImageInputAr type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
                         <button type="button" class="icon-btn" aria-label="Add link">
-                            <i class="bi bi-link-45deg"></i>
+                            <i class="bi bi-link-45deg rtl-flip"></i>
                         </button>
                     </div>
 
@@ -104,27 +114,39 @@
                         <input
                             type="text"
                             class="form-control"
+                            [(ngModel)]="heroTitleAr"
                             placeholder="ادخل عنوان قسم الهيرو، مثال: مرحباً بكم في WES"
                         />
 
                         <textarea
                             class="form-control"
                             rows="2"
+                            [(ngModel)]="heroContentAr"
                             placeholder="ادخل محتوى قسم الهيرو، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"
                         ></textarea>
 
                         <div class="buttons-row">
                             <div class="button-item">
-                                <input type="text" class="form-control button-label-input" placeholder="الزر الأساسي" />
+                                <input
+                                    type="text"
+                                    class="form-control button-label-input"
+                                    [(ngModel)]="primaryButtonTextAr"
+                                    placeholder="الزر الأساسي"
+                                />
                                 <button type="button" class="icon-btn" aria-label="Edit primary button text">
-                                    <i class="bi bi-pencil"></i>
+                                    <i class="bi bi-pen rtl-flip"></i>
                                 </button>
                             </div>
 
                             <div class="button-item">
-                                <input type="text" class="form-control button-label-input" placeholder="الزر الثانوي" />
+                                <input
+                                    type="text"
+                                    class="form-control button-label-input"
+                                    [(ngModel)]="secondaryButtonTextAr"
+                                    placeholder="الزر الثانوي"
+                                />
                                 <button type="button" class="icon-btn" aria-label="Edit secondary button text">
-                                    <i class="bi bi-pencil"></i>
+                                    <i class="bi bi-pen rtl-flip"></i>
                                 </button>
                             </div>
                         </div>

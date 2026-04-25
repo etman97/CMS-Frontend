@@ -12,13 +12,27 @@ import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 export class DashboardHomeComponent {
     activeTab = 'en';
     isActive = false;
+    topImageUrl: string | null = null;
 
     heroTitle = '';
     heroContent = '';
     primaryButtonText = '';
     secondaryButtonText = '';
 
+    heroTitleAr = '';
+    heroContentAr = '';
+    primaryButtonTextAr = '';
+    secondaryButtonTextAr = '';
+
     onActiveToggle(input: HTMLInputElement): void {
         input.blur();
+    }
+
+    onTopImageSelected(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        const file = input.files?.[0];
+        if (file) {
+            this.topImageUrl = URL.createObjectURL(file);
+        }
     }
 }

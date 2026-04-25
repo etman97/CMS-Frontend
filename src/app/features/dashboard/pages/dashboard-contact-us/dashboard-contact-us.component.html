@@ -1,1 +1,172 @@
-<div class="dashboard-page"></div>
+<div class="dashboard-contact-us-page">
+    <div class="page-header">
+        <div class="title-group">
+            <h1>Contact Us</h1>
+            <div class="active-switch">
+                <label class="form-check form-switch">
+                    <input
+                        #activeSwitch
+                        class="form-check-input"
+                        type="checkbox"
+                        [(ngModel)]="isActive"
+                        (change)="onActiveToggle(activeSwitch)"
+                    />
+                </label>
+                <span>Active</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button type="button" class="btn preview-btn">
+                <i class="bi bi-eye"></i>
+                <span>Preview</span>
+            </button>
+            <button type="button" class="btn save-btn">Save</button>
+        </div>
+    </div>
+
+    <p-tabs [(value)]="activeTab" class="contact-tabs">
+        <p-tablist>
+            <p-tab value="en">English version</p-tab>
+            <p-tab value="ar">Arabic version</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+            <p-tabpanel value="en">
+                <section class="editor-card">
+                    <div
+                        class="editor-top"
+                        [style.background-image]="sharedTopImageUrl ? 'url(' + sharedTopImageUrl + ')' : null"
+                        [class.editor-top--has-image]="sharedTopImageUrl"
+                    >
+                        <div class="panel-tools">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputEn.click()">
+                                <i class="bi bi-upload"></i>
+                            </button>
+                            <input #topImageInputEn type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <button type="button" class="icon-btn" aria-label="Add link">
+                                <i class="bi bi-link-45deg"></i>
+                            </button>
+                        </div>
+
+                        <article class="text-box text-box--intro">
+                            <h2>{{ contentByLang.en.introTitle }}</h2>
+                            <textarea
+                                class="content-input"
+                                rows="2"
+                                [(ngModel)]="contentByLang.en.introDescription"
+                                placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"
+                            ></textarea>
+                        </article>
+                    </div>
+
+                    <div class="editor-bottom">
+                        <div class="contact-grid">
+                            <article class="text-box text-box--card">
+                                <h2>{{ contentByLang.en.contactTitle }}</h2>
+                                <div class="fields-grid">
+                                    <input
+                                        type="text"
+                                        class="field-input"
+                                        [(ngModel)]="sharedContactFields.phone"
+                                        placeholder="Phone number"
+                                    />
+                                    <input
+                                        type="email"
+                                        class="field-input"
+                                        [(ngModel)]="sharedContactFields.email"
+                                        placeholder="Email"
+                                    />
+                                    <input
+                                        type="text"
+                                        class="field-input field-input--full"
+                                        [(ngModel)]="sharedContactFields.address"
+                                        placeholder="Address"
+                                    />
+                                </div>
+                            </article>
+
+                            <article class="text-box text-box--card">
+                                <h2>{{ contentByLang.en.visitTitle }}</h2>
+                                <input
+                                    type="url"
+                                    class="field-input"
+                                    [(ngModel)]="sharedContactFields.locationUrl"
+                                    placeholder="Location URL"
+                                />
+                            </article>
+                        </div>
+                    </div>
+                </section>
+            </p-tabpanel>
+
+            <p-tabpanel value="ar">
+                <section class="editor-card" dir="rtl">
+                    <div
+                        class="editor-top"
+                        [style.background-image]="sharedTopImageUrl ? 'url(' + sharedTopImageUrl + ')' : null"
+                        [class.editor-top--has-image]="sharedTopImageUrl"
+                    >
+                        <div class="panel-tools">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputAr.click()">
+                                <i class="bi bi-upload"></i>
+                            </button>
+                            <input #topImageInputAr type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <button type="button" class="icon-btn" aria-label="Add link">
+                                <i class="bi bi-link-45deg"></i>
+                            </button>
+                        </div>
+
+                        <article class="text-box text-box--intro">
+                            <h2>{{ contentByLang.ar.introTitle }}</h2>
+                            <textarea
+                                class="content-input"
+                                rows="2"
+                                [(ngModel)]="contentByLang.ar.introDescription"
+                                placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"
+                            ></textarea>
+                        </article>
+                    </div>
+
+                    <div class="editor-bottom">
+                        <div class="contact-grid">
+                            <article class="text-box text-box--card">
+                                <h2>{{ contentByLang.ar.contactTitle }}</h2>
+                                <div class="fields-grid">
+                                    <input
+                                        type="text"
+                                        class="field-input"
+                                        [(ngModel)]="sharedContactFields.phone"
+                                        placeholder="رقم الهاتف"
+                                    />
+                                    <input
+                                        type="email"
+                                        class="field-input"
+                                        [(ngModel)]="sharedContactFields.email"
+                                        placeholder="البريد الإلكتروني"
+                                    />
+                                    <input
+                                        type="text"
+                                        class="field-input field-input--full"
+                                        [(ngModel)]="sharedContactFields.address"
+                                        placeholder="العنوان"
+                                    />
+                                </div>
+                            </article>
+
+                            <article class="text-box text-box--card">
+                                <h2>{{ contentByLang.ar.visitTitle }}</h2>
+                                <input
+                                    type="url"
+                                    class="field-input"
+                                    [(ngModel)]="sharedContactFields.locationUrl"
+                                    placeholder="رابط الموقع"
+                                />
+                            </article>
+                        </div>
+                    </div>
+                </section>
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+</div>

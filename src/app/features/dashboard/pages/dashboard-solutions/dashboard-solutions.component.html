@@ -1,1 +1,166 @@
-<div class="dashboard-page"></div>
+<div class="dashboard-solutions-page">
+    <div class="page-header">
+        <div class="title-group">
+            <h1>Solutions</h1>
+            <div class="active-switch">
+                <label class="form-check form-switch">
+                    <input
+                        #activeSwitch
+                        class="form-check-input"
+                        type="checkbox"
+                        [(ngModel)]="isActive"
+                        (change)="onActiveToggle(activeSwitch)"
+                    />
+                </label>
+                <span>Active</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <button type="button" class="btn preview-btn">
+                <i class="bi bi-eye"></i>
+                <span>Preview</span>
+            </button>
+            <button type="button" class="btn save-btn">Save</button>
+        </div>
+    </div>
+
+    <p-tabs [(value)]="activeTab" class="solutions-tabs">
+        <p-tablist>
+            <p-tab value="en">English version</p-tab>
+            <p-tab value="ar">Arabic version</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+            <p-tabpanel value="en">
+                <section class="editor-card">
+                    <div
+                        class="editor-top"
+                        [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
+                        [class.editor-top--has-image]="topImageUrl"
+                    >
+                        <div class="panel-tools">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputEn.click()">
+                                <i class="bi bi-upload"></i>
+                            </button>
+                            <input #topImageInputEn type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+
+                            <button type="button" class="icon-btn" aria-label="Add link">
+                                <i class="bi bi-link-45deg"></i>
+                            </button>
+                        </div>
+
+                        <article class="text-box text-box--intro">
+                            <h2>{{ introByLang.en.title }}</h2>
+                            <textarea class="content-input" rows="2" [(ngModel)]="introContentByLang.en" [placeholder]="introByLang.en.placeholder"></textarea>
+                        </article>
+                    </div>
+
+                    <div class="editor-bottom">
+                        <div class="solutions-grid">
+                            @for (card of solutionsByLang.en; track card.id) {
+                            <article class="solution-card">
+                                <div class="solution-card__head">
+                                    <h3>{{ card.title }}</h3>
+                                    <button type="button" class="menu-btn" aria-label="Card actions">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                </div>
+
+                                <textarea class="content-input content-input--card" rows="3" [(ngModel)]="card.content"></textarea>
+
+                                <div class="solution-card__media" [class.solution-card__media--filled]="card.imageUrl" (click)="cardImageInput.click()">
+                                    <input
+                                        #cardImageInput
+                                        type="file"
+                                        accept="image/png,image/jpeg"
+                                        hidden
+                                        (change)="onCardImageSelected($event, 'en', card.id)"
+                                    />
+
+                                    @if (card.imageUrl) {
+                                        <img [src]="card.imageUrl" [alt]="card.title" class="media-preview" />
+                                    } @else {
+                                        <i class="bi bi-camera"></i>
+                                        <span>Upload images, PNG and JPEG formats are accepted.</span>
+                                    }
+                                </div>
+                            </article>
+                            }
+
+                            <button type="button" class="add-group-card" (click)="addSolutionsGroup('en')">
+                                <span class="add-group-icon" aria-hidden="true"></span>
+                                <span>Add solutions group</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </p-tabpanel>
+
+            <p-tabpanel value="ar">
+                <section class="editor-card" dir="rtl">
+                    <div
+                        class="editor-top"
+                        [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
+                        [class.editor-top--has-image]="topImageUrl"
+                    >
+                        <div class="panel-tools">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputAr.click()">
+                                <i class="bi bi-upload"></i>
+                            </button>
+                            <input #topImageInputAr type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+
+                            <button type="button" class="icon-btn" aria-label="Add link">
+                                <i class="bi bi-link-45deg"></i>
+                            </button>
+                        </div>
+
+                        <article class="text-box text-box--intro">
+                            <h2>{{ introByLang.ar.title }}</h2>
+                            <textarea class="content-input" rows="2" [(ngModel)]="introContentByLang.ar" [placeholder]="introByLang.ar.placeholder"></textarea>
+                        </article>
+                    </div>
+
+                    <div class="editor-bottom">
+                        <div class="solutions-grid">
+                            @for (card of solutionsByLang.ar; track card.id) {
+                            <article class="solution-card">
+                                <div class="solution-card__head">
+                                    <h3>{{ card.title }}</h3>
+                                    <button type="button" class="menu-btn" aria-label="Card actions">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                </div>
+
+                                <textarea class="content-input content-input--card" rows="3" [(ngModel)]="card.content"></textarea>
+
+                                <div class="solution-card__media" [class.solution-card__media--filled]="card.imageUrl" (click)="cardImageInput.click()">
+                                    <input
+                                        #cardImageInput
+                                        type="file"
+                                        accept="image/png,image/jpeg"
+                                        hidden
+                                        (change)="onCardImageSelected($event, 'ar', card.id)"
+                                    />
+
+                                    @if (card.imageUrl) {
+                                        <img [src]="card.imageUrl" [alt]="card.title" class="media-preview" />
+                                    } @else {
+                                        <i class="bi bi-camera"></i>
+                                        <span>ارفع الصور، يتم قبول صيغ PNG و JPEG.</span>
+                                    }
+                                </div>
+                            </article>
+                            }
+
+                            <button type="button" class="add-group-card" (click)="addSolutionsGroup('ar')">
+                                <span class="add-group-icon" aria-hidden="true"></span>
+                                <span>إضافة مجموعة حلول</span>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+</div>

@@ -4,25 +4,25 @@
             class="content-input"
             rows="6"
             [(ngModel)]="content"
-            [placeholder]="'Enter content...' | translate"
+            [placeholder]="labels.enterContent"
         ></textarea>
 
         <div class="field">
-            <span class="field-label">{{ 'Upload Image' | translate }}</span>
+            <span class="field-label">{{ labels.uploadImage }}</span>
             <div class="upload-area" (click)="fileInput.click()">
                 <input #fileInput type="file" accept="image/png,image/jpeg" hidden (change)="onFileChange($event)" />
                 @if (imageUrl) {
                     <img [src]="imageUrl" alt="Section image" class="upload-preview" />
                 } @else {
                     <i class="bi bi-camera"></i>
-                    <span>{{ 'Upload images, PNG and JPEG formats are accepted.' | translate }}</span>
+                    <span>{{ labels.uploadHint }}</span>
                 }
             </div>
         </div>
     </div>
 
     <div class="dialog-footer">
-        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ 'Cancel' | translate }}</button>
-        <button type="button" class="btn save-btn" (click)="save()">{{ 'Save' | translate }}</button>
+        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ labels.cancel }}</button>
+        <button type="button" class="btn save-btn" (click)="save()">{{ labels.save }}</button>
     </div>
 </div>

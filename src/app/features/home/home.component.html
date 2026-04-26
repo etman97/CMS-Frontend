@@ -27,6 +27,7 @@
 </header>
 
 <!-- Solutions Grid -->
+@if (showServices) {
 <section class="solutions-section">
   <div class="container">
     <div class="section-title-wrap">
@@ -96,8 +97,10 @@
     </div>
   </div>
 </section>
+} <!-- /showServices -->
 
 <!-- Partners -->
+@if (showPartners) {
 <section class="home-partners-section">
   <div class="container">
     <div class="section-title-wrap">
@@ -138,4 +141,5 @@
     </div>
   </div>
 </section>
+} <!-- /showPartners -->
 </div>

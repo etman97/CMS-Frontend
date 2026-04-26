@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { HomePageDto, HomePageService } from '../../core/services/home-page.service';
+import { PageStatusService } from '../../core/services/page-status.service';
 
 export interface HomeDialogData {
     source?: 'preview' | 'api';
@@ -20,6 +21,7 @@ export interface HomeDialogData {
 export class HomeComponent implements OnInit, OnDestroy {
     private readonly route = inject(ActivatedRoute);
     private readonly homePageService = inject(HomePageService);
+    private readonly pageStatusService = inject(PageStatusService);
     private readonly dialogConfig = inject(DynamicDialogConfig<HomeDialogData>, { optional: true });
     private readonly messageService = inject(MessageService, { optional: true });
     private dirObserver: MutationObserver | null = null;
@@ -34,6 +36,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     isRtl = false;
     isPreviewMode = false;
     isLoading = true;
+    showServices = false;
+    showPartners = false;
 
     ngOnInit(): void {
         this.routeLang = this.resolveRouteLang(this.route.snapshot.queryParamMap.get('lang'));
@@ -53,10 +57,14 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.dataSource = resolvedData;
             this.applyCurrentLanguage();
             this.isLoading = false;
-            return;
+        } else {
+            this.loadFromApi();
         }
 
-        this.loadFromApi();
+        this.pageStatusService.getStatuses().subscribe(statuses => {
+            this.showServices = statuses.services;
+            this.showPartners = statuses.partners;
+        });
     }
 
     ngOnDestroy(): void {

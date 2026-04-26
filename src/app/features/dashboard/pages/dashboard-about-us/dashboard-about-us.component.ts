@@ -10,7 +10,6 @@ import { AddMemberDialogComponent } from './dialogs/add-member-dialog/add-member
 import { AddMemberDialogData, AddMemberDialogResult } from './dialogs/add-member-dialog/add-member-dialog.model';
 import { AboutPageService, AboutPageDto, TeamMemberDto } from '../../../../core/services/about-page.service';
 import { MediaService } from '../../../../core/services/media.service';
-import { AboutComponent } from '../../../about/about.component';
 import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
 
 @Component({
@@ -110,46 +109,6 @@ export class DashboardAboutUsComponent implements OnInit {
         this.teamMembers = [...data.teamMembers];
     }
 
-    private buildDto(): AboutPageDto {
-        return {
-            isActive: this.isActive,
-            aboutUsContentEn: this.aboutUsContentEn,
-            subContentEn: this.subContentEn,
-            whyUsContentEn: this.whyUsContentEn,
-            numbersSubtitleEn: this.numbersSubtitleEn,
-            missionContentEn: this.missionContentEn,
-            visionContentEn: this.visionContentEn,
-            leadershipContentEn: this.leadershipContentEn,
-            aboutUsContentAr: this.aboutUsContentAr,
-            whyUsContentAr: this.whyUsContentAr,
-            missionContentAr: this.missionContentAr,
-            visionContentAr: this.visionContentAr,
-            leadershipContentAr: this.leadershipContentAr,
-            numberOfEmployees: this.numberOfEmployees,
-            numberOfProducts: this.numberOfProducts,
-            numberOfClients: this.numberOfClients,
-            numberOfPartners: this.numberOfPartners,
-            heroImageUrl: this.heroImageUrl,
-            missionImageUrl: this.sectionImages.mission,
-            visionImageUrl: this.sectionImages.vision,
-            leadershipImageUrl: this.sectionImages.leadership,
-            teamMembers: this.teamMembers.map((m, i) => ({ ...m, displayOrder: i }))
-        };
-    }
-
-    openPreview(): void {
-        this.dialogService.open(AboutComponent, {
-            data: this.buildDto(),
-            header: 'Preview — About Us',
-            width: '100vw',
-            height: '100vh',
-            modal: true,
-            closable: true,
-            styleClass: 'preview-dialog',
-            contentStyle: { padding: '0', overflow: 'auto' }
-        });
-    }
-
     onTopImageSelected(event: Event): void {
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0];
@@ -229,7 +188,7 @@ export class DashboardAboutUsComponent implements OnInit {
         const member = this.teamMembers[index];
         if (!member) return;
 
-        const header = lang === 'ar' ? 'تعديل عضو فريق' : 'Edit Team Member';
+        const header = lang === 'ar' ? 'طھط¹ط¯ظٹظ„ ط¹ط¶ظˆ ظپط±ظٹظ‚' : 'Edit Team Member';
         const dialogRef: DynamicDialogRef | null = this.dialogService.open(AddMemberDialogComponent, {
             header,
             data: {
@@ -333,8 +292,33 @@ export class DashboardAboutUsComponent implements OnInit {
     save(): void {
         if (this.isSaving || this.isUploadingHero || this.uploadingSectionImage) return;
 
+        const dto: AboutPageDto = {
+            isActive: this.isActive,
+            aboutUsContentEn: this.aboutUsContentEn,
+            subContentEn: this.subContentEn,
+            whyUsContentEn: this.whyUsContentEn,
+            numbersSubtitleEn: this.numbersSubtitleEn,
+            missionContentEn: this.missionContentEn,
+            visionContentEn: this.visionContentEn,
+            leadershipContentEn: this.leadershipContentEn,
+            aboutUsContentAr: this.aboutUsContentAr,
+            whyUsContentAr: this.whyUsContentAr,
+            missionContentAr: this.missionContentAr,
+            visionContentAr: this.visionContentAr,
+            leadershipContentAr: this.leadershipContentAr,
+            numberOfEmployees: this.numberOfEmployees,
+            numberOfProducts: this.numberOfProducts,
+            numberOfClients: this.numberOfClients,
+            numberOfPartners: this.numberOfPartners,
+            heroImageUrl: this.heroImageUrl,
+            missionImageUrl: this.sectionImages.mission,
+            visionImageUrl: this.sectionImages.vision,
+            leadershipImageUrl: this.sectionImages.leadership,
+            teamMembers: this.teamMembers.map((m, i) => ({ ...m, displayOrder: i }))
+        };
+
         this.isSaving = true;
-        this.aboutPageService.save(this.buildDto()).subscribe({
+        this.aboutPageService.save(dto).subscribe({
             next: () => {
                 this.isSaving = false;
                 this.messageService.add({ severity: 'success', summary: 'Saved', detail: 'About Us page saved successfully.' });

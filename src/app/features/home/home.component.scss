@@ -4,10 +4,9 @@
 .hero-section {
   position: relative;
   min-height: 1024px;
-  background-color: rgba(45, 46, 131, 0.9);
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background:
+    linear-gradient(rgba(45, 46, 131, 0.25), rgba(45, 46, 131, 0.25)),
+    url('https://www.figma.com/api/mcp/asset/ed172d86-718c-4793-911c-3302a8ba5382') center center / cover no-repeat;
   overflow: hidden;
   padding-top: 120px;
 }

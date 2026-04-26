@@ -2,10 +2,6 @@
     <app-dashboard-page-header
         title="Services"
         [(active)]="isActive"
-        [isSaving]="isSaving"
-        [saveDisabled]="isSaving || isUploadingImage"
-        (preview)="openPreview()"
-        (save)="save()"
     />
 
     <p-tabs [(value)]="activeTab" class="services-tabs">

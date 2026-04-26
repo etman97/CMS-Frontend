@@ -1,52 +1,95 @@
-@if (isLoading) {
-  <div class="page-loader"><div class="spinner"></div></div>
-}
+<main class="solutions-page">
+  <section class="hero">
+    <div class="hero__bg hero__bg--left-glow"></div>
+    <div class="hero__bg hero__bg--right-glow"></div>
+    <div class="hero__bg hero__bg--bottom-glow"></div>
 
-@if (!isLoading) {
-  <main class="solutions-page" [class.preview-mode]="isPreview">
-    <section class="hero">
-      <div class="hero__bg hero__bg--left-glow"></div>
-      <div class="hero__bg hero__bg--right-glow"></div>
-      <div class="hero__bg hero__bg--bottom-glow"></div>
+    <div class="hero__lamp-wrap" aria-hidden="true">
+      <img
+        class="hero__lamp"
+        src="https://www.figma.com/api/mcp/asset/3690bb3d-52b3-4c9f-a19f-df35850637a6"
+        alt=""
+      />
+      <img
+        class="hero__lamp hero__lamp--half"
+        src="https://www.figma.com/api/mcp/asset/3690bb3d-52b3-4c9f-a19f-df35850637a6"
+        alt=""
+      />
+      <div class="hero__lamp-overlay"></div>
+    </div>
 
-      @if (heroImageUrl) {
-        <div class="hero__lamp-wrap" aria-hidden="true">
-          <img class="hero__lamp" [src]="heroImageUrl" alt="" />
-          <div class="hero__lamp-overlay"></div>
+    <div class="hero__content">
+      <h1 class="hero__title">Solutions</h1>
+      <p class="hero__text">
+        Our partnerships power integrated, future-ready solutions that
+        help organizations thrive in a connected world. With every
+        collaboration, we deliver performance, reliability, and
+        scalability—because your success is our mission.
+      </p>
+    </div>
+  </section>
+
+  <section class="solutions-section">
+    <div class="container-fluid px-0">
+      <div class="row g-0">
+
+        <div class="col-md-6">
+          <a routerLink="/solutions" class="solution-card">
+            <img
+              src="https://www.figma.com/api/mcp/asset/f9840836-d013-4a25-b0e4-1f4aa04a5475"
+              alt="IT Solutions"
+            />
+            <div class="solution-overlay"></div>
+            <div class="solution-content">
+              <h3>IT Solutions <span>→</span></h3>
+              <p>Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.</p>
+            </div>
+          </a>
         </div>
-      }
 
-      <div class="hero__content">
-        <h1 class="hero__title">Solutions</h1>
-        @if (introContent) {
-          <p class="hero__text">{{ introContent }}</p>
-        }
+        <div class="col-md-6">
+          <a routerLink="/solutions" class="solution-card">
+            <img
+              src="https://www.figma.com/api/mcp/asset/69e91cf7-e3ff-4299-a554-5dc3a029ecb7"
+              alt="Data Solutions"
+            />
+            <div class="solution-overlay"></div>
+            <div class="solution-content">
+              <h3>Data Solutions <span>→</span></h3>
+              <p>Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.</p>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-6">
+          <a routerLink="/solutions" class="solution-card">
+            <img
+              src="https://www.figma.com/api/mcp/asset/716037ad-3e87-4ed4-9f11-8adff311ecd5"
+              alt="AI and Data Solutions"
+            />
+            <div class="solution-overlay"></div>
+            <div class="solution-content">
+              <h3>AI and Data Solutions <span>→</span></h3>
+              <p>Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.</p>
+            </div>
+          </a>
+        </div>
+
+        <div class="col-md-6">
+          <a routerLink="/solutions" class="solution-card">
+            <img
+              src="https://www.figma.com/api/mcp/asset/bd8b46b0-b70b-4920-bbae-b7b59ea121da"
+              alt="Cybersecurity"
+            />
+            <div class="solution-overlay"></div>
+            <div class="solution-content">
+              <h3>Cybersecurity <span>→</span></h3>
+              <p>Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.</p>
+            </div>
+          </a>
+        </div>
+
       </div>
-    </section>
-
-    @if (cards.length > 0) {
-      <section class="solutions-section">
-        <div class="container-fluid px-0">
-          <div class="row g-0">
-            @for (card of cards; track card.id) {
-              <div class="col-md-6">
-                <a href="/solutions" class="solution-card">
-                  @if (card.imageUrl) {
-                    <img [src]="card.imageUrl" [alt]="cardTitle(card)" />
-                  }
-                  <div class="solution-overlay"></div>
-                  <div class="solution-content">
-                    <h3>{{ cardTitle(card) }} <span>→</span></h3>
-                    @if (cardContent(card)) {
-                      <p>{{ cardContent(card) }}</p>
-                    }
-                  </div>
-                </a>
-              </div>
-            }
-          </div>
-        </div>
-      </section>
-    }
-  </main>
-}
+    </div>
+  </section>
+</main>

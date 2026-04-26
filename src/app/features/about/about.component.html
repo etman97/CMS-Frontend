@@ -1,151 +1,214 @@
-@if (isLoading) {
-  <div class="page-loader"><div class="spinner"></div></div>
-}
+<!-- Hero -->
+<main class="hero-section">
+  <div class="hero-bg-image"></div>
+  <div class="hero-bg-overlay"></div>
+  <div class="hero-glow hero-glow-left"></div>
+  <div class="hero-glow hero-glow-right"></div>
+  <div class="hero-glow hero-glow-bottom"></div>
 
-@if (!isLoading) {
-  <main class="hero-section" [class.preview-mode]="isPreview">
-    <div class="hero-bg-image" [style.backgroundImage]="heroImageStyle"></div>
-    <div class="hero-bg-overlay"></div>
-    <div class="hero-glow hero-glow-left"></div>
-    <div class="hero-glow hero-glow-right"></div>
-    <div class="hero-glow hero-glow-bottom"></div>
+  <section class="about-content">
 
-    <section class="about-content">
+    <!-- Intro -->
+    <div class="intro">
+      <h1>About Us</h1>
+      <p>
+        WES is a leading technology solutions provider, passionately dedicated to helping organizations not just meet,
+        but exceed their digital aspirations. We are a collective of seasoned experts, each bringing deep domain
+        knowledge and a shared commitment to innovation. Our approach involves delivering bespoke strategies and
+        implementations that are meticulously crafted to drive
+      </p>
+      <p>
+        WES adds significant value by leveraging our extensive industry knowledge and a proven track record of successful
+        project delivery. This ensures that our clients receive highly customized solutions that precisely address their
+        unique challenges and strategic goals, consistently leading to measurable and impactful business improvements
+        that resonate across their entire organization.
+      </p>
+    </div>
 
-      <!-- Intro -->
-      <div class="intro">
-        <h1>About Us</h1>
-        @if (aboutUsContent) {
-          <p>{{ aboutUsContent }}</p>
-        }
-        @if (subContent) {
-          <p>{{ subContent }}</p>
-        }
+    <!-- Stats -->
+    <section class="stats-section">
+      <div class="why-wes">
+        <h2>Why WES</h2>
+        <p>
+          Choosing WES means forging an alliance with a truly visionary partner. We distinguish ourselves through
+          unparalleled industry insights, highly agile methodologies, and an unwavering, client-centric approach that
+          places your success at the forefront. Our core philosophy revolves around building enduring, long-term
+          relationships, providing continuous, proactive support, and meticulously adapting our services to your
+          evolving needs. This commitment ensures that your digital landscape remains not only resilient but also
+          future-proof.
+        </p>
+        <p>
+          Our profound value lies in our steadfast commitment to being a genuine partner, transcending the traditional
+          vendor-client relationship.
+        </p>
       </div>
 
-      <!-- Stats -->
-      <section class="stats-section">
-        <div class="why-wes">
-          <h2>Why WES</h2>
-          @if (whyUsContent) {
-            <p>{{ whyUsContent }}</p>
-          }
-        </div>
-
-        <div class="numbers">
-          @if (numbersSubtitle) {
-            <h2>{{ numbersSubtitle }}</h2>
-          }
-          <div class="numbers-grid">
-            @if (numberOfProducts > 0) {
-              <div class="number-card">
-                <div class="number">+{{ numberOfProducts }}</div>
-                <div class="label">Products</div>
-              </div>
-            }
-            @if (numberOfClients > 0) {
-              <div class="number-card">
-                <div class="number">+{{ numberOfClients }}</div>
-                <div class="label">Clients</div>
-              </div>
-            }
-            @if (numberOfPartners > 0) {
-              <div class="number-card">
-                <div class="number">+{{ numberOfPartners }}</div>
-                <div class="label">Partners</div>
-              </div>
-            }
-            @if (numberOfEmployees > 0) {
-              <div class="number-card">
-                <div class="number">+{{ numberOfEmployees }}</div>
-                <div class="label">Employees</div>
-              </div>
-            }
+      <div class="numbers">
+        <h2>WES in numbers</h2>
+        <div class="numbers-grid">
+          <div class="number-card">
+            <div class="number">+10</div>
+            <div class="label">Products</div>
+          </div>
+          <div class="number-card">
+            <div class="number">+12</div>
+            <div class="label">Clients</div>
+          </div>
+          <div class="number-card">
+            <div class="number">+20</div>
+            <div class="label">Partners</div>
+          </div>
+          <div class="number-card">
+            <div class="number">+60</div>
+            <div class="label">Employees</div>
           </div>
         </div>
-      </section>
-
-      <!-- Cards -->
-      <section class="cards">
-
-        <article class="info-card">
-          @if (missionImageUrl) {
-            <div class="card-media">
-              <img [src]="missionImageUrl" alt="Mission background" />
-            </div>
-            <div class="card-overlay"></div>
-          }
-          <div class="card-body">
-            <div class="card-title-row">
-              <h3>Our Mission</h3>
-            </div>
-            @if (missionContent) {
-              <p>{{ missionContent }}</p>
-            }
-          </div>
-        </article>
-
-        <article class="info-card">
-          @if (visionImageUrl) {
-            <div class="card-media">
-              <img [src]="visionImageUrl" alt="Vision background" />
-            </div>
-            <div class="card-overlay"></div>
-          }
-          <div class="card-body">
-            <div class="card-title-row">
-              <h3>Our Vision</h3>
-            </div>
-            @if (visionContent) {
-              <p>{{ visionContent }}</p>
-            }
-          </div>
-        </article>
-
-        <article class="info-card">
-          @if (leadershipImageUrl) {
-            <div class="card-media">
-              <img [src]="leadershipImageUrl" alt="Leadership background" />
-            </div>
-            <div class="card-overlay"></div>
-          }
-          <div class="card-body">
-            <div class="card-title-row">
-              <h3>Leadership</h3>
-            </div>
-            @if (leadershipContent) {
-              <p>{{ leadershipContent }}</p>
-            }
-          </div>
-        </article>
-
-      </section>
+      </div>
     </section>
 
-    <!-- Team -->
-    @if (teamMembers.length > 0) {
-      <section class="team-section">
-        <div class="team-content">
-          <h2>Our Team</h2>
-          <div class="team-grid">
-            @for (member of teamMembers; track member.id) {
-              <article class="team-card">
-                @if (member.imageUrl) {
-                  <img class="team-card__image" [src]="member.imageUrl" [alt]="memberName(member)" />
-                }
-                <div class="team-card__overlay"></div>
-                <div class="team-card__content">
-                  <h3>{{ memberName(member) }}</h3>
-                  <p class="team-card__role">{{ memberTitle(member) }}</p>
-                  @if (memberBrief(member)) {
-                    <p class="team-card__bio">{{ memberBrief(member) }}</p>
-                  }
-                </div>
-              </article>
-            }
-          </div>
+    <!-- Cards -->
+    <section class="cards">
+
+      <article class="info-card">
+        <div class="card-media">
+          <img src="https://www.figma.com/api/mcp/asset/82d8c6f9-59be-4750-8a67-320c3d9f2f4d" alt="Mission background" />
         </div>
-      </section>
-    }
-  </main>
-}
+        <div class="card-overlay"></div>
+        <div class="card-body">
+          <div class="card-title-row">
+            <img class="card-icon" src="https://www.figma.com/api/mcp/asset/f471d3eb-6863-440e-a423-9779bd19e6c1" alt="" />
+            <h3>Our Mission</h3>
+          </div>
+          <p>
+            Our mission is to empower businesses with transformative digital and cutting-edge AI solutions that unlock
+            previously untapped potentials, rigorously optimize operations, and cultivate sustainable competitive
+            advantages in dynamic markets.
+          </p>
+          <p>
+            WES's mission is brought to life through the delivery of innovative, high-impact solutions that directly
+            translate into significant operational efficiencies, substantial cost savings, and the creation of entirely
+            new revenue streams. This empowers our clients with a distinct and formidable edge in their respective
+            markets, driving sustained growth and market leadership.
+          </p>
+        </div>
+      </article>
+
+      <article class="info-card">
+        <div class="card-media">
+          <img src="https://www.figma.com/api/mcp/asset/400c0188-8007-4ae8-a28b-350a66b7d6d4" alt="Vision background" />
+        </div>
+        <div class="card-overlay"></div>
+        <div class="card-body">
+          <div class="card-title-row">
+            <img class="card-icon" src="https://www.figma.com/api/mcp/asset/f6912652-b91c-40a5-bf0b-0a8050e97bd7" alt="" />
+            <h3>Our Vision</h3>
+          </div>
+          <p>
+            Our vision is to ascend as the global leader in innovative technology solutions, earning recognition for
+            our unparalleled excellence in spearheading digital transformation and pioneering the responsible, ethical
+            integration of AI for a better, more efficient future.
+          </p>
+          <p>
+            Our ambitious vision serves as the driving force behind our relentless pursuit of technological advancement.
+            It ensures that WES consistently remains at the absolute forefront of digital and AI innovation, providing
+            our clients with exclusive access to the most advanced, ethically sound, and impactful solutions available
+            on the global stage.
+          </p>
+        </div>
+      </article>
+
+      <article class="info-card">
+        <div class="card-media">
+          <img src="https://www.figma.com/api/mcp/asset/357f7fdc-7ee8-41d9-89d7-58177ef610d8" alt="Leadership background" />
+        </div>
+        <div class="card-overlay"></div>
+        <div class="card-body">
+          <div class="card-title-row">
+            <img class="card-icon card-icon--sm" src="https://www.figma.com/api/mcp/asset/fdf49e45-cfa7-41e4-88fc-06eb855990aa" alt="" />
+            <h3>Leadership</h3>
+          </div>
+          <p>
+            Our distinguished leadership team is comprised of industry veterans and recognized thought leaders,
+            collectively possessing decades of combined experience across technology, intricate business strategy, and
+            groundbreaking innovation. They meticulously guide WES with an unwavering commitment to integrity,
+            operational excellence, and a forward-thinking approach.
+          </p>
+          <p>
+            The intrinsic value of WES's leadership is profoundly demonstrated in their strategic foresight and
+            extensive hands-on experience.
+          </p>
+        </div>
+      </article>
+
+    </section>
+  </section>
+
+  <!-- Team -->
+  <section class="team-section">
+    <div class="team-content">
+      <h2>Our Team</h2>
+
+      <div class="team-grid">
+        <article class="team-card">
+          <img class="team-card__image" src="https://www.figma.com/api/mcp/asset/2a234a7d-cd7a-4d31-93c1-3300b1a0e95c" alt="Taha Mohamed" />
+          <div class="team-card__overlay"></div>
+          <div class="team-card__content">
+            <h3>Taha Mohamed</h3>
+            <p class="team-card__role">CEO</p>
+            <p class="team-card__bio">Mohamed is a digital transformation leader with 15 years of experience. He focuses on leveraging AI to create innovative.</p>
+          </div>
+        </article>
+
+        <article class="team-card">
+          <img class="team-card__image" src="https://www.figma.com/api/mcp/asset/2a234a7d-cd7a-4d31-93c1-3300b1a0e95c" alt="Taha Mohamed" />
+          <div class="team-card__overlay"></div>
+          <div class="team-card__content">
+            <h3>Taha Mohamed</h3>
+            <p class="team-card__role">CEO</p>
+            <p class="team-card__bio">Mohamed is a digital transformation leader with 15 years of experience. He focuses on leveraging AI to create innovative.</p>
+          </div>
+        </article>
+
+        <article class="team-card">
+          <img class="team-card__image" src="https://www.figma.com/api/mcp/asset/2a234a7d-cd7a-4d31-93c1-3300b1a0e95c" alt="Taha Mohamed" />
+          <div class="team-card__overlay"></div>
+          <div class="team-card__content">
+            <h3>Taha Mohamed</h3>
+            <p class="team-card__role">CEO</p>
+            <p class="team-card__bio">Mohamed is a digital transformation leader with 15 years of experience. He focuses on leveraging AI to create innovative.</p>
+          </div>
+        </article>
+
+        <article class="team-card">
+          <img class="team-card__image" src="https://www.figma.com/api/mcp/asset/2a234a7d-cd7a-4d31-93c1-3300b1a0e95c" alt="Taha Mohamed" />
+          <div class="team-card__overlay"></div>
+          <div class="team-card__content">
+            <h3>Taha Mohamed</h3>
+            <p class="team-card__role">CEO</p>
+            <p class="team-card__bio">Mohamed is a digital transformation leader with 15 years of experience. He focuses on leveraging AI to create innovative.</p>
+          </div>
+        </article>
+
+        <article class="team-card">
+          <img class="team-card__image" src="https://www.figma.com/api/mcp/asset/2a234a7d-cd7a-4d31-93c1-3300b1a0e95c" alt="Taha Mohamed" />
+          <div class="team-card__overlay"></div>
+          <div class="team-card__content">
+            <h3>Taha Mohamed</h3>
+            <p class="team-card__role">CEO</p>
+            <p class="team-card__bio">Mohamed is a digital transformation leader with 15 years of experience. He focuses on leveraging AI to create innovative.</p>
+          </div>
+        </article>
+
+        <article class="team-card">
+          <img class="team-card__image" src="https://www.figma.com/api/mcp/asset/2a234a7d-cd7a-4d31-93c1-3300b1a0e95c" alt="Taha Mohamed" />
+          <div class="team-card__overlay"></div>
+          <div class="team-card__content">
+            <h3>Taha Mohamed</h3>
+            <p class="team-card__role">CEO</p>
+            <p class="team-card__bio">Mohamed is a digital transformation leader with 15 years of experience. He focuses on leveraging AI to create innovative.</p>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+</main>

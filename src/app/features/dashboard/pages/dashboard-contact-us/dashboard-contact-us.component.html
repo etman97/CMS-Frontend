@@ -1,7 +1,16 @@
-<div class="dashboard-contact-us-page">
+@if (isLoading) {
+<div class="page-loader">
+    <div class="spinner"></div>
+</div>
+}
+
+<div class="dashboard-contact-us-page" [class.page-hidden]="isLoading">
     <app-dashboard-page-header
         title="Contact Us"
         [(active)]="isActive"
+        [isSaving]="isSaving"
+        [saveDisabled]="isSaving || isUploadingImage"
+        (save)="save()"
     />
 
     <p-tabs [(value)]="activeTab" class="contact-tabs">
@@ -15,25 +24,27 @@
                 <section class="editor-card">
                     <div
                         class="editor-top"
-                        [style.background-image]="sharedTopImageUrl ? 'url(' + sharedTopImageUrl + ')' : null"
-                        [class.editor-top--has-image]="sharedTopImageUrl"
+                        [style.background-image]="heroImageUrl ? 'url(' + heroImageUrl + ')' : null"
+                        [class.editor-top--has-image]="heroImageUrl"
                     >
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputEn.click()">
+                            <button type="button" class="icon-btn" aria-label="Upload image"
+                                (click)="topImageInputEn.click()" [disabled]="isUploadingImage">
                                 <i class="bi bi-upload"></i>
                             </button>
-                            <input #topImageInputEn type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <input #topImageInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden
+                                (change)="onTopImageSelected($event)" />
                             <button type="button" class="icon-btn" aria-label="Add link">
                                 <i class="bi bi-link-45deg"></i>
                             </button>
                         </div>
 
                         <article class="text-box">
-                            <h2>{{ contentByLang.en.introTitle }}</h2>
+                            <h2>{{ labels.en.introTitle }}</h2>
                             <textarea
                                 class="content-input"
                                 rows="3"
-                                [(ngModel)]="contentByLang.en.introDescription"
+                                [(ngModel)]="introDescriptionEn"
                                 placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"
                             ></textarea>
                         </article>
@@ -42,35 +53,35 @@
                     <div class="editor-bottom">
                         <div class="contact-grid">
                             <article class="text-box text-box--card">
-                                <h2>{{ contentByLang.en.contactTitle }}</h2>
+                                <h2>{{ labels.en.contactTitle }}</h2>
                                 <div class="fields-grid">
                                     <input
                                         type="text"
                                         class="field-input"
-                                        [(ngModel)]="sharedContactFields.phone"
+                                        [(ngModel)]="phone"
                                         placeholder="Phone number"
                                     />
                                     <input
                                         type="email"
                                         class="field-input"
-                                        [(ngModel)]="sharedContactFields.email"
+                                        [(ngModel)]="email"
                                         placeholder="Email"
                                     />
                                     <input
                                         type="text"
                                         class="field-input field-input--full"
-                                        [(ngModel)]="sharedContactFields.address"
+                                        [(ngModel)]="address"
                                         placeholder="Address"
                                     />
                                 </div>
                             </article>
 
                             <article class="text-box text-box--card">
-                                <h2>{{ contentByLang.en.visitTitle }}</h2>
+                                <h2>{{ labels.en.visitTitle }}</h2>
                                 <input
                                     type="url"
                                     class="field-input"
-                                    [(ngModel)]="sharedContactFields.locationUrl"
+                                    [(ngModel)]="locationUrl"
                                     placeholder="Location URL"
                                 />
                             </article>
@@ -83,25 +94,27 @@
                 <section class="editor-card" dir="rtl">
                     <div
                         class="editor-top"
-                        [style.background-image]="sharedTopImageUrl ? 'url(' + sharedTopImageUrl + ')' : null"
-                        [class.editor-top--has-image]="sharedTopImageUrl"
+                        [style.background-image]="heroImageUrl ? 'url(' + heroImageUrl + ')' : null"
+                        [class.editor-top--has-image]="heroImageUrl"
                     >
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputAr.click()">
-                                <i class="bi bi-upload"></i>
+                            <button type="button" class="icon-btn" aria-label="Upload image"
+                                (click)="topImageInputAr.click()" [disabled]="isUploadingImage">
+                                <i class="bi bi-upload rtl-flip"></i>
                             </button>
-                            <input #topImageInputAr type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <input #topImageInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden
+                                (change)="onTopImageSelected($event)" />
                             <button type="button" class="icon-btn" aria-label="Add link">
-                                <i class="bi bi-link-45deg"></i>
+                                <i class="bi bi-link-45deg rtl-flip"></i>
                             </button>
                         </div>
 
                         <article class="text-box">
-                            <h2>{{ contentByLang.ar.introTitle }}</h2>
+                            <h2>{{ labels.ar.introTitle }}</h2>
                             <textarea
                                 class="content-input"
                                 rows="3"
-                                [(ngModel)]="contentByLang.ar.introDescription"
+                                [(ngModel)]="introDescriptionAr"
                                 placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"
                             ></textarea>
                         </article>
@@ -110,35 +123,35 @@
                     <div class="editor-bottom">
                         <div class="contact-grid">
                             <article class="text-box text-box--card">
-                                <h2>{{ contentByLang.ar.contactTitle }}</h2>
+                                <h2>{{ labels.ar.contactTitle }}</h2>
                                 <div class="fields-grid">
                                     <input
                                         type="text"
                                         class="field-input"
-                                        [(ngModel)]="sharedContactFields.phone"
+                                        [(ngModel)]="phone"
                                         placeholder="رقم الهاتف"
                                     />
                                     <input
                                         type="email"
                                         class="field-input"
-                                        [(ngModel)]="sharedContactFields.email"
+                                        [(ngModel)]="email"
                                         placeholder="البريد الإلكتروني"
                                     />
                                     <input
                                         type="text"
                                         class="field-input field-input--full"
-                                        [(ngModel)]="sharedContactFields.address"
+                                        [(ngModel)]="address"
                                         placeholder="العنوان"
                                     />
                                 </div>
                             </article>
 
                             <article class="text-box text-box--card">
-                                <h2>{{ contentByLang.ar.visitTitle }}</h2>
+                                <h2>{{ labels.ar.visitTitle }}</h2>
                                 <input
                                     type="url"
                                     class="field-input"
-                                    [(ngModel)]="sharedContactFields.locationUrl"
+                                    [(ngModel)]="locationUrl"
                                     placeholder="رابط الموقع"
                                 />
                             </article>

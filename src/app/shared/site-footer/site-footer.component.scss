@@ -63,15 +63,25 @@
     margin-bottom: 10px;
   }
 
-  a {
+  a,
+  .footer-link--disabled {
     color: $white;
     font-size: 16px;
     text-decoration: none;
     transition: color 0.3s ease;
+    display: inline-block;
+  }
 
+  a {
     &:hover {
       color: #c9c9ff;
     }
+  }
+
+  .footer-link--disabled {
+    color: rgba($white, 0.55);
+    cursor: not-allowed;
+    pointer-events: none;
   }
 }
 

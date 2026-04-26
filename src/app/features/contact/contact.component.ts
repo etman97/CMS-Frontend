@@ -1,4 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { MessageService } from 'primeng/api';
+import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { Subscription } from 'rxjs';
+import { ContactPageDto, ContactPageService } from '../../core/services/contact-page.service';
+
+export interface ContactDialogData {
+    source?: 'preview' | 'api';
+    data?: ContactPageDto;
+    previewLang?: 'en' | 'ar';
+}
 
 @Component({
     selector: 'app-contact',
@@ -7,4 +19,212 @@ import { Component } from '@angular/core';
     templateUrl: './contact.component.html',
     styleUrl: './contact.component.scss'
 })
-export class ContactComponent {}
+export class ContactComponent implements OnInit, OnDestroy {
+    private readonly route = inject(ActivatedRoute);
+    private readonly contactPageService = inject(ContactPageService);
+    private readonly dialogConfig = inject(DynamicDialogConfig<ContactDialogData>, { optional: true });
+    private readonly messageService = inject(MessageService, { optional: true });
+    private readonly sanitizer = inject(DomSanitizer);
+
+    private dirObserver: MutationObserver | null = null;
+    private queryParamSub: Subscription | null = null;
+    private dataSource: ContactPageDto | null = null;
+    private routeLang: 'en' | 'ar' | null = null;
+    private previewLang: 'en' | 'ar' | null = null;
+
+    isPreviewMode = false;
+    isLoading = true;
+    hasLoadError = false;
+    isRtl = false;
+
+    heroDescription = '';
+    contactTitle = '';
+    messageTitle = '';
+    visitTitle = '';
+    firstNamePlaceholder = '';
+    lastNamePlaceholder = '';
+    phonePlaceholder = '';
+    emailPlaceholder = '';
+    messagePlaceholder = '';
+    submitLabel = '';
+
+    phone = '';
+    email = '';
+    address = '';
+    locationUrl = '';
+    safeLocationUrl: SafeResourceUrl | null = null;
+    heroImageUrl: string | null = null;
+
+    ngOnInit(): void {
+        this.routeLang = this.resolveRouteLang(this.route.snapshot.queryParamMap.get('lang'));
+
+        const dialogData = this.dialogConfig?.data;
+        if (dialogData?.source === 'preview' && dialogData.data) {
+            this.isPreviewMode = true;
+            const lang: 'en' | 'ar' = dialogData.previewLang ?? 'en';
+            this.previewLang = lang;
+            this.dataSource = dialogData.data;
+            this.populate(dialogData.data, lang);
+            this.isLoading = false;
+            return;
+        }
+
+        this.observeDirectionChanges();
+        this.observeQueryLangChanges();
+
+        const resolvedData = this.route.snapshot.data['contactPageData'] as ContactPageDto | null | undefined;
+        if (resolvedData !== undefined) {
+            this.dataSource = resolvedData;
+            this.applyCurrentLanguage();
+            this.isLoading = false;
+            return;
+        }
+
+        this.loadFromApi();
+    }
+
+    ngOnDestroy(): void {
+        this.dirObserver?.disconnect();
+        this.dirObserver = null;
+        this.queryParamSub?.unsubscribe();
+        this.queryParamSub = null;
+    }
+
+    private populate(data: ContactPageDto, lang: 'en' | 'ar'): void {
+        this.isRtl = lang === 'ar';
+
+        this.heroDescription = lang === 'ar' ? (data.introDescriptionAr ?? '') : (data.introDescriptionEn ?? '');
+
+        this.contactTitle = this.isRtl ? 'تواصل معنا' : 'Contact Us';
+        this.messageTitle = this.isRtl ? 'راسلنا' : 'Message Us';
+        this.visitTitle = this.isRtl ? 'زورونا' : 'Visit Us';
+        this.firstNamePlaceholder = this.isRtl ? 'الاسم الأول' : 'First Name';
+        this.lastNamePlaceholder = this.isRtl ? 'اسم العائلة' : 'Last Name';
+        this.phonePlaceholder = this.isRtl ? 'رقم الهاتف' : 'Phone Number';
+        this.emailPlaceholder = this.isRtl ? 'البريد الإلكتروني' : 'Email';
+        this.messagePlaceholder = this.isRtl ? 'اكتب رسالتك' : 'Enter your message';
+        this.submitLabel = this.isRtl ? 'إرسال' : 'Submit';
+
+        this.phone = data.phone ?? '';
+        this.email = data.email ?? '';
+        this.address = data.address ?? '';
+        this.locationUrl = data.locationUrl ?? '';
+        const normalizedMapUrl = this.normalizeMapUrl(this.locationUrl);
+        this.safeLocationUrl = normalizedMapUrl ? this.sanitizer.bypassSecurityTrustResourceUrl(normalizedMapUrl) : null;
+        this.heroImageUrl = data.heroImageUrl ?? null;
+    }
+
+    private normalizeMapUrl(value: string): string {
+        const trimmed = value.trim();
+        if (!trimmed) {
+            return '';
+        }
+
+        if (trimmed.startsWith('<')) {
+            const srcMatch = trimmed.match(/src\s*=\s*["']([^"']+)["']/i);
+            if (!srcMatch?.[1]) {
+                return '';
+            }
+
+            return srcMatch[1].replace(/&amp;/g, '&').trim();
+        }
+
+        return trimmed.replace(/&amp;/g, '&');
+    }
+
+    private loadFromApi(): void {
+        this.contactPageService.get().subscribe({
+            next: (data) => {
+                this.dataSource = data;
+                this.applyCurrentLanguage();
+                this.hasLoadError = false;
+                this.isLoading = false;
+            },
+            error: () => {
+                this.hasLoadError = true;
+                this.isLoading = false;
+                this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load contact page data.' });
+            }
+        });
+    }
+
+    private resolveRouteLang(value: string | null): 'en' | 'ar' | null {
+        if (value === 'ar') return 'ar';
+        if (value === 'en') return 'en';
+        return null;
+    }
+
+    private observeQueryLangChanges(): void {
+        this.queryParamSub = this.route.queryParamMap.subscribe((params) => {
+            this.routeLang = this.resolveRouteLang(params.get('lang'));
+            this.applyCurrentLanguage();
+        });
+    }
+
+    private observeDirectionChanges(): void {
+        this.dirObserver = new MutationObserver(() => {
+            if (!this.routeLang) {
+                this.applyCurrentLanguage();
+            }
+        });
+
+        this.dirObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['dir']
+        });
+    }
+
+    private applyCurrentLanguage(): void {
+        if (!this.dataSource) {
+            this.clearViewModel();
+            return;
+        }
+
+        const lang = this.previewLang ?? this.routeLang ?? this.getLangFromDocumentDir();
+        this.populate(this.dataSource, lang);
+    }
+
+    private getLangFromDocumentDir(): 'en' | 'ar' {
+        return document.documentElement.getAttribute('dir') === 'rtl' ? 'ar' : 'en';
+    }
+
+    private clearViewModel(): void {
+        const lang = this.previewLang ?? this.routeLang ?? this.getLangFromDocumentDir();
+        this.populate(
+            {
+                isActive: true,
+                introDescriptionEn: '',
+                introDescriptionAr: '',
+                phone: '',
+                email: '',
+                address: '',
+                locationUrl: '',
+                heroImageUrl: null
+            },
+            lang
+        );
+    }
+
+    onPreviewSurfaceClick(event: Event): void {
+        if (!this.isPreviewMode) {
+            return;
+        }
+
+        const target = event.target as HTMLElement | null;
+        if (!target) {
+            return;
+        }
+
+        if (target.closest('a,button,[role="button"]')) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+    }
+
+    onContactSubmit(event: Event): void {
+        event.preventDefault();
+        if (this.isPreviewMode) {
+            event.stopPropagation();
+        }
+    }
+}

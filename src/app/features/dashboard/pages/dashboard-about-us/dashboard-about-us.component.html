@@ -10,6 +10,7 @@
         [(active)]="isActive"
         [isSaving]="isSaving"
         [saveDisabled]="isSaving || isUploadingHero || !!uploadingSectionImage"
+        (preview)="onPreview()"
         (save)="save()"
     />
 
@@ -51,7 +52,7 @@
                         <div class="row row-two-columns">
                             <article class="text-box text-box--large">
                                 <h2>Why WES</h2>
-                                <textarea class="content-input" rows="4" [(ngModel)]="whyUsContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <textarea class="content-input" rows="8" [(ngModel)]="whyUsContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
                             </article>
 
                             <article class="text-box text-box--numbers">
@@ -219,7 +220,7 @@
                         <div class="row row-two-columns">
                             <article class="text-box text-box--large">
                                 <h2>لماذا WES</h2>
-                                <textarea class="content-input" rows="4" [(ngModel)]="whyUsContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                <textarea class="content-input" rows="8" [(ngModel)]="whyUsContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
                             </article>
 
                             <article class="text-box text-box--numbers">

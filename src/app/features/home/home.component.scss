@@ -4,9 +4,7 @@
 .hero-section {
   position: relative;
   min-height: 1024px;
-  background:
-    linear-gradient(rgba(45, 46, 131, 0.25), rgba(45, 46, 131, 0.25)),
-    url('https://www.figma.com/api/mcp/asset/ed172d86-718c-4793-911c-3302a8ba5382') center center / cover no-repeat;
+  background: linear-gradient(rgba(45, 46, 131, 0.25), rgba(45, 46, 131, 0.25));
   overflow: hidden;
   padding-top: 120px;
 }
@@ -56,6 +54,14 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+.hero-content[dir='rtl'] .hero-title {
+  line-height: 1.32;
+  padding-top: 0.06em;
+  padding-bottom: 0.06em;
+  letter-spacing: 0;
+  overflow: visible;
 }
 
 .hero-text {

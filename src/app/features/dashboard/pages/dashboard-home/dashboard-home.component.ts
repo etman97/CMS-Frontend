@@ -1,21 +1,26 @@
 import { Component, ChangeDetectorRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { HomePageService, HomePageDto } from '../../../../core/services/home-page.service';
 import { MediaService } from '../../../../core/services/media.service';
+import { PRIME_NG_CONFIGS } from '../../../../shared/prime-ng-configs';
 import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
+import { HomeComponent, HomeDialogData } from '../../../home/home.component';
 
 @Component({
     selector: 'app-dashboard-home',
     standalone: true,
-    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DashboardPageHeaderComponent],
+    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DynamicDialogModule, DashboardPageHeaderComponent],
+    providers: [DialogService],
     templateUrl: './dashboard-home.component.html',
     styleUrl: './dashboard-home.component.scss'
 })
 export class DashboardHomeComponent implements OnInit, OnDestroy {
     private readonly homePageService = inject(HomePageService);
     private readonly mediaService = inject(MediaService);
+    private readonly dialogService = inject(DialogService);
     private readonly messageService = inject(MessageService);
     private readonly cdr = inject(ChangeDetectorRef);
 
@@ -129,6 +134,42 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
         }
     }
 
+    onPreview(): void {
+        const payload: HomePageDto = {
+            isActive: this.isActive,
+            heroTitleEn: this.heroTitleEn,
+            heroContentEn: this.heroContentEn,
+            primaryButtonTextEn: this.primaryButtonTextEn,
+            secondaryButtonTextEn: this.secondaryButtonTextEn,
+            heroTitleAr: this.heroTitleAr,
+            heroContentAr: this.heroContentAr,
+            primaryButtonTextAr: this.primaryButtonTextAr,
+            secondaryButtonTextAr: this.secondaryButtonTextAr,
+            heroImageUrl: this.heroImageUrl
+        };
+
+        const previewLang: 'en' | 'ar' = this.activeTab === 'ar' ? 'ar' : 'en';
+        const previewHeader = previewLang === 'ar' ? 'الصفحة الرئيسية - معاينة' : 'Home Preview';
+
+        const dialogData: HomeDialogData = {
+            source: 'preview',
+            data: payload,
+            previewLang
+        };
+
+        this.dialogService.open(HomeComponent, {
+            ...PRIME_NG_CONFIGS.dynamicDialog,
+            header: previewHeader,
+            data: dialogData,
+            width: '95vw',
+            height: '95vh',
+            style: { direction: previewLang === 'ar' ? 'rtl' : 'ltr' },
+            contentStyle: { padding: '0' },
+            maximizable: false,
+            closable: true
+        });
+    }
+
     save(): void {
         if (this.isSaving || this.isUploadingImage) return;
 
@@ -158,3 +199,4 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
         });
     }
 }
+

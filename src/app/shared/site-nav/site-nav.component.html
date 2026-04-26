@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg wes-navbar fixed-top">
   <div class="container">
 
-    <a class="navbar-brand" routerLink="/" aria-label="WES Home">
+    <a class="navbar-brand" routerLink="/" [attr.aria-label]="'nav.brandAria' | translate">
       <img
         src="/wes-logo-primary.png"
         alt="WES Logo"
@@ -23,28 +23,26 @@
 
     <div class="collapse navbar-collapse" id="wesNavbar">
       <ul class="navbar-nav wes-nav-list align-items-lg-center">
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/about" routerLinkActive="active">About Us</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/partners" routerLinkActive="active">Our Partners</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/solutions" routerLinkActive="active">Solutions</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/services" routerLinkActive="active">Services</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/contact" routerLinkActive="active">Contact Us</a>
-        </li>
+        @for (item of navItems; track item.key) {
+          <li class="nav-item">
+            @if (isPageEnabled(item.key)) {
+              <a
+                class="nav-link"
+                [routerLink]="item.route"
+                routerLinkActive="active"
+                [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+              >
+                {{ item.labelKey | translate }}
+              </a>
+            } @else {
+              <span class="nav-link nav-link--disabled" aria-disabled="true">{{ item.labelKey | translate }}</span>
+            }
+          </li>
+        }
         <li class="nav-item nav-item--language mt-3 mt-lg-0">
           <button type="button" class="btn btn-language" (click)="toggleLanguage()">
             <i class="bi bi-globe2 lang-icon"></i>
-            {{ isArabic ? 'English' : 'Arabic' }}
+            {{ (isArabic ? 'nav.languageEnglish' : 'nav.languageArabic') | translate }}
           </button>
         </li>
       </ul>

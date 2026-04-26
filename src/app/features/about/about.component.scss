@@ -1,6 +1,35 @@
 @use 'variables' as *;
 
-// ─── Hero ────────────────────────────────────────
+.page-loader {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.7);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  position: fixed;
+  z-index: 1200;
+}
+
+.spinner {
+  animation: about-spin 0.85s linear infinite;
+  border: 4px solid #e9ecef;
+  border-radius: 50%;
+  border-top-color: $primary;
+  height: 44px;
+  width: 44px;
+}
+
+.page-hidden {
+  pointer-events: none;
+  visibility: hidden;
+}
+
+@keyframes about-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .hero-section {
   position: relative;
   min-height: 1483px;
@@ -15,9 +44,6 @@
   inset: 0 auto auto 0;
   width: 100%;
   height: 341px;
-  background-image:
-    linear-gradient(to bottom, rgba(0, 0, 0, 0) 24%, rgba(0, 0, 0, 1) 100%),
-    url('https://www.figma.com/api/mcp/asset/e65b8460-7668-4aff-91e6-065d907208fc');
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -61,7 +87,6 @@
   background: rgba(238, 238, 255, 0.07);
 }
 
-// ─── Content wrapper ────────────────────────────
 .about-content {
   position: relative;
   z-index: 3;
@@ -69,7 +94,12 @@
   margin: 0 auto;
 }
 
-// ─── Intro ──────────────────────────────────────
+.load-error {
+  margin: 0 0 24px;
+  color: $white;
+  font-size: 18px;
+}
+
 .intro {
   h1 {
     margin: 0 0 24px;
@@ -90,7 +120,6 @@
   }
 }
 
-// ─── Stats ──────────────────────────────────────
 .stats-section {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -104,6 +133,13 @@
     font-weight: 600;
     color: $white;
   }
+}
+
+.numbers-subtitle {
+  margin: 0 0 16px;
+  font-size: 18px;
+  line-height: 1.5;
+  color: $white;
 }
 
 .why-wes p {
@@ -141,7 +177,6 @@
   padding-bottom: 14px;
 }
 
-// ─── Cards ──────────────────────────────────────
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -198,12 +233,18 @@
 .card-icon {
   width: 40px;
   height: 40px;
-  object-fit: contain;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  line-height: 1;
+  color: $white;
   flex-shrink: 0;
 
   &--sm {
     width: 36px;
     height: 36px;
+    font-size: 28px;
   }
 }
 
@@ -214,7 +255,6 @@
   color: $white;
 }
 
-// â”€â”€â”€ Team â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 .team-section {
   position: relative;
   z-index: 3;
@@ -306,7 +346,14 @@
   line-height: 1.5;
 }
 
-// ─── Responsive ─────────────────────────────────
+.about-page--preview {
+  a,
+  button,
+  [role='button'] {
+    pointer-events: none;
+  }
+}
+
 @media (max-width: 1200px) {
   .about-content {
     width: min(calc(100% - 64px), 1280px);
@@ -369,6 +416,7 @@
 
   .intro p,
   .why-wes p,
+  .numbers-subtitle,
   .card-body p {
     font-size: 15px;
   }
@@ -399,7 +447,6 @@
   }
 }
 
-// ─── 1920px Desktop ──────────────────────────────
 @media (min-width: 1920px) {
   .about-content {
     width: min(calc(100% - 160px), 1760px);

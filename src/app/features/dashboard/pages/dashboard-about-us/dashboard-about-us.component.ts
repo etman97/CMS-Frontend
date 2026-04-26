@@ -11,6 +11,7 @@ import { AddMemberDialogData, AddMemberDialogResult } from './dialogs/add-member
 import { AboutPageService, AboutPageDto, TeamMemberDto } from '../../../../core/services/about-page.service';
 import { MediaService } from '../../../../core/services/media.service';
 import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
+import { AboutComponent, AboutDialogData } from '../../../about/about.component';
 
 @Component({
     selector: 'app-dashboard-about-us',
@@ -419,6 +420,56 @@ export class DashboardAboutUsComponent implements OnInit, OnDestroy {
 
     closeTeamMenu(): void {
         this.openTeamMenuIndex = null;
+    }
+
+    onPreview(): void {
+        const payload: AboutPageDto = {
+            isActive: this.isActive,
+            aboutUsContentEn: this.aboutUsContentEn,
+            subContentEn: this.subContentEn,
+            whyUsContentEn: this.whyUsContentEn,
+            numbersSubtitleEn: this.numbersSubtitleEn,
+            missionContentEn: this.missionContentEn,
+            visionContentEn: this.visionContentEn,
+            leadershipContentEn: this.leadershipContentEn,
+            aboutUsContentAr: this.aboutUsContentAr,
+            subContentAr: this.subContentAr,
+            whyUsContentAr: this.whyUsContentAr,
+            numbersSubtitleAr: this.numbersSubtitleAr,
+            missionContentAr: this.missionContentAr,
+            visionContentAr: this.visionContentAr,
+            leadershipContentAr: this.leadershipContentAr,
+            numberOfEmployees: this.numberOfEmployees,
+            numberOfProducts: this.numberOfProducts,
+            numberOfClients: this.numberOfClients,
+            numberOfPartners: this.numberOfPartners,
+            heroImageUrl: this.heroImageUrl,
+            missionImageUrl: this.sectionImages.mission,
+            visionImageUrl: this.sectionImages.vision,
+            leadershipImageUrl: this.sectionImages.leadership,
+            teamMembers: this.teamMembers.map((m, i) => ({ ...m, displayOrder: i }))
+        };
+
+        const previewLang: 'en' | 'ar' = this.activeTab === 'ar' ? 'ar' : 'en';
+        const previewHeader = previewLang === 'ar' ? 'معاينة من نحن' : 'About Us Preview';
+
+        const dialogData: AboutDialogData = {
+            source: 'preview',
+            data: payload,
+            previewLang
+        };
+
+        this.dialogService.open(AboutComponent, {
+            ...PRIME_NG_CONFIGS.dynamicDialog,
+            header: previewHeader,
+            data: dialogData,
+            width: '95vw',
+            height: '95vh',
+            style: { direction: previewLang === 'ar' ? 'rtl' : 'ltr' },
+            contentStyle: { padding: '0' },
+            maximizable: false,
+            closable: true
+        });
     }
 
     save(): void {

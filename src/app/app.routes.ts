@@ -1,5 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard } from './core/auth/auth.guard';
+import { homePageResolver } from './core/resolvers/home-page.resolver';
+import { aboutPageResolver } from './core/resolvers/about-page.resolver';
+import { contactPageResolver } from './core/resolvers/contact-page.resolver';
 
 export const routes: Routes = [
     {
@@ -9,11 +12,17 @@ export const routes: Routes = [
             {
                 path: '',
                 pathMatch: 'full',
-                loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent)
+                loadComponent: () => import('./features/home/home.component').then(m => m.HomeComponent),
+                resolve: {
+                    homePageData: homePageResolver
+                }
             },
             {
                 path: 'about',
-                loadComponent: () => import('./features/about/about.component').then(m => m.AboutComponent)
+                loadComponent: () => import('./features/about/about.component').then(m => m.AboutComponent),
+                resolve: {
+                    aboutPageData: aboutPageResolver
+                }
             },
             {
                 path: 'solutions',
@@ -29,7 +38,10 @@ export const routes: Routes = [
             },
             {
                 path: 'contact',
-                loadComponent: () => import('./features/contact/contact.component').then(m => m.ContactComponent)
+                loadComponent: () => import('./features/contact/contact.component').then(m => m.ContactComponent),
+                resolve: {
+                    contactPageData: contactPageResolver
+                }
             }
         ]
     },

@@ -10,6 +10,7 @@
         [(active)]="isActive"
         [isSaving]="isSaving"
         [saveDisabled]="isSaving || isUploadingImage"
+        (preview)="onPreview()"
         (save)="save()"
     />
 
@@ -79,7 +80,7 @@
                             <article class="text-box text-box--card">
                                 <h2>{{ labels.en.visitTitle }}</h2>
                                 <input
-                                    type="url"
+                                    type="text"
                                     class="field-input"
                                     [(ngModel)]="locationUrl"
                                     placeholder="Location URL"
@@ -149,7 +150,7 @@
                             <article class="text-box text-box--card">
                                 <h2>{{ labels.ar.visitTitle }}</h2>
                                 <input
-                                    type="url"
+                                    type="text"
                                     class="field-input"
                                     [(ngModel)]="locationUrl"
                                     placeholder="رابط الموقع"
@@ -162,3 +163,4 @@
         </p-tabpanels>
     </p-tabs>
 </div>
+

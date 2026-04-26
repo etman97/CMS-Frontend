@@ -10,6 +10,7 @@
         [(active)]="isActive"
         [isSaving]="isSaving"
         [saveDisabled]="isSaving || isUploadingImage"
+        (preview)="onPreview()"
         (save)="save()"
     />
 

@@ -1,21 +1,25 @@
 import { Component, ChangeDetectorRef, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { HomePageService, HomePageDto } from '../../../../core/services/home-page.service';
 import { MediaService } from '../../../../core/services/media.service';
+import { HomeComponent } from '../../../home/home.component';
 import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
 
 @Component({
     selector: 'app-dashboard-home',
     standalone: true,
-    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DashboardPageHeaderComponent],
+    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DynamicDialogModule, DashboardPageHeaderComponent],
+    providers: [DialogService],
     templateUrl: './dashboard-home.component.html',
     styleUrl: './dashboard-home.component.scss'
 })
 export class DashboardHomeComponent implements OnInit {
     private readonly homePageService = inject(HomePageService);
     private readonly mediaService = inject(MediaService);
+    private readonly dialogService = inject(DialogService);
     private readonly messageService = inject(MessageService);
     private readonly cdr = inject(ChangeDetectorRef);
 
@@ -67,6 +71,34 @@ export class DashboardHomeComponent implements OnInit {
         this.heroImageUrl = data.heroImageUrl;
     }
 
+    private buildDto(): HomePageDto {
+        return {
+            isActive: this.isActive,
+            heroTitleEn: this.heroTitleEn,
+            heroContentEn: this.heroContentEn,
+            primaryButtonTextEn: this.primaryButtonTextEn,
+            secondaryButtonTextEn: this.secondaryButtonTextEn,
+            heroTitleAr: this.heroTitleAr,
+            heroContentAr: this.heroContentAr,
+            primaryButtonTextAr: this.primaryButtonTextAr,
+            secondaryButtonTextAr: this.secondaryButtonTextAr,
+            heroImageUrl: this.heroImageUrl
+        };
+    }
+
+    openPreview(): void {
+        this.dialogService.open(HomeComponent, {
+            data: this.buildDto(),
+            header: 'Preview — Home',
+            width: '100vw',
+            height: '100vh',
+            modal: true,
+            closable: true,
+            styleClass: 'preview-dialog',
+            contentStyle: { padding: '0', overflow: 'auto' }
+        });
+    }
+
     onTopImageSelected(event: Event): void {
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0];
@@ -91,21 +123,8 @@ export class DashboardHomeComponent implements OnInit {
     save(): void {
         if (this.isSaving || this.isUploadingImage) return;
 
-        const dto: HomePageDto = {
-            isActive: this.isActive,
-            heroTitleEn: this.heroTitleEn,
-            heroContentEn: this.heroContentEn,
-            primaryButtonTextEn: this.primaryButtonTextEn,
-            secondaryButtonTextEn: this.secondaryButtonTextEn,
-            heroTitleAr: this.heroTitleAr,
-            heroContentAr: this.heroContentAr,
-            primaryButtonTextAr: this.primaryButtonTextAr,
-            secondaryButtonTextAr: this.secondaryButtonTextAr,
-            heroImageUrl: this.heroImageUrl
-        };
-
         this.isSaving = true;
-        this.homePageService.save(dto).subscribe({
+        this.homePageService.save(this.buildDto()).subscribe({
             next: () => {
                 this.isSaving = false;
                 this.messageService.add({ severity: 'success', summary: 'Saved', detail: 'Home page saved successfully.' });

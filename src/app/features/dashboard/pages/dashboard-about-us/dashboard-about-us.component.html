@@ -10,6 +10,7 @@
         [(active)]="isActive"
         [isSaving]="isSaving"
         [saveDisabled]="isSaving || isUploadingHero || !!uploadingSectionImage"
+        (preview)="openPreview()"
         (save)="save()"
     />
 

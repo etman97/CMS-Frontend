@@ -1,16 +1,19 @@
 import { Component, ChangeDetectorRef, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { ContactPageService, ContactPageDto } from '../../../../core/services/contact-page.service';
 import { MediaService } from '../../../../core/services/media.service';
+import { ContactComponent } from '../../../contact/contact.component';
 import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
 
 type ContactLang = 'en' | 'ar';
 
 @Component({
     selector: 'app-dashboard-contact-us',
-    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DashboardPageHeaderComponent],
+    imports: [FormsModule, Tabs, TabList, Tab, TabPanels, TabPanel, DynamicDialogModule, DashboardPageHeaderComponent],
+    providers: [DialogService],
     standalone: true,
     templateUrl: './dashboard-contact-us.component.html',
     styleUrl: './dashboard-contact-us.component.scss'
@@ -18,6 +21,7 @@ type ContactLang = 'en' | 'ar';
 export class DashboardContactUsComponent implements OnInit {
     private readonly contactPageService = inject(ContactPageService);
     private readonly mediaService = inject(MediaService);
+    private readonly dialogService = inject(DialogService);
     private readonly messageService = inject(MessageService);
     private readonly cdr = inject(ChangeDetectorRef);
 
@@ -66,6 +70,32 @@ export class DashboardContactUsComponent implements OnInit {
         this.heroImageUrl = data.heroImageUrl;
     }
 
+    private buildDto(): ContactPageDto {
+        return {
+            isActive: this.isActive,
+            introDescriptionEn: this.introDescriptionEn,
+            introDescriptionAr: this.introDescriptionAr,
+            phone: this.phone,
+            email: this.email,
+            address: this.address,
+            locationUrl: this.locationUrl,
+            heroImageUrl: this.heroImageUrl
+        };
+    }
+
+    openPreview(): void {
+        this.dialogService.open(ContactComponent, {
+            data: this.buildDto(),
+            header: 'Preview — Contact Us',
+            width: '100vw',
+            height: '100vh',
+            modal: true,
+            closable: true,
+            styleClass: 'preview-dialog',
+            contentStyle: { padding: '0', overflow: 'auto' }
+        });
+    }
+
     onTopImageSelected(event: Event): void {
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0];
@@ -90,19 +120,8 @@ export class DashboardContactUsComponent implements OnInit {
     save(): void {
         if (this.isSaving || this.isUploadingImage) return;
 
-        const dto: ContactPageDto = {
-            isActive: this.isActive,
-            introDescriptionEn: this.introDescriptionEn,
-            introDescriptionAr: this.introDescriptionAr,
-            phone: this.phone,
-            email: this.email,
-            address: this.address,
-            locationUrl: this.locationUrl,
-            heroImageUrl: this.heroImageUrl
-        };
-
         this.isSaving = true;
-        this.contactPageService.save(dto).subscribe({
+        this.contactPageService.save(this.buildDto()).subscribe({
             next: () => {
                 this.isSaving = false;
                 this.messageService.add({ severity: 'success', summary: 'Saved', detail: 'Contact page saved successfully.' });

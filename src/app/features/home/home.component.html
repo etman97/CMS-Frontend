@@ -1,147 +1,85 @@
-<!-- Hero -->
-<header class="hero-section d-flex align-items-center">
-  <div class="hero-overlay"></div>
-  <div class="hero-light hero-light-left"></div>
-  <div class="hero-light hero-light-right"></div>
+@if (isLoading) {
+  <div class="page-loader"><div class="spinner"></div></div>
+}
 
-  <div class="container position-relative hero-content text-center">
-    <div class="row justify-content-center">
-      <div class="col-xl-10 col-lg-11">
+@if (!isLoading) {
+  <div [class.preview-mode]="isPreview">
 
-        <h1 class="hero-title">
-          Unlock the Digital Core<br />
-          and AI Infinite Capability
-        </h1>
+    <!-- Hero -->
+    <header class="hero-section d-flex align-items-center" [style.backgroundImage]="heroImageStyle">
+      <div class="hero-overlay"></div>
+      <div class="hero-light hero-light-left"></div>
+      <div class="hero-light hero-light-right"></div>
 
-        <p class="hero-text mx-auto">
-          At WES, we empower businesses to navigate the complexities of the digital age
-          with cutting-edge solutions. Our expertise spans from fortifying your IT
-          infrastructure to harnessing the boundless potential of Artificial Intelligence,
-          ensuring your enterprise is not just ready for the future, but actively shaping it.
-        </p>
+      <div class="container position-relative hero-content text-center">
+        <div class="row justify-content-center">
+          <div class="col-xl-10 col-lg-11">
 
-        <div class="d-flex flex-wrap justify-content-center gap-3 hero-actions">
-          <a href="#" class="btn btn-contact">Contact Us</a>
-          <a href="#" class="btn btn-try-ai">
-            Try AI
-            <span class="arrow">→</span>
-          </a>
+            <h1 class="hero-title">{{ heroTitle }}</h1>
+
+            <p class="hero-text mx-auto">{{ heroContent }}</p>
+
+            <div class="d-flex flex-wrap justify-content-center gap-3 hero-actions">
+              <a href="/contact" class="btn btn-contact">{{ primaryButtonText }}</a>
+              <a href="#" class="btn btn-try-ai">
+                {{ secondaryButtonText }}
+                <span class="arrow">→</span>
+              </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Solutions Grid -->
+    @if (solutionCards.length > 0) {
+      <section class="solutions-section">
+        <div class="container">
+          <div class="section-title-wrap">
+            <h2 class="section-title">Discover Our Services</h2>
+          </div>
         </div>
 
-      </div>
-    </div>
-  </div>
-</header>
-
-<!-- Solutions Grid -->
-<section class="solutions-section">
-  <div class="container">
-    <div class="section-title-wrap">
-      <h2 class="section-title">Discover Our Services</h2>
-    </div>
-  </div>
-
-  <div class="container-fluid px-0">
-    <div class="row g-0">
-
-      <div class="col-md-6">
-        <a href="#" class="solution-card">
-          <img
-            src="https://www.figma.com/api/mcp/asset/bd833695-5755-4cfb-ab65-8df84921acde"
-            alt="IT Solutions"
-          />
-          <div class="solution-overlay"></div>
-          <div class="solution-content">
-            <h3>IT Solutions <span>→</span></h3>
-            <p>Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.</p>
+        <div class="container-fluid px-0">
+          <div class="row g-0">
+            @for (card of solutionCards; track card.id) {
+              <div class="col-md-6">
+                <a href="/solutions" class="solution-card">
+                  @if (card.imageUrl) {
+                    <img [src]="card.imageUrl" [alt]="solutionTitle(card)" />
+                  }
+                  <div class="solution-overlay"></div>
+                  <div class="solution-content">
+                    <h3>{{ solutionTitle(card) }} <span>→</span></h3>
+                    <p>{{ solutionContent(card) }}</p>
+                  </div>
+                </a>
+              </div>
+            }
           </div>
-        </a>
-      </div>
+        </div>
+      </section>
+    }
 
-      <div class="col-md-6">
-        <a href="#" class="solution-card">
-          <img
-            src="https://www.figma.com/api/mcp/asset/b5bdc7c0-b9b0-4397-9092-d96580b13cb8"
-            alt="Data Solutions"
-          />
-          <div class="solution-overlay"></div>
-          <div class="solution-content">
-            <h3>Data Solutions <span>→</span></h3>
-            <p>Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.</p>
+    <!-- Partners -->
+    @if (partnerLogos.length > 0) {
+      <section class="home-partners-section">
+        <div class="container">
+          <div class="section-title-wrap">
+            <h2 class="partners-title">Our Valued Partners</h2>
           </div>
-        </a>
-      </div>
 
-      <div class="col-md-6">
-        <a href="#" class="solution-card">
-          <img
-            src="https://www.figma.com/api/mcp/asset/46989d31-d536-413a-8146-1152436400eb"
-            alt="AI and Data Solutions"
-          />
-          <div class="solution-overlay"></div>
-          <div class="solution-content">
-            <h3>AI and Data Solutions <span>→</span></h3>
-            <p>Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.</p>
+          <div class="partners-strip" aria-label="Partners logos">
+            @for (partner of partnerLogos; track partner.id) {
+              <article class="home-partner-card">
+                <img [src]="partner.imageUrl" alt="Partner" />
+              </article>
+            }
           </div>
-        </a>
-      </div>
+        </div>
+      </section>
+    }
 
-      <div class="col-md-6">
-        <a href="#" class="solution-card">
-          <img
-            src="https://www.figma.com/api/mcp/asset/f371c04d-fa8a-4f08-bced-b2300c0c6592"
-            alt="Cybersecurity"
-          />
-          <div class="solution-overlay"></div>
-          <div class="solution-content">
-            <h3>Cybersecurity <span>→</span></h3>
-            <p>Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.</p>
-          </div>
-        </a>
-      </div>
-
-    </div>
   </div>
-</section>
-
-<!-- Partners -->
-<section class="home-partners-section">
-  <div class="container">
-    <div class="section-title-wrap">
-      <h2 class="partners-title">Our Valued Partners</h2>
-    </div>
-
-    <div class="partners-strip" aria-label="Partners logos">
-      <article class="home-partner-card">
-        <img src="https://www.figma.com/api/mcp/asset/bcfac602-aad4-40be-a22c-16bdca00704c" alt="Partner 1" />
-      </article>
-      <article class="home-partner-card">
-        <img src="https://www.figma.com/api/mcp/asset/35788448-7e5d-4bf1-a9ea-e4494435f2a6" alt="Partner 2" />
-      </article>
-      <article class="home-partner-card">
-        <img src="https://www.figma.com/api/mcp/asset/0303e305-c049-49db-8e40-8182b5763afe" alt="Partner 3" />
-      </article>
-      <article class="home-partner-card">
-        <img src="https://www.figma.com/api/mcp/asset/b3aeaba4-c6b4-42b7-ac57-e0f29387a748" alt="Partner 4" />
-      </article>
-      <article class="home-partner-card">
-        <img src="https://www.figma.com/api/mcp/asset/4b1ec2a7-86ef-4486-8059-bcff84909131" alt="Partner 5" />
-      </article>
-      <article class="home-partner-card">
-        <img src="https://www.figma.com/api/mcp/asset/6226ba67-8661-483f-9111-ae611ae26bfb" alt="Partner 6" />
-      </article>
-      <article class="home-partner-card">
-        <img src="https://www.figma.com/api/mcp/asset/eae3bdaf-98ed-449c-8864-3312c2fd0c70" alt="Partner 7" />
-      </article>
-      <article class="home-partner-card">
-        <img src="https://www.figma.com/api/mcp/asset/0368e0f4-9efd-49aa-818c-78a0af8fb009" alt="Partner 8" />
-      </article>
-      <article class="home-partner-card">
-        <img src="https://www.figma.com/api/mcp/asset/56599a90-f650-4b20-a6e9-3010aa5e9461" alt="Partner 9" />
-      </article>
-      <article class="home-partner-card">
-        <img src="https://www.figma.com/api/mcp/asset/0f0290eb-9d0c-46d5-89d7-15992a471f7f" alt="Partner 10" />
-      </article>
-    </div>
-  </div>
-</section>
+}

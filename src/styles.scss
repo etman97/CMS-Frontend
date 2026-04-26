@@ -339,3 +339,38 @@ select {
     height: 0;
     overflow: hidden;
 }
+
+// ─── Preview mode ───────────────────────────────
+// Applied to public page root when opened in dashboard preview dialog.
+// Disables all interactions so buttons/links do nothing.
+.preview-mode {
+    a,
+    button,
+    input,
+    textarea,
+    select,
+    label[for],
+    [role='button'] {
+        pointer-events: none !important;
+        cursor: default !important;
+    }
+}
+
+// ─── Preview dialog (full-screen) ───────────────
+.preview-dialog {
+    .p-dialog {
+        margin: 0 !important;
+        border-radius: 0 !important;
+        max-height: 100dvh !important;
+    }
+
+    .p-dialog-header {
+        padding: 0.5rem 1rem !important;
+        border-radius: 0 !important;
+    }
+
+    .p-dialog-content {
+        padding: 0 !important;
+        overflow-y: auto !important;
+    }
+}

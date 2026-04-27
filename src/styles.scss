@@ -339,3 +339,31 @@ select {
     height: 0;
     overflow: hidden;
 }
+
+// Shared dashboard responsiveness guards
+@media (max-width: 992px) {
+    .dashboard,
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page {
+        padding: 1rem 1rem 1.5rem !important;
+    }
+
+    .dashboard,
+    .content,
+    .editor-card,
+    .editor-bottom {
+        min-width: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .p-dialog {
+        margin: 0 0.5rem;
+        width: calc(100vw - 1rem) !important;
+    }
+}

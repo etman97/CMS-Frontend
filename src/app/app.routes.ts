@@ -86,6 +86,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/dashboard/pages/dashboard-solutions/dashboard-solutions.component').then(m => m.DashboardSolutionsComponent)
             },
             {
+                path: 'dashboard/solutions/access',
+                loadComponent: () => import('./features/dashboard/pages/dashboard-solutions-access/dashboard-solutions-access.component').then(m => m.DashboardSolutionsAccessComponent)
+            },
+            {
                 path: 'dashboard/services',
                 loadComponent: () => import('./features/dashboard/pages/dashboard-services/dashboard-services.component').then(m => m.DashboardServicesComponent)
             },

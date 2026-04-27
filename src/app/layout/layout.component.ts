@@ -13,11 +13,26 @@ import { AuthService } from '../core/auth/auth.service';
 })
 export class LayoutComponent {
     sidebarCollapsed = false;
+    isMobileSidebarOpen = false;
 
     constructor(public authService: AuthService) { }
 
     toggleSidebar(): void {
+        if (typeof window !== 'undefined' && window.innerWidth <= 992) {
+            this.isMobileSidebarOpen = !this.isMobileSidebarOpen;
+            return;
+        }
         this.sidebarCollapsed = !this.sidebarCollapsed;
+    }
+
+    closeMobileSidebar(): void {
+        this.isMobileSidebarOpen = false;
+    }
+
+    onNavItemClick(): void {
+        if (typeof window !== 'undefined' && window.innerWidth <= 992) {
+            this.closeMobileSidebar();
+        }
     }
 
     logout(): void {

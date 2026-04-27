@@ -1,6 +1,7 @@
-<div class="layout" [class.sidebar-collapsed]="sidebarCollapsed">
+<div class="layout" [class.sidebar-collapsed]="sidebarCollapsed" [class.mobile-sidebar-open]="isMobileSidebarOpen">
+    <div class="layout-backdrop" [class.visible]="isMobileSidebarOpen" (click)="closeMobileSidebar()"></div>
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="sidebar" [class.mobile-open]="isMobileSidebarOpen">
         <div class="sidebar-header">
             <div class="sidebar-logo">
                 @if (!sidebarCollapsed) {
@@ -16,43 +17,43 @@
         </div>
 
         <nav class="sidebar-nav">
-            <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-item">
+            <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="nav-item" (click)="onNavItemClick()">
                 <i class="bi bi-speedometer2"></i>
                 @if (!sidebarCollapsed) {
                 <span>Dashboard</span>
                 }
             </a>
-            <a routerLink="/dashboard/home" routerLinkActive="active" class="nav-item">
+            <a routerLink="/dashboard/home" routerLinkActive="active" class="nav-item" (click)="onNavItemClick()">
                 <i class="bi bi-house-door"></i>
                 @if (!sidebarCollapsed) {
                 <span>Home</span>
                 }
             </a>
-            <a routerLink="/dashboard/about-us" routerLinkActive="active" class="nav-item">
+            <a routerLink="/dashboard/about-us" routerLinkActive="active" class="nav-item" (click)="onNavItemClick()">
                 <i class="bi bi-info-circle"></i>
                 @if (!sidebarCollapsed) {
                 <span>About Us</span>
                 }
             </a>
-            <a routerLink="/dashboard/solutions" routerLinkActive="active" class="nav-item disabled">
+            <a routerLink="/dashboard/solutions" routerLinkActive="active" class="nav-item " (click)="onNavItemClick()">
                 <i class="bi bi-diagram-3"></i>
                 @if (!sidebarCollapsed) {
                 <span>Solutions</span>
                 }
             </a>
-            <a routerLink="/dashboard/services" routerLinkActive="active" class="nav-item disabled">
+            <a routerLink="/dashboard/services" routerLinkActive="active" class="nav-item " (click)="onNavItemClick()">
                 <i class="bi bi-briefcase"></i>
                 @if (!sidebarCollapsed) {
                 <span>Services</span>
                 }
             </a>
-            <a routerLink="/dashboard/partners" routerLinkActive="active" class="nav-item disabled">
+            <a routerLink="/dashboard/partners" routerLinkActive="active" class="nav-item " (click)="onNavItemClick()">
                 <i class="bi bi-people"></i>
                 @if (!sidebarCollapsed) {
                 <span>Partners</span>
                 }
             </a>
-            <a routerLink="/dashboard/contact-us" routerLinkActive="active" class="nav-item">
+            <a routerLink="/dashboard/contact-us" routerLinkActive="active" class="nav-item" (click)="onNavItemClick()">
                 <i class="bi bi-envelope"></i>
                 @if (!sidebarCollapsed) {
                 <span>Contact Us</span>
@@ -66,6 +67,13 @@
         <!-- Header -->
         <header class="header">
             <div class="header-left">
+                <button class="mobile-menu-toggle" type="button" (click)="toggleSidebar()" aria-label="Open menu">
+                    <i
+                        class="bi"
+                        [class.bi-chevron-left]="isMobileSidebarOpen"
+                        [class.bi-chevron-right]="!isMobileSidebarOpen"
+                    ></i>
+                </button>
                 <h2 class="page-title">Dashboard</h2>
             </div>
             <div class="header-right">

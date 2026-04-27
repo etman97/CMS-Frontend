@@ -1,0 +1,136 @@
+﻿<div class="solutions-access-page">
+    <header class="page-header">
+        <div class="breadcrumb-wrap">
+            <a routerLink="/dashboard/solutions" class="back-link" aria-label="Back to solutions">
+                <i class="bi bi-chevron-left"></i>
+            </a>
+            <span class="breadcrumb-muted">Solutions /</span>
+            <h1>IT Solutions 1</h1>
+        </div>
+
+        <div class="header-actions">
+            <button type="button" class="btn preview-btn">
+                <i class="bi bi-eye"></i>
+                <span>Preview</span>
+            </button>
+            <button type="button" class="btn save-btn">Save</button>
+        </div>
+    </header>
+
+    <p-tabs [(value)]="activeTab" class="solutions-tabs">
+        <p-tablist>
+            <p-tab value="en">English version</p-tab>
+            <p-tab value="ar">Arabic version</p-tab>
+        </p-tablist>
+
+        <p-tabpanels>
+            <p-tabpanel value="en">
+                <section class="editor-card">
+                    <div class="editor-bottom" (click)="closeSectionMenu()">
+                        @for (section of sectionsByLang.en; track section.id) {
+                            <article class="service-row" [class.service-row--reverse]="section.imageFirst">
+                                <div class="service-row__menu">
+                                    <button type="button" class="menu-btn" aria-label="Section actions" (click)="toggleSectionMenu(section.id, $event)">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    @if (openMenuSectionId === section.id) {
+                                        <div class="section-actions-menu" (click)="$event.stopPropagation()">
+                                            <button type="button" (click)="editSection(section.id)">
+                                                <i class="bi bi-pen"></i>
+                                                <span>Edit</span>
+                                            </button>
+                                            <button type="button" class="section-actions-menu__delete" (click)="removeSection(section.id)">
+                                                <i class="bi bi-trash3"></i>
+                                                <span>Delete</span>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="service-row__content">
+                                    <div class="service-row__text">
+                                        <h3 class="service-title">{{ section.title }}</h3>
+                                        <p class="service-description">{{ section.description }}</p>
+                                    </div>
+
+                                    <div class="service-row__media">
+                                        @if (section.imageUrls.length === 1) {
+                                            <img [src]="section.imageUrls[0]" [alt]="section.title" />
+                                        } @else if (section.imageUrls.length > 1) {
+                                            <div class="service-row__media-grid">
+                                                @for (imageUrl of section.imageUrls; track imageUrl) {
+                                                    <img [src]="imageUrl" [alt]="section.title" />
+                                                }
+                                            </div>
+                                        } @else {
+                                            <span>Upload image</span>
+                                        }
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                        <button type="button" class="add-section-btn" (click)="addSection()">
+                            <i class="bi bi-plus-lg"></i>
+                            <span>Add section</span>
+                        </button>
+
+                    </div>
+                </section>
+            </p-tabpanel>
+
+            <p-tabpanel value="ar">
+                <section class="editor-card" dir="rtl">
+                    <div class="editor-bottom" (click)="closeSectionMenu()">
+                        @for (section of sectionsByLang.ar; track section.id) {
+                            <article class="service-row" [class.service-row--reverse]="section.imageFirst">
+                                <div class="service-row__menu">
+                                    <button type="button" class="menu-btn" aria-label="خيارات القسم" (click)="toggleSectionMenu(section.id, $event)">
+                                        <i class="bi bi-three-dots-vertical"></i>
+                                    </button>
+                                    @if (openMenuSectionId === section.id) {
+                                        <div class="section-actions-menu" (click)="$event.stopPropagation()">
+                                            <button type="button" (click)="editSection(section.id)">
+                                                <i class="bi bi-pen"></i>
+                                                <span>تعديل</span>
+                                            </button>
+                                            <button type="button" class="section-actions-menu__delete" (click)="removeSection(section.id)">
+                                                <i class="bi bi-trash3"></i>
+                                                <span>حذف</span>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="service-row__content">
+                                    <div class="service-row__text">
+                                        <h3 class="service-title">{{ section.title }}</h3>
+                                        <p class="service-description">{{ section.description }}</p>
+                                    </div>
+
+                                    <div class="service-row__media">
+                                        @if (section.imageUrls.length === 1) {
+                                            <img [src]="section.imageUrls[0]" [alt]="section.title" />
+                                        } @else if (section.imageUrls.length > 1) {
+                                            <div class="service-row__media-grid">
+                                                @for (imageUrl of section.imageUrls; track imageUrl) {
+                                                    <img [src]="imageUrl" [alt]="section.title" />
+                                                }
+                                            </div>
+                                        } @else {
+                                            <span>ارفع صورة</span>
+                                        }
+                                    </div>
+                                </div>
+                            </article>
+                        }
+                        <button type="button" class="add-section-btn" (click)="addSection()">
+                            <i class="bi bi-plus-lg"></i>
+                            <span>إضافة قسم</span>
+                        </button>
+
+                    </div>
+                </section>
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+</div>

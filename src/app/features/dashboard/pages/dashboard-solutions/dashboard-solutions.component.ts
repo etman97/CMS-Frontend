@@ -1,5 +1,6 @@
-ï»¿import { ChangeDetectorRef, Component, NgZone, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PRIME_NG_CONFIGS } from '../../../../shared/prime-ng-configs';
@@ -28,6 +29,7 @@ export class DashboardSolutionsComponent {
     private readonly dialogService = inject(DialogService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly ngZone = inject(NgZone);
+    private readonly router = inject(Router);
 
     activeTab: SolutionsLang = 'en';
     isActive = true;
@@ -47,8 +49,8 @@ export class DashboardSolutionsComponent {
             placeholder: 'Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age'
         },
         ar: {
-            title: 'Ø§Ù„Ø­Ù„ÙˆÙ„',
-            placeholder: 'Ø§Ø¯Ø®Ù„ Ø§Ù„Ù…Ø­ØªÙˆÙ‰ØŒ Ù…Ø«Ø§Ù„: ÙÙŠ WES Ù†Ø³Ø§Ø¹Ø¯ Ø§Ù„Ø´Ø±ÙƒØ§Øª Ø¹Ù„Ù‰ Ø§Ù„ØªØ¹Ø§Ù…Ù„ Ù…Ø¹ ØªØ­Ø¯ÙŠØ§Øª Ø§Ù„Ø¹ØµØ± Ø§Ù„Ø±Ù‚Ù…ÙŠ'
+            title: 'ÇáÍáæá',
+            placeholder: 'ÇÏÎá ÇáãÍÊæì¡ ãËÇá: İí WES äÓÇÚÏ ÇáÔÑßÇÊ Úáì ÇáÊÚÇãá ãÚ ÊÍÏíÇÊ ÇáÚÕÑ ÇáÑŞãí'
         }
     };
 
@@ -167,6 +169,7 @@ export class DashboardSolutionsComponent {
 
     openCardAccess(): void {
         this.closeCardMenu();
+        void this.router.navigate(['/dashboard/solutions/access']);
     }
 
     removeSolutionCard(cardId: number): void {
@@ -200,3 +203,4 @@ export class DashboardSolutionsComponent {
         });
     }
 }
+

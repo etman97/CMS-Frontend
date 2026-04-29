@@ -1,0 +1,104 @@
+<div class="home-button-dialog" [dir]="dir">
+    <div class="dialog-body">
+        <label class="field">
+            <span class="field-label">{{ labels.buttonName }}</span>
+            <input
+                type="text"
+                class="field-input"
+                [class.is-invalid]="showButtonNameRequired"
+                [(ngModel)]="label"
+                [placeholder]="labels.buttonNamePlaceholder"
+                (blur)="markLabelTouched()"
+                required
+            />
+            @if (showButtonNameRequired) {
+                <span class="validation-message">{{ labels.buttonNameRequired }}</span>
+            }
+        </label>
+
+        <div class="field">
+            <span class="field-label">{{ labels.linkType }}</span>
+            <div class="radio-row">
+                <label class="radio-option">
+                    <input
+                        type="radio"
+                        name="homeButtonLinkType"
+                        value="internal"
+                        [ngModel]="linkType"
+                        (ngModelChange)="onLinkTypeChange($event)"
+                    />
+                    <span>{{ labels.internal }}</span>
+                </label>
+
+                <label class="radio-option">
+                    <input
+                        type="radio"
+                        name="homeButtonLinkType"
+                        value="external"
+                        [ngModel]="linkType"
+                        (ngModelChange)="onLinkTypeChange($event)"
+                    />
+                    <span>{{ labels.external }}</span>
+                </label>
+            </div>
+        </div>
+
+        @if (linkType === 'internal') {
+            <div class="field">
+                <span class="field-label">{{ labels.selectPage }}</span>
+                @if (isLoadingPages) {
+                    <div class="field-message">{{ labels.loadingPages }}</div>
+                } @else if (hasActiveInternalPages) {
+                    <select
+                        class="field-input"
+                        [class.is-invalid]="showInternalPageRequired"
+                        [(ngModel)]="linkValue"
+                        (blur)="markLinkValueTouched()"
+                        (change)="markLinkValueTouched()"
+                        required
+                    >
+                        <option value="" disabled>{{ labels.selectPage }}</option>
+                        @for (page of internalPages; track page.value) {
+                            <option [value]="page.value">{{ page.label }}</option>
+                        }
+                    </select>
+                    @if (showInternalPageRequired) {
+                        <span class="validation-message">{{ labels.internalPageRequired }}</span>
+                    }
+                } @else {
+                    <div class="warning-message">{{ labels.noActivePages }}</div>
+                }
+            </div>
+        } @else {
+            <label class="field">
+                <span class="field-label">{{ labels.externalUrl }}</span>
+                <input
+                    type="url"
+                    class="field-input"
+                    [class.is-invalid]="showExternalUrlRequired || showExternalUrlInvalid"
+                    [(ngModel)]="linkValue"
+                    placeholder="https://example.com"
+                    (blur)="markLinkValueTouched()"
+                    required
+                />
+                @if (showExternalUrlRequired) {
+                    <span class="validation-message">{{ labels.externalUrlRequired }}</span>
+                } @else if (showExternalUrlInvalid) {
+                    <span class="validation-message">{{ labels.externalUrlInvalid }}</span>
+                }
+            </label>
+        }
+    </div>
+
+    <div class="dialog-footer">
+        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ labels.cancel }}</button>
+        <button
+            type="button"
+            class="btn save-btn"
+            (click)="save()"
+            [disabled]="!canSave"
+        >
+            {{ labels.save }}
+        </button>
+    </div>
+</div>

@@ -14,11 +14,23 @@
         <p class="hero-text mx-auto">{{ heroContent }}</p>
 
         <div class="d-flex flex-wrap justify-content-center gap-3 hero-actions">
-          <a href="#" class="btn btn-contact">{{ primaryButtonText }}</a>
-          <a href="#" class="btn btn-try-ai">
-            {{ secondaryButtonText }}
-            <span class="arrow">{{ isRtl ? '←' : '→' }}</span>
-          </a>
+          @if (primaryButtonLinkType === 'external') {
+            <a [href]="primaryButtonLink" target="_blank" rel="noopener noreferrer" class="btn btn-contact">{{ primaryButtonText }}</a>
+          } @else {
+            <a [routerLink]="primaryButtonLink" class="btn btn-contact">{{ primaryButtonText }}</a>
+          }
+
+          @if (secondaryButtonLinkType === 'external') {
+            <a [href]="secondaryButtonLink" target="_blank" rel="noopener noreferrer" class="btn btn-try-ai">
+              {{ secondaryButtonText }}
+              <span class="arrow">{{ isRtl ? '←' : '→' }}</span>
+            </a>
+          } @else {
+            <a [routerLink]="secondaryButtonLink" class="btn btn-try-ai">
+              {{ secondaryButtonText }}
+              <span class="arrow">{{ isRtl ? '←' : '→' }}</span>
+            </a>
+          }
         </div>
 
       </div>

@@ -4,16 +4,26 @@ import { Observable, of } from 'rxjs';
 import { finalize, shareReplay, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
+export type HomeButtonLinkType = 'internal' | 'external';
+
 export interface HomePageDto {
     isActive: boolean;
     heroTitleEn: string;
     heroContentEn: string;
     primaryButtonTextEn: string;
     secondaryButtonTextEn: string;
+    primaryButtonLinkTypeEn?: HomeButtonLinkType;
+    primaryButtonLinkEn?: string;
+    secondaryButtonLinkTypeEn?: HomeButtonLinkType;
+    secondaryButtonLinkEn?: string;
     heroTitleAr: string;
     heroContentAr: string;
     primaryButtonTextAr: string;
     secondaryButtonTextAr: string;
+    primaryButtonLinkTypeAr?: HomeButtonLinkType;
+    primaryButtonLinkAr?: string;
+    secondaryButtonLinkTypeAr?: HomeButtonLinkType;
+    secondaryButtonLinkAr?: string;
     heroImageUrl: string | null;
 }
 

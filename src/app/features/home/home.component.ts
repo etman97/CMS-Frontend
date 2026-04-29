@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
-import { HomePageDto, HomePageService } from '../../core/services/home-page.service';
+import { HomeButtonLinkType, HomePageDto, HomePageService } from '../../core/services/home-page.service';
 import { PageStatusService } from '../../core/services/page-status.service';
 
 export interface HomeDialogData {
@@ -14,7 +14,7 @@ export interface HomeDialogData {
 @Component({
     selector: 'app-home',
     standalone: true,
-    imports: [],
+    imports: [RouterLink],
     templateUrl: './home.component.html',
     styleUrl: './home.component.scss'
 })
@@ -32,6 +32,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     heroContent = '';
     primaryButtonText = '';
     secondaryButtonText = '';
+    primaryButtonLinkType: HomeButtonLinkType = 'internal';
+    primaryButtonLink = '/contact';
+    secondaryButtonLinkType: HomeButtonLinkType = 'internal';
+    secondaryButtonLink = '/services';
     heroBackgroundImageStyle: string | null = null;
     isRtl = false;
     isPreviewMode = false;
@@ -80,11 +84,19 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.heroContent = data.heroContentAr ?? '';
             this.primaryButtonText = data.primaryButtonTextAr ?? '';
             this.secondaryButtonText = data.secondaryButtonTextAr ?? '';
+            this.primaryButtonLinkType = data.primaryButtonLinkTypeAr ?? 'internal';
+            this.primaryButtonLink = data.primaryButtonLinkAr ?? '/contact';
+            this.secondaryButtonLinkType = data.secondaryButtonLinkTypeAr ?? 'internal';
+            this.secondaryButtonLink = data.secondaryButtonLinkAr ?? '/services';
         } else {
             this.heroTitle = data.heroTitleEn ?? '';
             this.heroContent = data.heroContentEn ?? '';
             this.primaryButtonText = data.primaryButtonTextEn ?? '';
             this.secondaryButtonText = data.secondaryButtonTextEn ?? '';
+            this.primaryButtonLinkType = data.primaryButtonLinkTypeEn ?? 'internal';
+            this.primaryButtonLink = data.primaryButtonLinkEn ?? '/contact';
+            this.secondaryButtonLinkType = data.secondaryButtonLinkTypeEn ?? 'internal';
+            this.secondaryButtonLink = data.secondaryButtonLinkEn ?? '/services';
         }
 
         this.heroBackgroundImageStyle = this.buildHeroBackgroundStyle(data.heroImageUrl);

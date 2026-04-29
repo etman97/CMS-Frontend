@@ -1,13 +1,17 @@
 import { Component, ChangeDetectorRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
-import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
-import { HomePageService, HomePageDto } from '../../../../core/services/home-page.service';
+import { HomePageService, HomePageDto, HomeButtonLinkType } from '../../../../core/services/home-page.service';
 import { MediaService } from '../../../../core/services/media.service';
 import { PRIME_NG_CONFIGS } from '../../../../shared/prime-ng-configs';
 import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
 import { HomeComponent, HomeDialogData } from '../../../home/home.component';
+import { HomeButtonDialogComponent } from './dialogs/home-button-dialog/home-button-dialog.component';
+import { HomeButtonDialogResult } from './dialogs/home-button-dialog/home-button-dialog.model';
+
+type HomeButtonKey = 'primary' | 'secondary';
 
 @Component({
     selector: 'app-dashboard-home',
@@ -34,11 +38,19 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
     heroContentEn = '';
     primaryButtonTextEn = '';
     secondaryButtonTextEn = '';
+    primaryButtonLinkTypeEn: HomeButtonLinkType = 'internal';
+    primaryButtonLinkEn = '';
+    secondaryButtonLinkTypeEn: HomeButtonLinkType = 'internal';
+    secondaryButtonLinkEn = '';
 
     heroTitleAr = '';
     heroContentAr = '';
     primaryButtonTextAr = '';
     secondaryButtonTextAr = '';
+    primaryButtonLinkTypeAr: HomeButtonLinkType = 'internal';
+    primaryButtonLinkAr = '';
+    secondaryButtonLinkTypeAr: HomeButtonLinkType = 'internal';
+    secondaryButtonLinkAr = '';
 
     heroImageUrl: string | null = null;
     private persistedHeroImageUrl: string | null = null;
@@ -71,10 +83,18 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
         this.heroContentEn = data.heroContentEn;
         this.primaryButtonTextEn = data.primaryButtonTextEn;
         this.secondaryButtonTextEn = data.secondaryButtonTextEn;
+        this.primaryButtonLinkTypeEn = data.primaryButtonLinkTypeEn ?? 'internal';
+        this.primaryButtonLinkEn = data.primaryButtonLinkEn ?? '';
+        this.secondaryButtonLinkTypeEn = data.secondaryButtonLinkTypeEn ?? 'internal';
+        this.secondaryButtonLinkEn = data.secondaryButtonLinkEn ?? '';
         this.heroTitleAr = data.heroTitleAr;
         this.heroContentAr = data.heroContentAr;
         this.primaryButtonTextAr = data.primaryButtonTextAr;
         this.secondaryButtonTextAr = data.secondaryButtonTextAr;
+        this.primaryButtonLinkTypeAr = data.primaryButtonLinkTypeAr ?? 'internal';
+        this.primaryButtonLinkAr = data.primaryButtonLinkAr ?? '';
+        this.secondaryButtonLinkTypeAr = data.secondaryButtonLinkTypeAr ?? 'internal';
+        this.secondaryButtonLinkAr = data.secondaryButtonLinkAr ?? '';
         this.heroImageUrl = data.heroImageUrl;
         this.persistedHeroImageUrl = data.heroImageUrl;
     }
@@ -134,6 +154,98 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
         }
     }
 
+    openButtonDialog(button: HomeButtonKey, lang: 'en' | 'ar'): void {
+        const dialogRef = this.createButtonDialog(button, lang);
+
+        dialogRef?.onClose.subscribe((result?: HomeButtonDialogResult) => {
+            if (!result) return;
+
+            this.applyButtonDialogResult(button, lang, result);
+            this.cdr.markForCheck();
+        });
+    }
+
+    private createButtonDialog(button: HomeButtonKey, lang: 'en' | 'ar'): DynamicDialogRef | null {
+        const isArabic = lang === 'ar';
+
+        return this.dialogService.open(HomeButtonDialogComponent, {
+            ...PRIME_NG_CONFIGS.dynamicDialog,
+            header: isArabic ? 'تعديل الزر' : 'Edit Button',
+            data: {
+                lang,
+                label: this.getButtonText(button, lang),
+                linkType: this.getButtonLinkType(button, lang),
+                linkValue: this.getButtonLinkValue(button, lang)
+            },
+            style: { direction: isArabic ? 'rtl' : 'ltr' },
+            width: '520px'
+        });
+    }
+
+    private applyButtonDialogResult(button: HomeButtonKey, lang: 'en' | 'ar', result: HomeButtonDialogResult): void {
+        const normalizedLinkValue = result.linkType === 'external'
+            ? this.normalizeExternalUrl(result.linkValue)
+            : (result.linkValue || '/');
+
+        if (button === 'primary' && lang === 'en') {
+            this.primaryButtonTextEn = result.label;
+            this.primaryButtonLinkTypeEn = result.linkType;
+            this.primaryButtonLinkEn = normalizedLinkValue;
+            return;
+        }
+
+        if (button === 'secondary' && lang === 'en') {
+            this.secondaryButtonTextEn = result.label;
+            this.secondaryButtonLinkTypeEn = result.linkType;
+            this.secondaryButtonLinkEn = normalizedLinkValue;
+            return;
+        }
+
+        if (button === 'primary') {
+            this.primaryButtonTextAr = result.label;
+            this.primaryButtonLinkTypeAr = result.linkType;
+            this.primaryButtonLinkAr = normalizedLinkValue;
+            return;
+        }
+
+        this.secondaryButtonTextAr = result.label;
+        this.secondaryButtonLinkTypeAr = result.linkType;
+        this.secondaryButtonLinkAr = normalizedLinkValue;
+    }
+
+    private getButtonText(button: HomeButtonKey, lang: 'en' | 'ar'): string {
+        if (button === 'primary') {
+            return lang === 'ar' ? this.primaryButtonTextAr : this.primaryButtonTextEn;
+        }
+
+        return lang === 'ar' ? this.secondaryButtonTextAr : this.secondaryButtonTextEn;
+    }
+
+    private getButtonLinkType(button: HomeButtonKey, lang: 'en' | 'ar'): HomeButtonLinkType {
+        if (button === 'primary') {
+            return lang === 'ar' ? this.primaryButtonLinkTypeAr : this.primaryButtonLinkTypeEn;
+        }
+
+        return lang === 'ar' ? this.secondaryButtonLinkTypeAr : this.secondaryButtonLinkTypeEn;
+    }
+
+    private getButtonLinkValue(button: HomeButtonKey, lang: 'en' | 'ar'): string {
+        if (button === 'primary') {
+            return lang === 'ar' ? this.primaryButtonLinkAr : this.primaryButtonLinkEn;
+        }
+
+        return lang === 'ar' ? this.secondaryButtonLinkAr : this.secondaryButtonLinkEn;
+    }
+
+    private normalizeExternalUrl(value: string): string {
+        const trimmed = value.trim();
+        if (!trimmed || /^[a-z][a-z0-9+.-]*:\/\//i.test(trimmed)) {
+            return trimmed;
+        }
+
+        return `https://${trimmed}`;
+    }
+
     onPreview(): void {
         const payload: HomePageDto = {
             isActive: this.isActive,
@@ -141,10 +253,18 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
             heroContentEn: this.heroContentEn,
             primaryButtonTextEn: this.primaryButtonTextEn,
             secondaryButtonTextEn: this.secondaryButtonTextEn,
+            primaryButtonLinkTypeEn: this.primaryButtonLinkTypeEn,
+            primaryButtonLinkEn: this.primaryButtonLinkEn,
+            secondaryButtonLinkTypeEn: this.secondaryButtonLinkTypeEn,
+            secondaryButtonLinkEn: this.secondaryButtonLinkEn,
             heroTitleAr: this.heroTitleAr,
             heroContentAr: this.heroContentAr,
             primaryButtonTextAr: this.primaryButtonTextAr,
             secondaryButtonTextAr: this.secondaryButtonTextAr,
+            primaryButtonLinkTypeAr: this.primaryButtonLinkTypeAr,
+            primaryButtonLinkAr: this.primaryButtonLinkAr,
+            secondaryButtonLinkTypeAr: this.secondaryButtonLinkTypeAr,
+            secondaryButtonLinkAr: this.secondaryButtonLinkAr,
             heroImageUrl: this.heroImageUrl
         };
 
@@ -179,10 +299,18 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
             heroContentEn: this.heroContentEn,
             primaryButtonTextEn: this.primaryButtonTextEn,
             secondaryButtonTextEn: this.secondaryButtonTextEn,
+            primaryButtonLinkTypeEn: this.primaryButtonLinkTypeEn,
+            primaryButtonLinkEn: this.primaryButtonLinkEn,
+            secondaryButtonLinkTypeEn: this.secondaryButtonLinkTypeEn,
+            secondaryButtonLinkEn: this.secondaryButtonLinkEn,
             heroTitleAr: this.heroTitleAr,
             heroContentAr: this.heroContentAr,
             primaryButtonTextAr: this.primaryButtonTextAr,
             secondaryButtonTextAr: this.secondaryButtonTextAr,
+            primaryButtonLinkTypeAr: this.primaryButtonLinkTypeAr,
+            primaryButtonLinkAr: this.primaryButtonLinkAr,
+            secondaryButtonLinkTypeAr: this.secondaryButtonLinkTypeAr,
+            secondaryButtonLinkAr: this.secondaryButtonLinkAr,
             heroImageUrl: this.persistedHeroImageUrl
         };
 

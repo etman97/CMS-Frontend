@@ -48,7 +48,8 @@
                             <div class="button-item">
                                 <input type="text" class="form-control button-label-input"
                                     [(ngModel)]="primaryButtonTextEn" placeholder="Primary button" />
-                                <button type="button" class="icon-btn" aria-label="Edit primary button text">
+                                <button type="button" class="icon-btn" aria-label="Edit primary button text"
+                                    (click)="openButtonDialog('primary', 'en')">
                                     <i class="bi bi-pen"></i>
                                 </button>
                             </div>
@@ -56,7 +57,8 @@
                             <div class="button-item">
                                 <input type="text" class="form-control button-label-input"
                                     [(ngModel)]="secondaryButtonTextEn" placeholder="Secondary button" />
-                                <button type="button" class="icon-btn" aria-label="Edit secondary button text">
+                                <button type="button" class="icon-btn" aria-label="Edit secondary button text"
+                                    (click)="openButtonDialog('secondary', 'en')">
                                     <i class="bi bi-pen"></i>
                                 </button>
                             </div>
@@ -92,7 +94,8 @@
                             <div class="button-item">
                                 <input type="text" class="form-control button-label-input"
                                     [(ngModel)]="primaryButtonTextAr" placeholder="الزر الأساسي" />
-                                <button type="button" class="icon-btn" aria-label="Edit primary button text">
+                                <button type="button" class="icon-btn" aria-label="Edit primary button text"
+                                    (click)="openButtonDialog('primary', 'ar')">
                                     <i class="bi bi-pen rtl-flip"></i>
                                 </button>
                             </div>
@@ -100,7 +103,8 @@
                             <div class="button-item">
                                 <input type="text" class="form-control button-label-input"
                                     [(ngModel)]="secondaryButtonTextAr" placeholder="الزر الثانوي" />
-                                <button type="button" class="icon-btn" aria-label="Edit secondary button text">
+                                <button type="button" class="icon-btn" aria-label="Edit secondary button text"
+                                    (click)="openButtonDialog('secondary', 'ar')">
                                     <i class="bi bi-pen rtl-flip"></i>
                                 </button>
                             </div>

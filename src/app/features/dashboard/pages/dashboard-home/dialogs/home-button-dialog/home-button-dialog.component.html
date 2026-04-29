@@ -22,10 +22,10 @@
                 <label class="radio-option">
                     <input
                         type="radio"
-                        name="homeButtonLinkType"
-                        value="internal"
-                        [ngModel]="linkType"
-                        (ngModelChange)="onLinkTypeChange($event)"
+                        name="homeButtonDirection"
+                        value="Internal"
+                        [ngModel]="direction"
+                        (ngModelChange)="onDirectionChange($event)"
                     />
                     <span>{{ labels.internal }}</span>
                 </label>
@@ -33,17 +33,17 @@
                 <label class="radio-option">
                     <input
                         type="radio"
-                        name="homeButtonLinkType"
-                        value="external"
-                        [ngModel]="linkType"
-                        (ngModelChange)="onLinkTypeChange($event)"
+                        name="homeButtonDirection"
+                        value="External"
+                        [ngModel]="direction"
+                        (ngModelChange)="onDirectionChange($event)"
                     />
                     <span>{{ labels.external }}</span>
                 </label>
             </div>
         </div>
 
-        @if (linkType === 'internal') {
+        @if (direction === 'Internal') {
             <div class="field">
                 <span class="field-label">{{ labels.selectPage }}</span>
                 @if (isLoadingPages) {

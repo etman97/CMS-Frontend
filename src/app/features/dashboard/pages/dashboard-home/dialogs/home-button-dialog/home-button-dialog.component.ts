@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { HomeButtonLinkType } from '../../../../../../core/services/home-page.service';
+import { ButtonDirection } from '../../../../../../core/services/home-page.service';
 import { PageStatusService, PublicPageKey, PublicPageStatusMap } from '../../../../../../core/services/page-status.service';
 import { HomeButtonDialogData, HomeButtonDialogResult } from './home-button-dialog.model';
 
@@ -45,7 +45,7 @@ export class HomeButtonDialogComponent implements OnInit {
     lang: 'en' | 'ar' = 'en';
     dir: 'ltr' | 'rtl' = 'ltr';
     label = '';
-    linkType: HomeButtonLinkType = 'internal';
+    direction: ButtonDirection = 'Internal';
     linkValue = '/';
     isLoadingPages = false;
     internalPages: InternalPageOption[] = [];
@@ -135,16 +135,16 @@ export class HomeButtonDialogComponent implements OnInit {
     }
 
     get showInternalPageRequired(): boolean {
-        return (this.attemptedSave || this.linkValueTouched) && this.linkType === 'internal' && this.hasActiveInternalPages && !this.linkValue.trim();
+        return (this.attemptedSave || this.linkValueTouched) && this.direction === 'Internal' && this.hasActiveInternalPages && !this.linkValue.trim();
     }
 
     get showExternalUrlRequired(): boolean {
-        return (this.attemptedSave || this.linkValueTouched) && this.linkType === 'external' && !this.linkValue.trim();
+        return (this.attemptedSave || this.linkValueTouched) && this.direction === 'External' && !this.linkValue.trim();
     }
 
     get showExternalUrlInvalid(): boolean {
         const value = this.linkValue.trim();
-        return (this.attemptedSave || this.linkValueTouched) && this.linkType === 'external' && !!value && !this.externalUrlPattern.test(value);
+        return (this.attemptedSave || this.linkValueTouched) && this.direction === 'External' && !!value && !this.externalUrlPattern.test(value);
     }
 
     get canSave(): boolean {
@@ -152,7 +152,7 @@ export class HomeButtonDialogComponent implements OnInit {
             return false;
         }
 
-        if (this.linkType === 'internal') {
+        if (this.direction === 'Internal') {
             return !this.isLoadingPages && this.hasActiveInternalPages && !!this.linkValue.trim();
         }
 
@@ -165,20 +165,15 @@ export class HomeButtonDialogComponent implements OnInit {
         this.lang = data?.lang ?? 'en';
         this.dir = this.lang === 'ar' ? 'rtl' : 'ltr';
         this.label = data?.label ?? '';
-        this.linkType = data?.linkType ?? 'internal';
-        this.linkValue = data?.linkValue || (this.linkType === 'internal' ? '/' : '');
+        this.direction = data?.direction ?? 'Internal';
+        this.linkValue = data?.linkValue || (this.direction === 'Internal' ? '/' : '');
         this.loadInternalPages();
     }
 
-    onLinkTypeChange(type: HomeButtonLinkType): void {
-        this.linkType = type;
-        this.linkValueTouched = false;
-        if (type === 'internal') {
-            this.linkValue = '';
-            return;
-        }
-
+    onDirectionChange(direction: ButtonDirection): void {
+        this.direction = direction;
         this.linkValue = '';
+        this.linkValueTouched = false;
     }
 
     markLabelTouched(): void {
@@ -199,7 +194,7 @@ export class HomeButtonDialogComponent implements OnInit {
 
         const result: HomeButtonDialogResult = {
             label: this.label.trim(),
-            linkType: this.linkType,
+            direction: this.direction,
             linkValue: this.linkValue.trim()
         };
 
@@ -240,7 +235,7 @@ export class HomeButtonDialogComponent implements OnInit {
     }
 
     private resolveInternalLinkValue(currentValue: string): string {
-        if (this.linkType !== 'internal') {
+        if (this.direction !== 'Internal') {
             return currentValue;
         }
 

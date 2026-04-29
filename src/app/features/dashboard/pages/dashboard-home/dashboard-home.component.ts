@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
-import { HomePageService, HomePageDto, HomeButtonLinkType } from '../../../../core/services/home-page.service';
+import { HomePageService, HomePageDto, ButtonConfigDto, ButtonDirection } from '../../../../core/services/home-page.service';
 import { MediaService } from '../../../../core/services/media.service';
 import { PRIME_NG_CONFIGS } from '../../../../shared/prime-ng-configs';
 import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
@@ -36,21 +36,11 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
 
     heroTitleEn = '';
     heroContentEn = '';
-    primaryButtonTextEn = '';
-    secondaryButtonTextEn = '';
-    primaryButtonLinkTypeEn: HomeButtonLinkType = 'internal';
-    primaryButtonLinkEn = '';
-    secondaryButtonLinkTypeEn: HomeButtonLinkType = 'internal';
-    secondaryButtonLinkEn = '';
-
     heroTitleAr = '';
     heroContentAr = '';
-    primaryButtonTextAr = '';
-    secondaryButtonTextAr = '';
-    primaryButtonLinkTypeAr: HomeButtonLinkType = 'internal';
-    primaryButtonLinkAr = '';
-    secondaryButtonLinkTypeAr: HomeButtonLinkType = 'internal';
-    secondaryButtonLinkAr = '';
+
+    primaryButton: ButtonConfigDto = { en: '', ar: '', direction: 'Internal', selectedTab: null, externalUrl: null };
+    secondaryButton: ButtonConfigDto = { en: '', ar: '', direction: 'Internal', selectedTab: null, externalUrl: null };
 
     heroImageUrl: string | null = null;
     private persistedHeroImageUrl: string | null = null;
@@ -81,20 +71,10 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
         this.isActive = data.isActive;
         this.heroTitleEn = data.heroTitleEn;
         this.heroContentEn = data.heroContentEn;
-        this.primaryButtonTextEn = data.primaryButtonTextEn;
-        this.secondaryButtonTextEn = data.secondaryButtonTextEn;
-        this.primaryButtonLinkTypeEn = data.primaryButtonLinkTypeEn ?? 'internal';
-        this.primaryButtonLinkEn = data.primaryButtonLinkEn ?? '';
-        this.secondaryButtonLinkTypeEn = data.secondaryButtonLinkTypeEn ?? 'internal';
-        this.secondaryButtonLinkEn = data.secondaryButtonLinkEn ?? '';
         this.heroTitleAr = data.heroTitleAr;
         this.heroContentAr = data.heroContentAr;
-        this.primaryButtonTextAr = data.primaryButtonTextAr;
-        this.secondaryButtonTextAr = data.secondaryButtonTextAr;
-        this.primaryButtonLinkTypeAr = data.primaryButtonLinkTypeAr ?? 'internal';
-        this.primaryButtonLinkAr = data.primaryButtonLinkAr ?? '';
-        this.secondaryButtonLinkTypeAr = data.secondaryButtonLinkTypeAr ?? 'internal';
-        this.secondaryButtonLinkAr = data.secondaryButtonLinkAr ?? '';
+        this.primaryButton = { ...data.primaryButton };
+        this.secondaryButton = { ...data.secondaryButton };
         this.heroImageUrl = data.heroImageUrl;
         this.persistedHeroImageUrl = data.heroImageUrl;
     }
@@ -167,15 +147,16 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
 
     private createButtonDialog(button: HomeButtonKey, lang: 'en' | 'ar'): DynamicDialogRef | null {
         const isArabic = lang === 'ar';
+        const cfg = button === 'primary' ? this.primaryButton : this.secondaryButton;
 
         return this.dialogService.open(HomeButtonDialogComponent, {
             ...PRIME_NG_CONFIGS.dynamicDialog,
             header: isArabic ? 'تعديل الزر' : 'Edit Button',
             data: {
                 lang,
-                label: this.getButtonText(button, lang),
-                linkType: this.getButtonLinkType(button, lang),
-                linkValue: this.getButtonLinkValue(button, lang)
+                label: lang === 'ar' ? cfg.ar : cfg.en,
+                direction: cfg.direction,
+                linkValue: cfg.direction === 'Internal' ? (cfg.selectedTab ?? '') : (cfg.externalUrl ?? '')
             },
             style: { direction: isArabic ? 'rtl' : 'ltr' },
             width: '520px'
@@ -183,58 +164,22 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
     }
 
     private applyButtonDialogResult(button: HomeButtonKey, lang: 'en' | 'ar', result: HomeButtonDialogResult): void {
-        const normalizedLinkValue = result.linkType === 'external'
-            ? this.normalizeExternalUrl(result.linkValue)
-            : (result.linkValue || '/');
+        const cfg = button === 'primary' ? this.primaryButton : this.secondaryButton;
 
-        if (button === 'primary' && lang === 'en') {
-            this.primaryButtonTextEn = result.label;
-            this.primaryButtonLinkTypeEn = result.linkType;
-            this.primaryButtonLinkEn = normalizedLinkValue;
-            return;
+        if (lang === 'ar') {
+            cfg.ar = result.label;
+        } else {
+            cfg.en = result.label;
         }
 
-        if (button === 'secondary' && lang === 'en') {
-            this.secondaryButtonTextEn = result.label;
-            this.secondaryButtonLinkTypeEn = result.linkType;
-            this.secondaryButtonLinkEn = normalizedLinkValue;
-            return;
+        cfg.direction = result.direction;
+        if (result.direction === 'Internal') {
+            cfg.selectedTab = result.linkValue || '/';
+            cfg.externalUrl = null;
+        } else {
+            cfg.externalUrl = this.normalizeExternalUrl(result.linkValue);
+            cfg.selectedTab = null;
         }
-
-        if (button === 'primary') {
-            this.primaryButtonTextAr = result.label;
-            this.primaryButtonLinkTypeAr = result.linkType;
-            this.primaryButtonLinkAr = normalizedLinkValue;
-            return;
-        }
-
-        this.secondaryButtonTextAr = result.label;
-        this.secondaryButtonLinkTypeAr = result.linkType;
-        this.secondaryButtonLinkAr = normalizedLinkValue;
-    }
-
-    private getButtonText(button: HomeButtonKey, lang: 'en' | 'ar'): string {
-        if (button === 'primary') {
-            return lang === 'ar' ? this.primaryButtonTextAr : this.primaryButtonTextEn;
-        }
-
-        return lang === 'ar' ? this.secondaryButtonTextAr : this.secondaryButtonTextEn;
-    }
-
-    private getButtonLinkType(button: HomeButtonKey, lang: 'en' | 'ar'): HomeButtonLinkType {
-        if (button === 'primary') {
-            return lang === 'ar' ? this.primaryButtonLinkTypeAr : this.primaryButtonLinkTypeEn;
-        }
-
-        return lang === 'ar' ? this.secondaryButtonLinkTypeAr : this.secondaryButtonLinkTypeEn;
-    }
-
-    private getButtonLinkValue(button: HomeButtonKey, lang: 'en' | 'ar'): string {
-        if (button === 'primary') {
-            return lang === 'ar' ? this.primaryButtonLinkAr : this.primaryButtonLinkEn;
-        }
-
-        return lang === 'ar' ? this.secondaryButtonLinkAr : this.secondaryButtonLinkEn;
     }
 
     private normalizeExternalUrl(value: string): string {
@@ -251,21 +196,11 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
             isActive: this.isActive,
             heroTitleEn: this.heroTitleEn,
             heroContentEn: this.heroContentEn,
-            primaryButtonTextEn: this.primaryButtonTextEn,
-            secondaryButtonTextEn: this.secondaryButtonTextEn,
-            primaryButtonLinkTypeEn: this.primaryButtonLinkTypeEn,
-            primaryButtonLinkEn: this.primaryButtonLinkEn,
-            secondaryButtonLinkTypeEn: this.secondaryButtonLinkTypeEn,
-            secondaryButtonLinkEn: this.secondaryButtonLinkEn,
             heroTitleAr: this.heroTitleAr,
             heroContentAr: this.heroContentAr,
-            primaryButtonTextAr: this.primaryButtonTextAr,
-            secondaryButtonTextAr: this.secondaryButtonTextAr,
-            primaryButtonLinkTypeAr: this.primaryButtonLinkTypeAr,
-            primaryButtonLinkAr: this.primaryButtonLinkAr,
-            secondaryButtonLinkTypeAr: this.secondaryButtonLinkTypeAr,
-            secondaryButtonLinkAr: this.secondaryButtonLinkAr,
-            heroImageUrl: this.heroImageUrl
+            heroImageUrl: this.heroImageUrl,
+            primaryButton: { ...this.primaryButton },
+            secondaryButton: { ...this.secondaryButton }
         };
 
         const previewLang: 'en' | 'ar' = this.activeTab === 'ar' ? 'ar' : 'en';

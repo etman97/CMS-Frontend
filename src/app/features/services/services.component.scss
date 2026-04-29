@@ -6,6 +6,16 @@
   min-height: 100vh;
 }
 
+.services-page--preview {
+  min-height: unset;
+
+  a,
+  button,
+  [role='button'] {
+    pointer-events: none;
+  }
+}
+
 // ─── Hero ────────────────────────────────────────
 .hero {
   position: relative;

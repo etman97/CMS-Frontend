@@ -2,6 +2,10 @@
     <app-dashboard-page-header
         title="Services"
         [(active)]="isActive"
+        [isSaving]="isSaving"
+        [saveDisabled]="isUploadingImage"
+        (preview)="onPreview()"
+        (save)="save()"
     />
 
     <p-tabs [(value)]="activeTab" class="services-tabs">
@@ -40,19 +44,19 @@
                     </div>
 
                     <div class="editor-bottom">
-                        @for (section of serviceSections; track section.id; let i = $index) {
+                        @for (section of serviceSections; track section.localId; let i = $index) {
                             <article class="service-row" [class.service-row--reverse]="i % 2 === 1">
                                 <div class="service-row__menu" (click)="closeSectionMenu()">
-                                    <button type="button" class="menu-btn" aria-label="Section actions" (click)="toggleSectionMenu(section.id, $event)">
+                                    <button type="button" class="menu-btn" aria-label="Section actions" (click)="toggleSectionMenu(section.localId, $event)">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
-                                    @if (openMenuSectionId === section.id) {
+                                    @if (openMenuSectionId === section.localId) {
                                         <div class="section-actions-menu" (click)="$event.stopPropagation()">
-                                            <button type="button" (click)="openEditSectionDialog(section.id)">
+                                            <button type="button" (click)="openEditSectionDialog(section.localId)">
                                                 <i class="bi bi-pen"></i>
                                                 <span>Edit</span>
                                             </button>
-                                            <button type="button" class="section-actions-menu__delete" (click)="removeSection(section.id)">
+                                            <button type="button" class="section-actions-menu__delete" (click)="removeSection(section.localId)">
                                                 <i class="bi bi-trash3"></i>
                                                 <span>Delete</span>
                                             </button>
@@ -114,19 +118,19 @@
                     </div>
 
                     <div class="editor-bottom">
-                        @for (section of serviceSections; track section.id; let i = $index) {
+                        @for (section of serviceSections; track section.localId; let i = $index) {
                             <article class="service-row" [class.service-row--reverse]="i % 2 === 1">
                                 <div class="service-row__menu" (click)="closeSectionMenu()">
-                                    <button type="button" class="menu-btn" aria-label="Section actions" (click)="toggleSectionMenu(section.id, $event)">
+                                    <button type="button" class="menu-btn" aria-label="Section actions" (click)="toggleSectionMenu(section.localId, $event)">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
-                                    @if (openMenuSectionId === section.id) {
+                                    @if (openMenuSectionId === section.localId) {
                                         <div class="section-actions-menu" (click)="$event.stopPropagation()">
-                                            <button type="button" (click)="openEditSectionDialog(section.id)">
+                                            <button type="button" (click)="openEditSectionDialog(section.localId)">
                                                 <i class="bi bi-pen"></i>
                                                 <span>تعديل</span>
                                             </button>
-                                            <button type="button" class="section-actions-menu__delete" (click)="removeSection(section.id)">
+                                            <button type="button" class="section-actions-menu__delete" (click)="removeSection(section.localId)">
                                                 <i class="bi bi-trash3"></i>
                                                 <span>حذف</span>
                                             </button>

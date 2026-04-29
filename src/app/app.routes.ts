@@ -3,6 +3,8 @@ import { authGuard, guestGuard } from './core/auth/auth.guard';
 import { homePageResolver } from './core/resolvers/home-page.resolver';
 import { aboutPageResolver } from './core/resolvers/about-page.resolver';
 import { contactPageResolver } from './core/resolvers/contact-page.resolver';
+import { partnersPageResolver } from './core/resolvers/partners-page.resolver';
+import { servicesPageResolver } from './core/resolvers/services-page.resolver';
 
 export const routes: Routes = [
     {
@@ -30,11 +32,13 @@ export const routes: Routes = [
             },
             {
                 path: 'services',
-                loadComponent: () => import('./features/services/services.component').then(m => m.ServicesComponent)
+                loadComponent: () => import('./features/services/services.component').then(m => m.ServicesComponent),
+                resolve: { servicesPageData: servicesPageResolver }
             },
             {
                 path: 'partners',
-                loadComponent: () => import('./features/partners/partners.component').then(m => m.PartnersComponent)
+                loadComponent: () => import('./features/partners/partners.component').then(m => m.PartnersComponent),
+                resolve: { partnersPageData: partnersPageResolver }
             },
             {
                 path: 'contact',

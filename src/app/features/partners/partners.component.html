@@ -1,7 +1,7 @@
-<main class="partners-page">
+<main class="partners-page" [class.partners-page--preview]="isPreviewMode" [attr.dir]="isRtl ? 'rtl' : 'ltr'">
   <section class="hero">
     <div class="hero-bg-wrap">
-      <img class="hero-bg" src="https://www.figma.com/api/mcp/asset/4bfe2ab4-5a22-4f0a-8475-9f8a9afe97d1" alt="" />
+      <img class="hero-bg" [src]="heroImageUrl || ''" alt="" />
       <div class="hero-overlay"></div>
     </div>
 
@@ -10,64 +10,19 @@
     <div class="hero-blur hero-blur-bottom"></div>
 
     <div class="container hero-content">
-      <h1 class="page-title">Our Partners</h1>
-      <p class="page-subtitle">
-        Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.
-        With every collaboration, we deliver performance, reliability, and scalability-because your success is our mission.
-      </p>
+      <h1 class="page-title">{{ isRtl ? 'شركاؤنا' : 'Our Partners' }}</h1>
+      <p class="page-subtitle">{{ subtitle }}</p>
     </div>
   </section>
 
   <section class="partners-section">
     <div class="container">
       <div class="partners-grid">
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/2c822778-2110-47b5-bd84-2ddc03bc8ea4" alt="Palo Alto Networks" />
-        </article>
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/509e9c0f-45fe-467b-8f57-b5cec5f68489" alt="Fortinet" />
-        </article>
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/395ea1de-8f71-4d40-a7ca-eb55a98a65a2" alt="Nutanix" />
-        </article>
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/796e1d7c-e156-46be-af1d-5f8ed2e5cbc8" alt="Hewlett Packard Enterprise" />
-        </article>
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/ae5d5ce5-e282-40fe-b15c-6e3696148360" alt="Rhebo" />
-        </article>
-
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/ac983be9-55c5-45e2-91f0-f1e711eabc2a" alt="AWS" />
-        </article>
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/61309c4d-ec03-4703-8b1c-4a63e1666dbe" alt="Soffid" />
-        </article>
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/e3eb51e4-70bd-4d7c-acf5-8b55f83dabe4" alt="SailPoint" />
-        </article>
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/0bb4cce6-8e3c-45bd-ba02-e02902612840" alt="Veridify Security" />
-        </article>
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/cbe8b95e-1bd4-49ae-ad97-e53b3f559d17" alt="Netskope" />
-        </article>
-
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/75691e87-ec12-4c6d-99d3-8b08e73ae196" alt="Microsoft" />
-        </article>
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/8f973671-b85d-459a-b386-17f4917370b2" alt="Pure Storage" />
-        </article>
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/2a1f1051-f547-4864-a9d5-896087a521c0" alt="Red Hat" />
-        </article>
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/59b43862-d166-46e8-b895-ec42bd72586b" alt="Nanitor" />
-        </article>
-        <article class="partner-card">
-          <img src="https://www.figma.com/api/mcp/asset/1e54a17f-31be-4d88-8b6a-2c45c0c652ef" alt="Commvault" />
-        </article>
+        @for (logo of partnerLogos; track logo.id) {
+          <article class="partner-card">
+            <img *ngIf="logo.logoImageUrl" [src]="logo.logoImageUrl" alt="Partner logo" />
+          </article>
+        }
       </div>
     </div>
   </section>

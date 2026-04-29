@@ -2,6 +2,10 @@
     <app-dashboard-page-header
         title="Our Partners"
         [(active)]="isActive"
+        [isSaving]="isSaving"
+        [saveDisabled]="anyUploading"
+        (preview)="onPreview()"
+        (save)="save()"
     />
 
     <p-tabs [(value)]="activeTab" class="partners-tabs">
@@ -41,10 +45,10 @@
 
                     <div class="editor-bottom">
                         <div class="partners-row">
-                            @for (partner of partnerCards; track partner.id) {
+                            @for (partner of partnerCards; track partner.localId) {
                                 <article class="partner-card">
                                     <div class="partner-card__head">
-                                        <button type="button" class="delete-btn" aria-label="Remove partner" (click)="removePartner(partner.id)">
+                                        <button type="button" class="delete-btn" aria-label="Remove partner" (click)="removePartner(partner.localId)">
                                             <i class="bi bi-trash3"></i>
                                         </button>
                                     </div>
@@ -54,7 +58,7 @@
                                             type="file"
                                             accept="image/png,image/jpeg,image/svg+xml"
                                             hidden
-                                            (change)="onPartnerLogoSelected($event, partner.id)"
+                                            (change)="onPartnerLogoSelected($event, partner.localId)"
                                         />
                                         @if (partner.imageUrl) {
                                             <img [src]="partner.imageUrl" alt="Partner logo" />
@@ -121,10 +125,10 @@
                                 <span>إضافة شريك</span>
                             </button>
 
-                            @for (partner of partnerCards; track partner.id) {
+                            @for (partner of partnerCards; track partner.localId) {
                                 <article class="partner-card">
                                     <div class="partner-card__head">
-                                        <button type="button" class="delete-btn" aria-label="Remove partner" (click)="removePartner(partner.id)">
+                                        <button type="button" class="delete-btn" aria-label="Remove partner" (click)="removePartner(partner.localId)">
                                             <i class="bi bi-trash3"></i>
                                         </button>
                                     </div>
@@ -134,7 +138,7 @@
                                             type="file"
                                             accept="image/png,image/jpeg,image/svg+xml"
                                             hidden
-                                            (change)="onPartnerLogoSelected($event, partner.id)"
+                                            (change)="onPartnerLogoSelected($event, partner.localId)"
                                         />
                                         @if (partner.imageUrl) {
                                             <img [src]="partner.imageUrl" alt="Partner logo" />

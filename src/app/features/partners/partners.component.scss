@@ -18,6 +18,16 @@
   background: var(--primary);
 }
 
+.partners-page--preview {
+  min-height: unset;
+
+  a,
+  button,
+  [role='button'] {
+    pointer-events: none;
+  }
+}
+
 .container {
   width: min(calc(100% - 160px), var(--container));
   margin: 0 auto;

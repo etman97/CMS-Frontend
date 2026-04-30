@@ -6,6 +6,8 @@ import { finalize } from 'rxjs';
 import { AddMemberDialogData, AddMemberDialogResult } from './add-member-dialog.model';
 import { MediaService } from '../../../../../../core/services/media.service';
 
+type MemberFieldKey = 'nameEn' | 'jobTitleEn' | 'briefEn' | 'nameAr' | 'jobTitleAr' | 'briefAr';
+
 @Component({
     selector: 'app-add-member-dialog',
     standalone: true,
@@ -31,9 +33,27 @@ export class AddMemberDialogComponent implements OnInit, OnDestroy {
     imageUrl: string | null = null;
     imagePreview: string | null = null;
     isUploading = false;
+    attemptedSave = false;
+    imageTouched = false;
+    touchedFields: Partial<Record<MemberFieldKey, boolean>> = {};
     private localPreviewUrl: string | null = null;
 
     dir: 'ltr' | 'rtl' = 'ltr';
+    private readonly englishPattern = /^[A-Za-z0-9\s.,!?'"():;&%+\-_/–—‘’“”]+$/;
+    private readonly arabicPattern = /^[A-Za-z\u0600-\u06FF\u0660-\u06690-9\s.,!?'"():;&%+\-_/،؛؟٪ـ–—‘’“”]+$/;
+
+    get canSave(): boolean {
+        const fields: MemberFieldKey[] = ['nameEn', 'jobTitleEn', 'briefEn', 'nameAr', 'jobTitleAr', 'briefAr'];
+        return !this.isUploading && !!this.imageUrl && fields.every((field) => this.getFieldValue(field).trim() && this.isFieldPatternValid(field));
+    }
+
+    get showImageRequired(): boolean {
+        return (this.attemptedSave || this.imageTouched) && !this.imageUrl;
+    }
+
+    get imageRequiredMessage(): string {
+        return this.dir === 'rtl' ? '\u0647\u0630\u0627 \u0627\u0644\u062d\u0642\u0644 \u0645\u0637\u0644\u0648\u0628.' : 'This field is required.';
+    }
 
     ngOnInit(): void {
         const lang = this.config.data?.lang ?? 'en';
@@ -59,6 +79,7 @@ export class AddMemberDialogComponent implements OnInit, OnDestroy {
     onFileChange(event: Event): void {
         if (this.isUploading) return;
 
+        this.imageTouched = true;
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0];
         if (!file) return;
@@ -134,16 +155,70 @@ export class AddMemberDialogComponent implements OnInit, OnDestroy {
         }
     }
 
-    save(): void {
-        if (this.isUploading) return;
+    markFieldTouched(field: MemberFieldKey): void {
+        this.touchedFields[field] = true;
+    }
 
-        const result: AddMemberDialogResult = {
+    markImageTouched(): void {
+        this.imageTouched = true;
+    }
+
+    showRequiredError(field: MemberFieldKey): boolean {
+        return (this.attemptedSave || !!this.touchedFields[field]) && !this.getFieldValue(field).trim();
+    }
+
+    showPatternError(field: MemberFieldKey): boolean {
+        const value = this.getFieldValue(field).trim();
+        return (this.attemptedSave || !!this.touchedFields[field]) && !!value && !this.isFieldPatternValid(field);
+    }
+
+    requiredMessage(lang: 'en' | 'ar'): string {
+        return lang === 'ar' ? '\u0647\u0630\u0627 \u0627\u0644\u062d\u0642\u0644 \u0645\u0637\u0644\u0648\u0628.' : 'This field is required.';
+    }
+
+    patternMessage(lang: 'en' | 'ar'): string {
+        return lang === 'ar' ? '\u064a\u0631\u062c\u0649 \u0625\u062f\u062e\u0627\u0644 \u0646\u0635 \u0639\u0631\u0628\u064a \u0623\u0648 \u0625\u0646\u062c\u0644\u064a\u0632\u064a \u0641\u0642\u0637.' : 'Please enter English text only.';
+    }
+
+    private getFieldValue(field: MemberFieldKey): string {
+        const fieldMap: Record<MemberFieldKey, string> = {
             nameEn: this.nameEn,
             jobTitleEn: this.jobTitleEn,
             briefEn: this.briefEn,
             nameAr: this.nameAr,
             jobTitleAr: this.jobTitleAr,
-            briefAr: this.briefAr,
+            briefAr: this.briefAr
+        };
+
+        return fieldMap[field] ?? '';
+    }
+
+    private isFieldPatternValid(field: MemberFieldKey): boolean {
+        const value = this.getFieldValue(field).trim();
+        if (!value) {
+            return false;
+        }
+
+        return field.endsWith('Ar')
+            ? this.arabicPattern.test(value)
+            : this.englishPattern.test(value);
+    }
+
+    save(): void {
+        this.attemptedSave = true;
+
+        if (!this.canSave) {
+            this.cdr.detectChanges();
+            return;
+        }
+
+        const result: AddMemberDialogResult = {
+            nameEn: this.nameEn.trim(),
+            jobTitleEn: this.jobTitleEn.trim(),
+            briefEn: this.briefEn.trim(),
+            nameAr: this.nameAr.trim(),
+            jobTitleAr: this.jobTitleAr.trim(),
+            briefAr: this.briefAr.trim(),
             imageUrl: this.imageUrl
         };
         this.ref.close(result);

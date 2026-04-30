@@ -1,9 +1,15 @@
-<div class="dashboard-services-page">
+@if (isLoading) {
+<div class="page-loader">
+    <div class="spinner"></div>
+</div>
+}
+
+<div class="dashboard-services-page" [class.page-hidden]="isLoading">
     <app-dashboard-page-header
         title="Services"
         [(active)]="isActive"
         [isSaving]="isSaving"
-        [saveDisabled]="isUploadingImage"
+        [saveDisabled]="isSaving || anyUploading || !canSave"
         (preview)="onPreview()"
         (save)="save()"
     />
@@ -23,10 +29,10 @@
                         [class.editor-top--has-image]="topImageUrl"
                     >
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputEn.click()">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputEn.click()" [disabled]="isUploadingImage">
                                 <i class="bi bi-upload"></i>
                             </button>
-                            <input #topImageInputEn type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <input #topImageInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onTopImageSelected($event)" />
                             <button type="button" class="icon-btn" aria-label="Add link">
                                 <i class="bi bi-link-45deg"></i>
                             </button>
@@ -38,8 +44,17 @@
                                 class="content-input"
                                 rows="2"
                                 [(ngModel)]="introByLang.en.description"
+                                [class.is-invalid]="showRequiredError('heroTextEn') || showPatternError('heroTextEn')"
+                                (ngModelChange)="markFieldTouched('heroTextEn')"
+                                (input)="markFieldTouched('heroTextEn')"
+                                (blur)="markFieldTouched('heroTextEn')"
                                 placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"
                             ></textarea>
+                            @if (showRequiredError('heroTextEn')) {
+                                <span class="validation-message">{{ requiredMessage('en') }}</span>
+                            } @else if (showPatternError('heroTextEn')) {
+                                <span class="validation-message">{{ patternMessage('en') }}</span>
+                            }
                         </article>
                     </div>
 
@@ -97,10 +112,10 @@
                         [class.editor-top--has-image]="topImageUrl"
                     >
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputAr.click()">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputAr.click()" [disabled]="isUploadingImage">
                                 <i class="bi bi-upload"></i>
                             </button>
-                            <input #topImageInputAr type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <input #topImageInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onTopImageSelected($event)" />
                             <button type="button" class="icon-btn" aria-label="Add link">
                                 <i class="bi bi-link-45deg"></i>
                             </button>
@@ -112,8 +127,17 @@
                                 class="content-input"
                                 rows="2"
                                 [(ngModel)]="introByLang.ar.description"
+                                [class.is-invalid]="showRequiredError('heroTextAr') || showPatternError('heroTextAr')"
+                                (ngModelChange)="markFieldTouched('heroTextAr')"
+                                (input)="markFieldTouched('heroTextAr')"
+                                (blur)="markFieldTouched('heroTextAr')"
                                 placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"
                             ></textarea>
+                            @if (showRequiredError('heroTextAr')) {
+                                <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                            } @else if (showPatternError('heroTextAr')) {
+                                <span class="validation-message">{{ patternMessage('ar') }}</span>
+                            }
                         </article>
                     </div>
 

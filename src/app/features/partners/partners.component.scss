@@ -1,26 +1,13 @@
-:host {
-  --primary: #2d2e83;
-  --secondary: #4544e7;
-  --primary-light: #eeeeff;
-  --white: #ffffff;
-  --hero-title-gradient-start: #f2f2f2;
-  --hero-title-gradient-end: #a0a0ff;
-  --card-bg: #ffffff;
-  --container: 1280px;
-  --hero-height: 341.333px;
-
-  display: block;
-}
+@use '../../variables' as v;
 
 .partners-page {
+  width: 100%;
   min-height: 100vh;
-  overflow-x: hidden;
-  background: var(--primary);
+  overflow: hidden;
+  background: v.$primary;
 }
 
 .partners-page--preview {
-  min-height: unset;
-
   a,
   button,
   [role='button'] {
@@ -29,7 +16,7 @@
 }
 
 .container {
-  width: min(calc(100% - 160px), var(--container));
+  width: min(calc(100% - 160px), 1280px);
   margin: 0 auto;
 }
 
@@ -41,21 +28,34 @@
 
 .hero-bg-wrap {
   position: absolute;
-  inset: 0 0 auto 0;
-  height: var(--hero-height);
+  inset: 0 0 auto;
+  height: 341px;
   overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(v.$black, 0) 24%, rgba(v.$black, 0.5) 100%);
+    transform: scaleY(-1);
+    transform-origin: center;
+  }
 }
 
 .hero-bg {
+  position: absolute;
+  inset: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: fill;
+  object-position: center top;
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 25%, #000000 100%);
+  background: linear-gradient(to bottom, rgba(v.$black, 0) 24%, v.$black 100%);
 }
 
 .hero-blur {
@@ -68,22 +68,19 @@
   left: 0;
   width: 400px;
   height: 400px;
-  background: var(--secondary);
-  opacity: 0.5;
+  background: rgba(v.$secondary, 0.5);
   filter: blur(120px);
-  border-top-right-radius: 200px;
-  border-bottom-right-radius: 200px;
+  border-radius: 0 200px 200px 0;
 }
 
 .hero-blur-right {
-  top: 582px;
-  right: 0;
+  top: 524px;
+  left: calc(50% + 220px);
   width: 500px;
   height: 500px;
-  background: var(--primary-light);
-  opacity: 0.1;
+  background: rgba(v.$primary-light, 0.1);
   filter: blur(120px);
-  transform: rotate(180deg) scaleY(-1);
+  transform: translateX(-50%) rotate(180deg) scaleY(-1);
 }
 
 .hero-blur-bottom {
@@ -91,8 +88,7 @@
   left: 0;
   width: 300px;
   height: 300px;
-  background: var(--primary-light);
-  opacity: 0.07;
+  background: rgba(v.$primary-light, 0.07);
   filter: blur(120px);
 }
 
@@ -110,7 +106,7 @@
   font-size: 32px;
   line-height: 1.2;
   font-weight: 700;
-  background: linear-gradient(90deg, var(--hero-title-gradient-start) 0%, var(--hero-title-gradient-end) 17.539%);
+  background: linear-gradient(90deg, #f2f2f2 0%, #a0a0ff 17.539%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -122,12 +118,13 @@
   font-size: 18px;
   line-height: 1.5;
   font-weight: 500;
-  color: var(--white);
+  color: v.$white;
 }
 
 .partners-section {
   position: relative;
-  padding: 48px 0 92px;
+  min-height: 683px;
+  padding: 48px 0 148px;
 }
 
 .partners-grid {
@@ -137,7 +134,7 @@
 }
 
 .partner-card {
-  background: var(--card-bg);
+  background: v.$white;
   border-radius: 16px;
   min-height: 160px;
   display: flex;
@@ -155,7 +152,7 @@
 
 @media (max-width: 1399px) {
   .container {
-    width: min(calc(100% - 80px), var(--container));
+    width: min(calc(100% - 80px), 1280px);
   }
 }
 
@@ -168,7 +165,7 @@
 
 @media (max-width: 991px) {
   .container {
-    width: min(calc(100% - 48px), var(--container));
+    width: min(calc(100% - 48px), 1280px);
   }
 
   .hero {
@@ -190,7 +187,7 @@
 
 @media (max-width: 767px) {
   .container {
-    width: min(calc(100% - 32px), var(--container));
+    width: min(calc(100% - 32px), 1280px);
   }
 
   .hero {
@@ -198,7 +195,7 @@
   }
 
   .hero-bg-wrap {
-    height: 260px;
+    height: 341px;
   }
 
   .page-title {
@@ -211,7 +208,7 @@
 
   .partners-section {
     padding-top: 40px;
-    padding-bottom: 56px;
+    padding-bottom: 72px;
   }
 
   .partners-grid {
@@ -227,11 +224,29 @@
     width: 130px;
     height: 130px;
   }
+
+  .hero-blur-left {
+    width: 260px;
+    height: 260px;
+  }
+
+  .hero-blur-right {
+    left: auto;
+    right: -100px;
+    width: 320px;
+    height: 320px;
+    transform: rotate(180deg) scaleY(-1);
+  }
+
+  .hero-blur-bottom {
+    width: 220px;
+    height: 220px;
+  }
 }
 
 @media (max-width: 479px) {
   .hero-bg-wrap {
-    height: 220px;
+    height: 341px;
   }
 
   .page-title {
@@ -243,16 +258,16 @@
   }
 
   .partners-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .partner-card {
-    min-height: 150px;
+    min-height: 130px;
   }
 
   .partner-card img {
-    width: 150px;
-    height: 150px;
+    width: 130px;
+    height: 130px;
   }
 }
 

@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
-import { HomeButtonLinkType, HomePageDto, HomePageService } from '../../core/services/home-page.service';
+import { ButtonDirection, HomePageDto, HomePageService } from '../../core/services/home-page.service';
 import { PageStatusService } from '../../core/services/page-status.service';
+import { PartnersPageService } from '../../core/services/partners-page.service';
 
 export interface HomeDialogData {
     source?: 'preview' | 'api';
@@ -22,9 +24,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly route = inject(ActivatedRoute);
     private readonly homePageService = inject(HomePageService);
     private readonly pageStatusService = inject(PageStatusService);
+    private readonly partnersPageService = inject(PartnersPageService);
     private readonly dialogConfig = inject(DynamicDialogConfig<HomeDialogData>, { optional: true });
     private readonly messageService = inject(MessageService, { optional: true });
     private dirObserver: MutationObserver | null = null;
+    private partnersSub: Subscription | null = null;
+    private pageStatusSub: Subscription | null = null;
     private dataSource: HomePageDto | null = null;
     private routeLang: 'en' | 'ar' | null = null;
 
@@ -32,16 +37,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     heroContent = '';
     primaryButtonText = '';
     secondaryButtonText = '';
-    primaryButtonLinkType: HomeButtonLinkType = 'internal';
-    primaryButtonLink = '/contact';
-    secondaryButtonLinkType: HomeButtonLinkType = 'internal';
-    secondaryButtonLink = '/services';
+    primaryButtonDirection: ButtonDirection = 'Internal';
+    primaryButtonLink: string | null = null;
+    secondaryButtonDirection: ButtonDirection = 'Internal';
+    secondaryButtonLink: string | null = null;
     heroBackgroundImageStyle: string | null = null;
     isRtl = false;
     isPreviewMode = false;
     isLoading = true;
-    showServices = false;
+    showSolutions = false;
     showPartners = false;
+    partnerLogos: { id: number; logoImageUrl: string | null }[] = [];
 
     ngOnInit(): void {
         this.routeLang = this.resolveRouteLang(this.route.snapshot.queryParamMap.get('lang'));
@@ -65,8 +71,10 @@ export class HomeComponent implements OnInit, OnDestroy {
             this.loadFromApi();
         }
 
-        this.pageStatusService.getStatuses().subscribe(statuses => {
-            this.showServices = statuses.services;
+        this.loadPartnerLogos();
+
+        this.pageStatusSub = this.pageStatusService.getStatuses().subscribe(statuses => {
+            this.showSolutions = statuses.solutions;
             this.showPartners = statuses.partners;
         });
     }
@@ -74,6 +82,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.dirObserver?.disconnect();
         this.dirObserver = null;
+        this.partnersSub?.unsubscribe();
+        this.partnersSub = null;
+        this.pageStatusSub?.unsubscribe();
+        this.pageStatusSub = null;
     }
 
     private populate(data: HomePageDto, lang: 'en' | 'ar'): void {
@@ -82,24 +94,31 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (lang === 'ar') {
             this.heroTitle = data.heroTitleAr ?? '';
             this.heroContent = data.heroContentAr ?? '';
-            this.primaryButtonText = data.primaryButtonTextAr ?? '';
-            this.secondaryButtonText = data.secondaryButtonTextAr ?? '';
-            this.primaryButtonLinkType = data.primaryButtonLinkTypeAr ?? 'internal';
-            this.primaryButtonLink = data.primaryButtonLinkAr ?? '/contact';
-            this.secondaryButtonLinkType = data.secondaryButtonLinkTypeAr ?? 'internal';
-            this.secondaryButtonLink = data.secondaryButtonLinkAr ?? '/services';
+            this.primaryButtonText = data.primaryButton?.ar ?? '';
+            this.secondaryButtonText = data.secondaryButton?.ar ?? '';
         } else {
             this.heroTitle = data.heroTitleEn ?? '';
             this.heroContent = data.heroContentEn ?? '';
-            this.primaryButtonText = data.primaryButtonTextEn ?? '';
-            this.secondaryButtonText = data.secondaryButtonTextEn ?? '';
-            this.primaryButtonLinkType = data.primaryButtonLinkTypeEn ?? 'internal';
-            this.primaryButtonLink = data.primaryButtonLinkEn ?? '/contact';
-            this.secondaryButtonLinkType = data.secondaryButtonLinkTypeEn ?? 'internal';
-            this.secondaryButtonLink = data.secondaryButtonLinkEn ?? '/services';
+            this.primaryButtonText = data.primaryButton?.en ?? '';
+            this.secondaryButtonText = data.secondaryButton?.en ?? '';
         }
 
+        this.primaryButtonDirection = data.primaryButton?.direction ?? 'Internal';
+        this.primaryButtonLink = this.resolveButtonLink(data.primaryButton);
+        this.secondaryButtonDirection = data.secondaryButton?.direction ?? 'Internal';
+        this.secondaryButtonLink = this.resolveButtonLink(data.secondaryButton);
+
         this.heroBackgroundImageStyle = this.buildHeroBackgroundStyle(data.heroImageUrl);
+    }
+
+    private resolveButtonLink(button: HomePageDto['primaryButton'] | null | undefined): string | null {
+        if (!button) {
+            return null;
+        }
+
+        return button.direction === 'External'
+            ? button.externalUrl
+            : button.selectedTab;
     }
 
     private buildHeroBackgroundStyle(imageUrl: string | null): string | null {
@@ -120,6 +139,20 @@ export class HomeComponent implements OnInit, OnDestroy {
             error: () => {
                 this.isLoading = false;
                 this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load home page data.' });
+            }
+        });
+    }
+
+    private loadPartnerLogos(): void {
+        this.partnersSub = this.partnersPageService.get().subscribe({
+            next: (data) => {
+                this.partnerLogos = data?.partnerLogos
+                    ? [...data.partnerLogos].sort((a, b) => a.displayOrder - b.displayOrder)
+                    : [];
+            },
+            error: () => {
+                this.partnerLogos = [];
+                this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load partners logos.' });
             }
         });
     }

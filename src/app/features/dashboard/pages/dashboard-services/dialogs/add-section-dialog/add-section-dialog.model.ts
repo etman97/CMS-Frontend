@@ -14,5 +14,5 @@ export interface AddSectionDialogResult {
     groupNameAr: string;
     briefEn: string;
     briefAr: string;
-    imageFile: File | null;
+    imageUrl: string | null;
 }

@@ -8,8 +8,17 @@
                         type="text"
                         class="field-input"
                         [(ngModel)]="groupNameEn"
+                        [class.is-invalid]="showRequiredError('groupNameEn') || showPatternError('groupNameEn')"
+                        (ngModelChange)="markFieldTouched('groupNameEn')"
+                        (blur)="markFieldTouched('groupNameEn')"
+                        [disabled]="isUploading"
                         [placeholder]="labels.enterGroupNameEn"
                     />
+                    @if (showRequiredError('groupNameEn')) {
+                        <span class="validation-message">{{ requiredMessage('en') }}</span>
+                    } @else if (showPatternError('groupNameEn')) {
+                        <span class="validation-message">{{ patternMessage('en') }}</span>
+                    }
                 </label>
             </div>
 
@@ -20,8 +29,17 @@
                         type="text"
                         class="field-input"
                         [(ngModel)]="groupNameAr"
+                        [class.is-invalid]="showRequiredError('groupNameAr') || showPatternError('groupNameAr')"
+                        (ngModelChange)="markFieldTouched('groupNameAr')"
+                        (blur)="markFieldTouched('groupNameAr')"
+                        [disabled]="isUploading"
                         [placeholder]="labels.enterGroupNameAr"
                     />
+                    @if (showRequiredError('groupNameAr')) {
+                        <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                    } @else if (showPatternError('groupNameAr')) {
+                        <span class="validation-message">{{ patternMessage('ar') }}</span>
+                    }
                 </label>
             </div>
 
@@ -32,8 +50,17 @@
                         class="field-input field-input--textarea"
                         rows="4"
                         [(ngModel)]="briefEn"
+                        [class.is-invalid]="showRequiredError('briefEn') || showPatternError('briefEn')"
+                        (ngModelChange)="markFieldTouched('briefEn')"
+                        (blur)="markFieldTouched('briefEn')"
+                        [disabled]="isUploading"
                         [placeholder]="labels.enterBriefEn"
                     ></textarea>
+                    @if (showRequiredError('briefEn')) {
+                        <span class="validation-message">{{ requiredMessage('en') }}</span>
+                    } @else if (showPatternError('briefEn')) {
+                        <span class="validation-message">{{ patternMessage('en') }}</span>
+                    }
                 </label>
             </div>
 
@@ -44,30 +71,44 @@
                         class="field-input field-input--textarea"
                         rows="4"
                         [(ngModel)]="briefAr"
+                        [class.is-invalid]="showRequiredError('briefAr') || showPatternError('briefAr')"
+                        (ngModelChange)="markFieldTouched('briefAr')"
+                        (blur)="markFieldTouched('briefAr')"
+                        [disabled]="isUploading"
                         [placeholder]="labels.enterBriefAr"
                     ></textarea>
+                    @if (showRequiredError('briefAr')) {
+                        <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                    } @else if (showPatternError('briefAr')) {
+                        <span class="validation-message">{{ patternMessage('ar') }}</span>
+                    }
                 </label>
             </div>
 
             <div class="col-12">
                 <div class="field">
                     <span class="field-label">{{ labels.uploadImage }}</span>
-                    <div class="upload-area" (click)="fileInput.click()">
+                    <div class="upload-area" [class.is-invalid]="showImageRequired" (click)="!isUploading && fileInput.click()">
                         <input #fileInput type="file" accept="image/png,image/jpeg" hidden (change)="onFileChange($event)" />
                         @if (imagePreview) {
                             <img [src]="imagePreview" alt="preview" class="upload-preview" />
+                        } @else if (isUploading) {
+                            <span>{{ lang === 'ar' ? 'جاري الرفع...' : 'Uploading...' }}</span>
                         } @else {
                             <i class="bi bi-camera"></i>
                             <span>{{ labels.uploadHint }}</span>
                         }
                     </div>
+                    @if (showImageRequired) {
+                        <span class="validation-message">{{ requiredMessage(lang) }}</span>
+                    }
                 </div>
             </div>
         </div>
     </div>
 
     <div class="dialog-footer">
-        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ labels.cancel }}</button>
-        <button type="button" class="btn save-btn" (click)="save()">{{ labels.save }}</button>
+        <button type="button" class="btn cancel-btn" [disabled]="isUploading" (click)="cancel()">{{ labels.cancel }}</button>
+        <button type="button" class="btn save-btn" [disabled]="!canSave" (click)="save()">{{ labels.save }}</button>
     </div>
 </div>

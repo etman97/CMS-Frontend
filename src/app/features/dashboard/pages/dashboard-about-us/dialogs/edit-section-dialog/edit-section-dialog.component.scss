@@ -35,6 +35,17 @@
     &:focus {
         border-color: #2d2e83;
     }
+
+    &.is-invalid {
+        background-image: none;
+        border-color: #dc2626;
+    }
+}
+
+.validation-message {
+    color: #dc2626;
+    font-size: 0.8125rem;
+    line-height: 1.3;
 }
 
 .upload-area {
@@ -97,5 +108,10 @@
 
     &:hover {
         background: #23247a;
+    }
+
+    &:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
     }
 }

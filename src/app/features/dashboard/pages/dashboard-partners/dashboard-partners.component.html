@@ -1,9 +1,15 @@
-<div class="dashboard-partners-page">
+@if (isLoading) {
+<div class="page-loader">
+    <div class="spinner"></div>
+</div>
+}
+
+<div class="dashboard-partners-page" [class.page-hidden]="isLoading">
     <app-dashboard-page-header
         title="Our Partners"
         [(active)]="isActive"
         [isSaving]="isSaving"
-        [saveDisabled]="anyUploading"
+        [saveDisabled]="isSaving || anyUploading || !canSave"
         (preview)="onPreview()"
         (save)="save()"
     />
@@ -23,10 +29,10 @@
                         [class.editor-top--has-image]="topImageUrl"
                     >
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputEn.click()">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputEn.click()" [disabled]="isUploadingImage">
                                 <i class="bi bi-upload"></i>
                             </button>
-                            <input #topImageInputEn type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <input #topImageInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onTopImageSelected($event)" />
                             <button type="button" class="icon-btn" aria-label="Add link">
                                 <i class="bi bi-link-45deg"></i>
                             </button>
@@ -38,8 +44,17 @@
                                 class="content-input"
                                 rows="3"
                                 [(ngModel)]="introByLang.en.description"
+                                [class.is-invalid]="showRequiredError('subtitleEn') || showPatternError('subtitleEn')"
+                                (ngModelChange)="markFieldTouched('subtitleEn')"
+                                (input)="markFieldTouched('subtitleEn')"
+                                (blur)="markFieldTouched('subtitleEn')"
                                 placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"
                             ></textarea>
+                            @if (showRequiredError('subtitleEn')) {
+                                <span class="validation-message">{{ requiredMessage('en') }}</span>
+                            } @else if (showPatternError('subtitleEn')) {
+                                <span class="validation-message">{{ patternMessage('en') }}</span>
+                            }
                         </article>
                     </div>
 
@@ -91,10 +106,10 @@
                         [class.editor-top--has-image]="topImageUrl"
                     >
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputAr.click()">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputAr.click()" [disabled]="isUploadingImage">
                                 <i class="bi bi-upload"></i>
                             </button>
-                            <input #topImageInputAr type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <input #topImageInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onTopImageSelected($event)" />
                             <button type="button" class="icon-btn" aria-label="Add link">
                                 <i class="bi bi-link-45deg"></i>
                             </button>
@@ -106,8 +121,17 @@
                                 class="content-input"
                                 rows="3"
                                 [(ngModel)]="introByLang.ar.description"
+                                [class.is-invalid]="showRequiredError('subtitleAr') || showPatternError('subtitleAr')"
+                                (ngModelChange)="markFieldTouched('subtitleAr')"
+                                (input)="markFieldTouched('subtitleAr')"
+                                (blur)="markFieldTouched('subtitleAr')"
                                 placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"
                             ></textarea>
+                            @if (showRequiredError('subtitleAr')) {
+                                <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                            } @else if (showPatternError('subtitleAr')) {
+                                <span class="validation-message">{{ patternMessage('ar') }}</span>
+                            }
                         </article>
                     </div>
 

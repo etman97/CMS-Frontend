@@ -9,7 +9,7 @@
         title="Home"
         [(active)]="isActive"
         [isSaving]="isSaving"
-        [saveDisabled]="isSaving || isUploadingImage"
+        [saveDisabled]="isSaving || isUploadingImage || !canSave"
         (preview)="onPreview()"
         (save)="save()"
     />
@@ -39,15 +39,42 @@
 
                     <div class="hero-fields">
                         <input type="text" class="form-control" [(ngModel)]="heroTitleEn"
+                            [class.is-invalid]="showRequiredError('heroTitleEn') || showPatternError('heroTitleEn')"
+                            (ngModelChange)="markFieldTouched('heroTitleEn')"
+                            (blur)="markFieldTouched('heroTitleEn')"
                             placeholder="Enter hero section title, for ex: Welcome at WES" />
+                        @if (showRequiredError('heroTitleEn')) {
+                            <span class="validation-message">{{ requiredMessage('en') }}</span>
+                        } @else if (showPatternError('heroTitleEn')) {
+                            <span class="validation-message">{{ patternMessage('en') }}</span>
+                        }
 
                         <textarea class="form-control" rows="2" [(ngModel)]="heroContentEn"
+                            [class.is-invalid]="showRequiredError('heroContentEn') || showPatternError('heroContentEn')"
+                            (ngModelChange)="markFieldTouched('heroContentEn')"
+                            (blur)="markFieldTouched('heroContentEn')"
                             placeholder="Enter hero section content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                        @if (showRequiredError('heroContentEn')) {
+                            <span class="validation-message">{{ requiredMessage('en') }}</span>
+                        } @else if (showPatternError('heroContentEn')) {
+                            <span class="validation-message">{{ patternMessage('en') }}</span>
+                        }
 
                         <div class="buttons-row">
                             <div class="button-item">
-                                <input type="text" class="form-control button-label-input"
-                                    [(ngModel)]="primaryButtonTextEn" placeholder="Primary button" />
+                                <div class="button-input-group">
+                                    <input type="text" class="form-control button-label-input"
+                                        [(ngModel)]="primaryButton.en"
+                                        [class.is-invalid]="showRequiredError('primaryButtonEn') || showPatternError('primaryButtonEn')"
+                                        (ngModelChange)="markFieldTouched('primaryButtonEn')"
+                                        (blur)="markFieldTouched('primaryButtonEn')"
+                                        placeholder="Primary button" />
+                                    @if (showRequiredError('primaryButtonEn')) {
+                                        <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                    } @else if (showPatternError('primaryButtonEn')) {
+                                        <span class="validation-message">{{ patternMessage('en') }}</span>
+                                    }
+                                </div>
                                 <button type="button" class="icon-btn" aria-label="Edit primary button text"
                                     (click)="openButtonDialog('primary', 'en')">
                                     <i class="bi bi-pen"></i>
@@ -55,8 +82,19 @@
                             </div>
 
                             <div class="button-item">
-                                <input type="text" class="form-control button-label-input"
-                                    [(ngModel)]="secondaryButtonTextEn" placeholder="Secondary button" />
+                                <div class="button-input-group">
+                                    <input type="text" class="form-control button-label-input"
+                                        [(ngModel)]="secondaryButton.en"
+                                        [class.is-invalid]="showRequiredError('secondaryButtonEn') || showPatternError('secondaryButtonEn')"
+                                        (ngModelChange)="markFieldTouched('secondaryButtonEn')"
+                                        (blur)="markFieldTouched('secondaryButtonEn')"
+                                        placeholder="Secondary button" />
+                                    @if (showRequiredError('secondaryButtonEn')) {
+                                        <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                    } @else if (showPatternError('secondaryButtonEn')) {
+                                        <span class="validation-message">{{ patternMessage('en') }}</span>
+                                    }
+                                </div>
                                 <button type="button" class="icon-btn" aria-label="Edit secondary button text"
                                     (click)="openButtonDialog('secondary', 'en')">
                                     <i class="bi bi-pen"></i>
@@ -85,15 +123,42 @@
 
                     <div class="hero-fields" dir="rtl">
                         <input type="text" class="form-control" [(ngModel)]="heroTitleAr"
+                            [class.is-invalid]="showRequiredError('heroTitleAr') || showPatternError('heroTitleAr')"
+                            (ngModelChange)="markFieldTouched('heroTitleAr')"
+                            (blur)="markFieldTouched('heroTitleAr')"
                             placeholder="ادخل عنوان قسم الهيرو، مثال: مرحباً بكم في WES" />
+                        @if (showRequiredError('heroTitleAr')) {
+                            <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                        } @else if (showPatternError('heroTitleAr')) {
+                            <span class="validation-message">{{ patternMessage('ar') }}</span>
+                        }
 
                         <textarea class="form-control" rows="2" [(ngModel)]="heroContentAr"
+                            [class.is-invalid]="showRequiredError('heroContentAr') || showPatternError('heroContentAr')"
+                            (ngModelChange)="markFieldTouched('heroContentAr')"
+                            (blur)="markFieldTouched('heroContentAr')"
                             placeholder="ادخل محتوى قسم الهيرو، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                        @if (showRequiredError('heroContentAr')) {
+                            <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                        } @else if (showPatternError('heroContentAr')) {
+                            <span class="validation-message">{{ patternMessage('ar') }}</span>
+                        }
 
                         <div class="buttons-row">
                             <div class="button-item">
-                                <input type="text" class="form-control button-label-input"
-                                    [(ngModel)]="primaryButtonTextAr" placeholder="الزر الأساسي" />
+                                <div class="button-input-group">
+                                    <input type="text" class="form-control button-label-input"
+                                        [(ngModel)]="primaryButton.ar"
+                                        [class.is-invalid]="showRequiredError('primaryButtonAr') || showPatternError('primaryButtonAr')"
+                                        (ngModelChange)="markFieldTouched('primaryButtonAr')"
+                                        (blur)="markFieldTouched('primaryButtonAr')"
+                                        placeholder="الزر الأساسي" />
+                                    @if (showRequiredError('primaryButtonAr')) {
+                                        <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                    } @else if (showPatternError('primaryButtonAr')) {
+                                        <span class="validation-message">{{ patternMessage('ar') }}</span>
+                                    }
+                                </div>
                                 <button type="button" class="icon-btn" aria-label="Edit primary button text"
                                     (click)="openButtonDialog('primary', 'ar')">
                                     <i class="bi bi-pen rtl-flip"></i>
@@ -101,8 +166,19 @@
                             </div>
 
                             <div class="button-item">
-                                <input type="text" class="form-control button-label-input"
-                                    [(ngModel)]="secondaryButtonTextAr" placeholder="الزر الثانوي" />
+                                <div class="button-input-group">
+                                    <input type="text" class="form-control button-label-input"
+                                        [(ngModel)]="secondaryButton.ar"
+                                        [class.is-invalid]="showRequiredError('secondaryButtonAr') || showPatternError('secondaryButtonAr')"
+                                        (ngModelChange)="markFieldTouched('secondaryButtonAr')"
+                                        (blur)="markFieldTouched('secondaryButtonAr')"
+                                        placeholder="الزر الثانوي" />
+                                    @if (showRequiredError('secondaryButtonAr')) {
+                                        <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                    } @else if (showPatternError('secondaryButtonAr')) {
+                                        <span class="validation-message">{{ patternMessage('ar') }}</span>
+                                    }
+                                </div>
                                 <button type="button" class="icon-btn" aria-label="Edit secondary button text"
                                     (click)="openButtonDialog('secondary', 'ar')">
                                     <i class="bi bi-pen rtl-flip"></i>

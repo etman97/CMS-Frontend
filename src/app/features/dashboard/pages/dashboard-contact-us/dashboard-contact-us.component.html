@@ -9,7 +9,7 @@
         title="Contact Us"
         [(active)]="isActive"
         [isSaving]="isSaving"
-        [saveDisabled]="isSaving || isUploadingImage"
+        [saveDisabled]="isSaving || isUploadingImage || !canSave"
         (preview)="onPreview()"
         (save)="save()"
     />
@@ -23,18 +23,12 @@
         <p-tabpanels>
             <p-tabpanel value="en">
                 <section class="editor-card">
-                    <div
-                        class="editor-top"
-                        [style.background-image]="heroImageUrl ? 'url(' + heroImageUrl + ')' : null"
-                        [class.editor-top--has-image]="heroImageUrl"
-                    >
+                    <div class="editor-top" [style.background-image]="heroImageUrl ? 'url(' + heroImageUrl + ')' : null" [class.editor-top--has-image]="heroImageUrl">
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image"
-                                (click)="topImageInputEn.click()" [disabled]="isUploadingImage">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputEn.click()" [disabled]="isUploadingImage">
                                 <i class="bi bi-upload"></i>
                             </button>
-                            <input #topImageInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden
-                                (change)="onTopImageSelected($event)" />
+                            <input #topImageInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onTopImageSelected($event)" />
                             <button type="button" class="icon-btn" aria-label="Add link">
                                 <i class="bi bi-link-45deg"></i>
                             </button>
@@ -46,8 +40,17 @@
                                 class="content-input"
                                 rows="3"
                                 [(ngModel)]="introDescriptionEn"
+                                [class.is-invalid]="showRequiredError('introDescriptionEn') || showPatternError('introDescriptionEn')"
+                                (ngModelChange)="markFieldTouched('introDescriptionEn')"
+                                (input)="markFieldTouched('introDescriptionEn')"
+                                (blur)="markFieldTouched('introDescriptionEn')"
                                 placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"
                             ></textarea>
+                            @if (showRequiredError('introDescriptionEn')) {
+                                <span class="validation-message">{{ requiredMessage('en') }}</span>
+                            } @else if (showPatternError('introDescriptionEn')) {
+                                <span class="validation-message">{{ patternMessage('introDescriptionEn', 'en') }}</span>
+                            }
                         </article>
                     </div>
 
@@ -56,35 +59,63 @@
                             <article class="text-box text-box--card">
                                 <h2>{{ labels.en.contactTitle }}</h2>
                                 <div class="fields-grid">
-                                    <input
-                                        type="text"
-                                        class="field-input"
-                                        [(ngModel)]="phone"
-                                        placeholder="Phone number"
-                                    />
-                                    <input
-                                        type="email"
-                                        class="field-input"
-                                        [(ngModel)]="email"
-                                        placeholder="Email"
-                                    />
-                                    <input
-                                        type="text"
-                                        class="field-input field-input--full"
-                                        [(ngModel)]="address"
-                                        placeholder="Address"
-                                    />
+                                    <div class="field-group">
+                                        <input type="text" class="field-input" [(ngModel)]="phone"
+                                            [class.is-invalid]="showRequiredError('phone') || showPatternError('phone')"
+                                            (ngModelChange)="markFieldTouched('phone')"
+                                            (input)="markFieldTouched('phone')"
+                                            (blur)="markFieldTouched('phone')"
+                                            placeholder="Phone number" />
+                                        @if (showRequiredError('phone')) {
+                                            <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                        } @else if (showPatternError('phone')) {
+                                            <span class="validation-message">{{ patternMessage('phone', 'en') }}</span>
+                                        }
+                                    </div>
+
+                                    <div class="field-group">
+                                        <input type="email" class="field-input" [(ngModel)]="email"
+                                            [class.is-invalid]="showRequiredError('email') || showPatternError('email')"
+                                            (ngModelChange)="markFieldTouched('email')"
+                                            (input)="markFieldTouched('email')"
+                                            (blur)="markFieldTouched('email')"
+                                            placeholder="Email" />
+                                        @if (showRequiredError('email')) {
+                                            <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                        } @else if (showPatternError('email')) {
+                                            <span class="validation-message">{{ patternMessage('email', 'en') }}</span>
+                                        }
+                                    </div>
+
+                                    <div class="field-group field-group--full">
+                                        <input type="text" class="field-input" [(ngModel)]="address"
+                                            [class.is-invalid]="showRequiredError('address') || showPatternError('address')"
+                                            (ngModelChange)="markFieldTouched('address')"
+                                            (input)="markFieldTouched('address')"
+                                            (blur)="markFieldTouched('address')"
+                                            placeholder="Address" />
+                                        @if (showRequiredError('address')) {
+                                            <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                        } @else if (showPatternError('address')) {
+                                            <span class="validation-message">{{ patternMessage('address', 'en') }}</span>
+                                        }
+                                    </div>
                                 </div>
                             </article>
 
                             <article class="text-box text-box--card">
                                 <h2>{{ labels.en.visitTitle }}</h2>
-                                <input
-                                    type="text"
-                                    class="field-input"
-                                    [(ngModel)]="locationUrl"
-                                    placeholder="Location URL"
-                                />
+                                <input type="text" class="field-input" [(ngModel)]="locationUrl"
+                                    [class.is-invalid]="showRequiredError('locationUrl') || showPatternError('locationUrl')"
+                                    (ngModelChange)="markFieldTouched('locationUrl')"
+                                    (input)="markFieldTouched('locationUrl')"
+                                    (blur)="markFieldTouched('locationUrl')"
+                                    placeholder="Location URL" />
+                                @if (showRequiredError('locationUrl')) {
+                                    <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                } @else if (showPatternError('locationUrl')) {
+                                    <span class="validation-message">{{ patternMessage('locationUrl', 'en') }}</span>
+                                }
                             </article>
                         </div>
                     </div>
@@ -93,18 +124,12 @@
 
             <p-tabpanel value="ar">
                 <section class="editor-card" dir="rtl">
-                    <div
-                        class="editor-top"
-                        [style.background-image]="heroImageUrl ? 'url(' + heroImageUrl + ')' : null"
-                        [class.editor-top--has-image]="heroImageUrl"
-                    >
+                    <div class="editor-top" [style.background-image]="heroImageUrl ? 'url(' + heroImageUrl + ')' : null" [class.editor-top--has-image]="heroImageUrl">
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image"
-                                (click)="topImageInputAr.click()" [disabled]="isUploadingImage">
+                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputAr.click()" [disabled]="isUploadingImage">
                                 <i class="bi bi-upload rtl-flip"></i>
                             </button>
-                            <input #topImageInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden
-                                (change)="onTopImageSelected($event)" />
+                            <input #topImageInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onTopImageSelected($event)" />
                             <button type="button" class="icon-btn" aria-label="Add link">
                                 <i class="bi bi-link-45deg rtl-flip"></i>
                             </button>
@@ -116,8 +141,17 @@
                                 class="content-input"
                                 rows="3"
                                 [(ngModel)]="introDescriptionAr"
+                                [class.is-invalid]="showRequiredError('introDescriptionAr') || showPatternError('introDescriptionAr')"
+                                (ngModelChange)="markFieldTouched('introDescriptionAr')"
+                                (input)="markFieldTouched('introDescriptionAr')"
+                                (blur)="markFieldTouched('introDescriptionAr')"
                                 placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"
                             ></textarea>
+                            @if (showRequiredError('introDescriptionAr')) {
+                                <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                            } @else if (showPatternError('introDescriptionAr')) {
+                                <span class="validation-message">{{ patternMessage('introDescriptionAr', 'ar') }}</span>
+                            }
                         </article>
                     </div>
 
@@ -126,35 +160,63 @@
                             <article class="text-box text-box--card">
                                 <h2>{{ labels.ar.contactTitle }}</h2>
                                 <div class="fields-grid">
-                                    <input
-                                        type="text"
-                                        class="field-input"
-                                        [(ngModel)]="phone"
-                                        placeholder="رقم الهاتف"
-                                    />
-                                    <input
-                                        type="email"
-                                        class="field-input"
-                                        [(ngModel)]="email"
-                                        placeholder="البريد الإلكتروني"
-                                    />
-                                    <input
-                                        type="text"
-                                        class="field-input field-input--full"
-                                        [(ngModel)]="address"
-                                        placeholder="العنوان"
-                                    />
+                                    <div class="field-group">
+                                        <input type="text" class="field-input" [(ngModel)]="phone"
+                                            [class.is-invalid]="showRequiredError('phone') || showPatternError('phone')"
+                                            (ngModelChange)="markFieldTouched('phone')"
+                                            (input)="markFieldTouched('phone')"
+                                            (blur)="markFieldTouched('phone')"
+                                            placeholder="رقم الهاتف" />
+                                        @if (showRequiredError('phone')) {
+                                            <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                        } @else if (showPatternError('phone')) {
+                                            <span class="validation-message">{{ patternMessage('phone', 'ar') }}</span>
+                                        }
+                                    </div>
+
+                                    <div class="field-group">
+                                        <input type="email" class="field-input" [(ngModel)]="email"
+                                            [class.is-invalid]="showRequiredError('email') || showPatternError('email')"
+                                            (ngModelChange)="markFieldTouched('email')"
+                                            (input)="markFieldTouched('email')"
+                                            (blur)="markFieldTouched('email')"
+                                            placeholder="البريد الإلكتروني" />
+                                        @if (showRequiredError('email')) {
+                                            <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                        } @else if (showPatternError('email')) {
+                                            <span class="validation-message">{{ patternMessage('email', 'ar') }}</span>
+                                        }
+                                    </div>
+
+                                    <div class="field-group field-group--full">
+                                        <input type="text" class="field-input" [(ngModel)]="address"
+                                            [class.is-invalid]="showRequiredError('address') || showPatternError('address')"
+                                            (ngModelChange)="markFieldTouched('address')"
+                                            (input)="markFieldTouched('address')"
+                                            (blur)="markFieldTouched('address')"
+                                            placeholder="العنوان" />
+                                        @if (showRequiredError('address')) {
+                                            <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                        } @else if (showPatternError('address')) {
+                                            <span class="validation-message">{{ patternMessage('address', 'ar') }}</span>
+                                        }
+                                    </div>
                                 </div>
                             </article>
 
                             <article class="text-box text-box--card">
                                 <h2>{{ labels.ar.visitTitle }}</h2>
-                                <input
-                                    type="text"
-                                    class="field-input"
-                                    [(ngModel)]="locationUrl"
-                                    placeholder="رابط الموقع"
-                                />
+                                <input type="text" class="field-input" [(ngModel)]="locationUrl"
+                                    [class.is-invalid]="showRequiredError('locationUrl') || showPatternError('locationUrl')"
+                                    (ngModelChange)="markFieldTouched('locationUrl')"
+                                    (input)="markFieldTouched('locationUrl')"
+                                    (blur)="markFieldTouched('locationUrl')"
+                                    placeholder="رابط الموقع" />
+                                @if (showRequiredError('locationUrl')) {
+                                    <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                } @else if (showPatternError('locationUrl')) {
+                                    <span class="validation-message">{{ patternMessage('locationUrl', 'ar') }}</span>
+                                }
                             </article>
                         </div>
                     </div>
@@ -163,4 +225,3 @@
         </p-tabpanels>
     </p-tabs>
 </div>
-

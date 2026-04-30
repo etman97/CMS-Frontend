@@ -12,6 +12,7 @@ import { MediaService } from '../../../../core/services/media.service';
 import { ServicesComponent, ServicesDialogData } from '../../../services/services.component';
 
 type ServicesLang = 'en' | 'ar';
+type ServicesFieldKey = 'heroTextEn' | 'heroTextAr';
 
 interface ServiceSection {
     localId: number;
@@ -20,6 +21,7 @@ interface ServiceSection {
     descriptionByLang: Record<ServicesLang, string>;
     imageUrl: string | null;
     persistedImageUrl: string | null;
+    isUploading: boolean;
 }
 
 interface ServicesIntroContent {
@@ -47,6 +49,8 @@ export class DashboardServicesComponent implements OnInit, OnDestroy {
     isActive = true;
     isSaving = false;
     isUploadingImage = false;
+    attemptedSave = false;
+    touchedFields: Partial<Record<ServicesFieldKey, boolean>> = {};
 
     topImageUrl: string | null = null;
     private persistedTopImageUrl: string | null = null;
@@ -60,9 +64,19 @@ export class DashboardServicesComponent implements OnInit, OnDestroy {
     serviceSections: ServiceSection[] = [];
     openMenuSectionId: number | null = null;
     private nextLocalId = 1;
+    private readonly englishPattern = /^[A-Za-z0-9\s.,!?'"():;&%+\-_/–—‘’“”]+$/;
+    private readonly mixedLanguagePattern = /^[A-Za-z\u0600-\u06FF\u0660-\u06690-9\s.,!?'"():;&%+\-_/،؛؟٪ـ–—‘’“”]+$/;
+
+    get canSave(): boolean {
+        return this.areRequiredFieldsValid() && this.areRequiredSectionsValid();
+    }
+
+    get anyUploading(): boolean {
+        return this.isUploadingImage || this.serviceSections.some(section => section.isUploading);
+    }
 
     ngOnInit(): void {
-        this.servicesPageService.get().subscribe({
+        this.servicesPageService.get({ forceRefresh: true }).subscribe({
             next: (data) => {
                 if (data) {
                     this.isActive = data.isActive;
@@ -78,7 +92,8 @@ export class DashboardServicesComponent implements OnInit, OnDestroy {
                             titleByLang: { en: item.groupNameEn, ar: item.groupNameAr },
                             descriptionByLang: { en: item.briefEn, ar: item.briefAr },
                             imageUrl: item.imageUrl,
-                            persistedImageUrl: item.imageUrl
+                            persistedImageUrl: item.imageUrl,
+                            isUploading: false
                         }));
                 }
                 this.isLoading = false;
@@ -111,11 +126,10 @@ export class DashboardServicesComponent implements OnInit, OnDestroy {
         this.mediaService.upload(file, 'cms/services').subscribe({
             next: (res) => {
                 this.persistedTopImageUrl = res.url;
-                this.topImageUrl = res.url;
-                this.revokeTopPreviewUrl();
                 this.isUploadingImage = false;
                 input.value = '';
                 this.messageService.add({ severity: 'success', summary: 'Uploaded', detail: 'Image uploaded.' });
+                this.swapToRemoteTopImageWhenReady(res.url);
                 this.cdr.detectChanges();
             },
             error: () => {
@@ -128,6 +142,20 @@ export class DashboardServicesComponent implements OnInit, OnDestroy {
                 this.cdr.detectChanges();
             }
         });
+    }
+
+    private swapToRemoteTopImageWhenReady(url: string): void {
+        const img = new Image();
+        img.onload = () => {
+            this.topImageUrl = url;
+            this.revokeTopPreviewUrl();
+            this.cdr.detectChanges();
+        };
+        img.onerror = () => {
+            this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Image uploaded but preview is not ready yet.' });
+            this.cdr.detectChanges();
+        };
+        img.src = url;
     }
 
     openAddSectionDialog(): void {
@@ -161,25 +189,10 @@ export class DashboardServicesComponent implements OnInit, OnDestroy {
             section.titleByLang.ar = result.groupNameAr.trim();
             section.descriptionByLang.en = result.briefEn.trim();
             section.descriptionByLang.ar = result.briefAr.trim();
-
-            if (result.imageFile) {
-                const preview = URL.createObjectURL(result.imageFile);
-                section.imageUrl = preview;
-                this.mediaService.upload(result.imageFile, 'cms/services').subscribe({
-                    next: (res) => {
-                        URL.revokeObjectURL(preview);
-                        section.persistedImageUrl = res.url;
-                        section.imageUrl = res.url;
-                        this.cdr.detectChanges();
-                    },
-                    error: () => {
-                        URL.revokeObjectURL(preview);
-                        section.imageUrl = section.persistedImageUrl;
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Image upload failed.' });
-                        this.cdr.detectChanges();
-                    }
-                });
-            }
+            section.imageUrl = result.imageUrl;
+            section.persistedImageUrl = result.imageUrl;
+            section.isUploading = false;
+            this.cdr.detectChanges();
         });
     }
 
@@ -188,7 +201,70 @@ export class DashboardServicesComponent implements OnInit, OnDestroy {
         this.closeSectionMenu();
     }
 
+    markFieldTouched(field: ServicesFieldKey): void {
+        this.touchedFields[field] = true;
+    }
+
+    showRequiredError(field: ServicesFieldKey): boolean {
+        return (this.attemptedSave || !!this.touchedFields[field]) && !this.getFieldValue(field).trim();
+    }
+
+    showPatternError(field: ServicesFieldKey): boolean {
+        const value = this.getFieldValue(field).trim();
+        return (this.attemptedSave || !!this.touchedFields[field]) && !!value && !this.isFieldPatternValid(field);
+    }
+
+    requiredMessage(lang: ServicesLang): string {
+        return lang === 'ar' ? '\u0647\u0630\u0627 \u0627\u0644\u062d\u0642\u0644 \u0645\u0637\u0644\u0648\u0628.' : 'This field is required.';
+    }
+
+    patternMessage(lang: ServicesLang): string {
+        return lang === 'ar' ? '\u064a\u0631\u062c\u0649 \u0625\u062f\u062e\u0627\u0644 \u0646\u0635 \u0639\u0631\u0628\u064a \u0623\u0648 \u0625\u0646\u062c\u0644\u064a\u0632\u064a \u0641\u0642\u0637.' : 'Please enter English text only.';
+    }
+
+    private areRequiredFieldsValid(): boolean {
+        const fields: ServicesFieldKey[] = ['heroTextEn', 'heroTextAr'];
+        return fields.every((field) => this.getFieldValue(field).trim() && this.isFieldPatternValid(field));
+    }
+
+    private areRequiredSectionsValid(): boolean {
+        return !!this.persistedTopImageUrl
+            && this.serviceSections.length > 0
+            && this.serviceSections.every((section) =>
+                !!section.persistedImageUrl
+                && !!section.titleByLang.en.trim()
+                && !!section.titleByLang.ar.trim()
+                && !!section.descriptionByLang.en.trim()
+                && !!section.descriptionByLang.ar.trim()
+                && this.englishPattern.test(section.titleByLang.en.trim())
+                && this.englishPattern.test(section.descriptionByLang.en.trim())
+                && this.mixedLanguagePattern.test(section.titleByLang.ar.trim())
+                && this.mixedLanguagePattern.test(section.descriptionByLang.ar.trim())
+            );
+    }
+
+    private getFieldValue(field: ServicesFieldKey): string {
+        return field === 'heroTextAr' ? this.introByLang.ar.description : this.introByLang.en.description;
+    }
+
+    private isFieldPatternValid(field: ServicesFieldKey): boolean {
+        const value = this.getFieldValue(field).trim();
+        if (!value) return false;
+
+        return field === 'heroTextAr'
+            ? this.mixedLanguagePattern.test(value)
+            : this.englishPattern.test(value);
+    }
+
     onPreview(): void {
+        this.attemptedSave = true;
+
+        if (!this.canSave) {
+            this.showValidationWarning();
+            this.cdr.detectChanges();
+            return;
+        }
+
         const previewLang: 'en' | 'ar' = this.activeTab === 'ar' ? 'ar' : 'en';
         const previewHeader = previewLang === 'ar' ? 'معاينة صفحة الخدمات' : 'Services Preview';
 
@@ -226,7 +302,14 @@ export class DashboardServicesComponent implements OnInit, OnDestroy {
     }
 
     save(): void {
-        if (this.isSaving || this.isUploadingImage) return;
+        this.attemptedSave = true;
+
+        if (this.isSaving || this.anyUploading) return;
+        if (!this.canSave) {
+            this.showValidationWarning();
+            this.cdr.detectChanges();
+            return;
+        }
 
         this.isSaving = true;
         this.servicesPageService.save({
@@ -265,31 +348,12 @@ export class DashboardServicesComponent implements OnInit, OnDestroy {
             backendId: 0,
             titleByLang: { en: result.groupNameEn.trim(), ar: result.groupNameAr.trim() },
             descriptionByLang: { en: result.briefEn.trim(), ar: result.briefAr.trim() },
-            imageUrl: null,
-            persistedImageUrl: null
+            imageUrl: result.imageUrl,
+            persistedImageUrl: result.imageUrl,
+            isUploading: false
         };
         this.serviceSections.push(newSection);
-
-        if (result.imageFile) {
-            const preview = URL.createObjectURL(result.imageFile);
-            newSection.imageUrl = preview;
-            this.cdr.detectChanges();
-
-            this.mediaService.upload(result.imageFile, 'cms/services').subscribe({
-                next: (res) => {
-                    URL.revokeObjectURL(preview);
-                    newSection.persistedImageUrl = res.url;
-                    newSection.imageUrl = res.url;
-                    this.cdr.detectChanges();
-                },
-                error: () => {
-                    URL.revokeObjectURL(preview);
-                    newSection.imageUrl = null;
-                    this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Image upload failed.' });
-                    this.cdr.detectChanges();
-                }
-            });
-        }
+        this.cdr.detectChanges();
     }
 
     private openSectionDialog(section?: ServiceSection): DynamicDialogRef | null {
@@ -313,6 +377,15 @@ export class DashboardServicesComponent implements OnInit, OnDestroy {
             },
             style: { direction: isRtl ? 'rtl' : 'ltr' },
             ...PRIME_NG_CONFIGS.dynamicDialog
+        });
+    }
+
+    private showValidationWarning(): void {
+        const isArabic = this.activeTab === 'ar';
+        this.messageService.add({
+            severity: 'warn',
+            summary: isArabic ? '\u062a\u0646\u0628\u064a\u0647' : 'Validation',
+            detail: isArabic ? '\u064a\u0631\u062c\u0649 \u0645\u0644\u0621 \u062c\u0645\u064a\u0639 \u0627\u0644\u062d\u0642\u0648\u0644 \u0627\u0644\u0645\u0637\u0644\u0648\u0628\u0629.' : 'Please fill all required fields.'
         });
     }
 

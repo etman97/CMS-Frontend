@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
-import { HomePageService, HomePageDto, ButtonConfigDto, ButtonDirection } from '../../../../core/services/home-page.service';
+import { HomePageService, HomePageDto, ButtonConfigDto } from '../../../../core/services/home-page.service';
 import { MediaService } from '../../../../core/services/media.service';
 import { PRIME_NG_CONFIGS } from '../../../../shared/prime-ng-configs';
 import { DashboardPageHeaderComponent } from '../../components/dashboard-page-header/dashboard-page-header.component';
@@ -12,6 +12,15 @@ import { HomeButtonDialogComponent } from './dialogs/home-button-dialog/home-but
 import { HomeButtonDialogResult } from './dialogs/home-button-dialog/home-button-dialog.model';
 
 type HomeButtonKey = 'primary' | 'secondary';
+type HomeFieldKey =
+    | 'heroTitleEn'
+    | 'heroContentEn'
+    | 'primaryButtonEn'
+    | 'secondaryButtonEn'
+    | 'heroTitleAr'
+    | 'heroContentAr'
+    | 'primaryButtonAr'
+    | 'secondaryButtonAr';
 
 @Component({
     selector: 'app-dashboard-home',
@@ -33,6 +42,8 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
     isActive = true;
     isSaving = false;
     isUploadingImage = false;
+    attemptedSave = false;
+    touchedFields: Partial<Record<HomeFieldKey, boolean>> = {};
 
     heroTitleEn = '';
     heroContentEn = '';
@@ -45,9 +56,15 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
     heroImageUrl: string | null = null;
     private persistedHeroImageUrl: string | null = null;
     private localPreviewUrl: string | null = null;
+    private readonly englishPattern = /^[A-Za-z0-9\s.,!?'"():;&%+\-_/–—‘’“”]+$/;
+    private readonly arabicPattern = /^[A-Za-z\u0600-\u06FF\u0660-\u06690-9\s.,!?'"():;&%+\-_/،؛؟٪ـ–—‘’“”]+$/;
+
+    get canSave(): boolean {
+        return this.areRequiredFieldsValid() && !!this.persistedHeroImageUrl;
+    }
 
     ngOnInit(): void {
-        this.homePageService.get().subscribe({
+        this.homePageService.get({ forceRefresh: true }).subscribe({
             next: (data) => {
                 if (data) {
                     this.populate(data);
@@ -134,6 +151,71 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
         }
     }
 
+    markFieldTouched(field: HomeFieldKey): void {
+        this.touchedFields[field] = true;
+    }
+
+    showRequiredError(field: HomeFieldKey): boolean {
+        return (this.attemptedSave || !!this.touchedFields[field]) && !this.getRequiredFieldValue(field).trim();
+    }
+
+    showPatternError(field: HomeFieldKey): boolean {
+        const value = this.getRequiredFieldValue(field).trim();
+        return (this.attemptedSave || !!this.touchedFields[field]) && !!value && !this.isFieldPatternValid(field);
+    }
+
+    requiredMessage(lang: 'en' | 'ar'): string {
+        return lang === 'ar' ? 'هذا الحقل مطلوب.' : 'This field is required.';
+    }
+
+    patternMessage(lang: 'en' | 'ar'): string {
+        return lang === 'ar' ? 'يرجى إدخال نص عربي أو إنجليزي فقط.' : 'Please enter English text only.';
+    }
+
+    private areRequiredFieldsValid(): boolean {
+        const fields: HomeFieldKey[] = [
+            'heroTitleEn',
+            'heroContentEn',
+            'primaryButtonEn',
+            'secondaryButtonEn',
+            'heroTitleAr',
+            'heroContentAr',
+            'primaryButtonAr',
+            'secondaryButtonAr'
+        ];
+
+        return fields.every((field) => {
+            const value = this.getRequiredFieldValue(field).trim();
+            return !!value && this.isFieldPatternValid(field);
+        });
+    }
+
+    private getRequiredFieldValue(field: HomeFieldKey): string {
+        const fieldMap: Record<HomeFieldKey, string> = {
+            heroTitleEn: this.heroTitleEn,
+            heroContentEn: this.heroContentEn,
+            primaryButtonEn: this.primaryButton.en,
+            secondaryButtonEn: this.secondaryButton.en,
+            heroTitleAr: this.heroTitleAr,
+            heroContentAr: this.heroContentAr,
+            primaryButtonAr: this.primaryButton.ar,
+            secondaryButtonAr: this.secondaryButton.ar
+        };
+
+        return fieldMap[field] ?? '';
+    }
+
+    private isFieldPatternValid(field: HomeFieldKey): boolean {
+        const value = this.getRequiredFieldValue(field).trim();
+        if (!value) {
+            return false;
+        }
+
+        return field.endsWith('Ar')
+            ? this.arabicPattern.test(value)
+            : this.englishPattern.test(value);
+    }
+
     openButtonDialog(button: HomeButtonKey, lang: 'en' | 'ar'): void {
         const dialogRef = this.createButtonDialog(button, lang);
 
@@ -174,7 +256,7 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
 
         cfg.direction = result.direction;
         if (result.direction === 'Internal') {
-            cfg.selectedTab = result.linkValue || '/';
+            cfg.selectedTab = result.linkValue || null;
             cfg.externalUrl = null;
         } else {
             cfg.externalUrl = this.normalizeExternalUrl(result.linkValue);
@@ -192,6 +274,14 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
     }
 
     onPreview(): void {
+        this.attemptedSave = true;
+
+        if (!this.canSave) {
+            this.showValidationWarning();
+            this.cdr.detectChanges();
+            return;
+        }
+
         const payload: HomePageDto = {
             isActive: this.isActive,
             heroTitleEn: this.heroTitleEn,
@@ -226,27 +316,24 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
     }
 
     save(): void {
+        this.attemptedSave = true;
+
         if (this.isSaving || this.isUploadingImage) return;
+        if (!this.canSave) {
+            this.showValidationWarning();
+            this.cdr.detectChanges();
+            return;
+        }
 
         const dto: HomePageDto = {
             isActive: this.isActive,
             heroTitleEn: this.heroTitleEn,
             heroContentEn: this.heroContentEn,
-            primaryButtonTextEn: this.primaryButtonTextEn,
-            secondaryButtonTextEn: this.secondaryButtonTextEn,
-            primaryButtonLinkTypeEn: this.primaryButtonLinkTypeEn,
-            primaryButtonLinkEn: this.primaryButtonLinkEn,
-            secondaryButtonLinkTypeEn: this.secondaryButtonLinkTypeEn,
-            secondaryButtonLinkEn: this.secondaryButtonLinkEn,
             heroTitleAr: this.heroTitleAr,
             heroContentAr: this.heroContentAr,
-            primaryButtonTextAr: this.primaryButtonTextAr,
-            secondaryButtonTextAr: this.secondaryButtonTextAr,
-            primaryButtonLinkTypeAr: this.primaryButtonLinkTypeAr,
-            primaryButtonLinkAr: this.primaryButtonLinkAr,
-            secondaryButtonLinkTypeAr: this.secondaryButtonLinkTypeAr,
-            secondaryButtonLinkAr: this.secondaryButtonLinkAr,
-            heroImageUrl: this.persistedHeroImageUrl
+            heroImageUrl: this.persistedHeroImageUrl,
+            primaryButton: { ...this.primaryButton },
+            secondaryButton: { ...this.secondaryButton }
         };
 
         this.isSaving = true;
@@ -259,6 +346,15 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
                 this.isSaving = false;
                 this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to save home page.' });
             }
+        });
+    }
+
+    private showValidationWarning(): void {
+        const isArabic = this.activeTab === 'ar';
+        this.messageService.add({
+            severity: 'warn',
+            summary: isArabic ? 'تنبيه' : 'Validation',
+            detail: isArabic ? 'يرجى ملء جميع الحقول المطلوبة.' : 'Please fill all required fields.'
         });
     }
 }

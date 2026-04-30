@@ -15,6 +15,7 @@ interface HomeButtonDialogLabels {
     buttonName: string;
     buttonNamePlaceholder: string;
     buttonNameRequired: string;
+    buttonNamePattern: string;
     linkType: string;
     internal: string;
     external: string;
@@ -54,6 +55,8 @@ export class HomeButtonDialogComponent implements OnInit {
     linkValueTouched = false;
 
     private readonly externalUrlPattern = /^(https?:\/\/)?([a-z0-9-]+\.)+[a-z]{2,}(\/[^\s]*)?$/i;
+    private readonly englishPattern = /^[A-Za-z0-9\s.,!?'"():;&%+\-_/–—‘’“”]+$/;
+    private readonly arabicPattern = /^[A-Za-z\u0600-\u06FF\u0660-\u06690-9\s.,!?'"():;&%+\-_/،؛؟٪ـ–—‘’“”]+$/;
 
     private readonly allInternalPages: InternalPageOption[] = [
         { key: 'about', label: 'About', value: '/about' },
@@ -77,6 +80,7 @@ export class HomeButtonDialogComponent implements OnInit {
             buttonName: 'Button name',
             buttonNamePlaceholder: 'Enter button name',
             buttonNameRequired: 'Button name is required.',
+            buttonNamePattern: 'Please enter English text only.',
             linkType: 'Link type',
             internal: 'Internal',
             external: 'External',
@@ -113,6 +117,7 @@ export class HomeButtonDialogComponent implements OnInit {
         const validationLabels: Partial<HomeButtonDialogLabels> = this.isArabic
             ? {
                 buttonNameRequired: '\u0627\u0633\u0645 \u0627\u0644\u0632\u0631 \u0645\u0637\u0644\u0648\u0628.',
+                buttonNamePattern: '\u064a\u0631\u062c\u0649 \u0625\u062f\u062e\u0627\u0644 \u0646\u0635 \u0639\u0631\u0628\u064a \u0623\u0648 \u0625\u0646\u062c\u0644\u064a\u0632\u064a \u0641\u0642\u0637.',
                 internalPageRequired: '\u064a\u0631\u062c\u0649 \u0627\u062e\u062a\u064a\u0627\u0631 \u0635\u0641\u062d\u0629.',
                 externalUrlRequired: '\u0627\u0644\u0631\u0627\u0628\u0637 \u0627\u0644\u062e\u0627\u0631\u062c\u064a \u0645\u0637\u0644\u0648\u0628.',
                 externalUrlInvalid: '\u0623\u062f\u062e\u0644 \u0631\u0627\u0628\u0637\u0627 \u0635\u062d\u064a\u062d\u0627\u060c \u0645\u062b\u0644 https://example.com.'
@@ -134,6 +139,11 @@ export class HomeButtonDialogComponent implements OnInit {
         return (this.attemptedSave || this.labelTouched) && !this.label.trim();
     }
 
+    get showButtonNamePattern(): boolean {
+        const value = this.label.trim();
+        return (this.attemptedSave || this.labelTouched) && !!value && !this.isButtonNamePatternValid();
+    }
+
     get showInternalPageRequired(): boolean {
         return (this.attemptedSave || this.linkValueTouched) && this.direction === 'Internal' && this.hasActiveInternalPages && !this.linkValue.trim();
     }
@@ -148,7 +158,7 @@ export class HomeButtonDialogComponent implements OnInit {
     }
 
     get canSave(): boolean {
-        if (!this.label.trim()) {
+        if (!this.label.trim() || !this.isButtonNamePatternValid()) {
             return false;
         }
 
@@ -166,7 +176,7 @@ export class HomeButtonDialogComponent implements OnInit {
         this.dir = this.lang === 'ar' ? 'rtl' : 'ltr';
         this.label = data?.label ?? '';
         this.direction = data?.direction ?? 'Internal';
-        this.linkValue = data?.linkValue || (this.direction === 'Internal' ? '/' : '');
+        this.linkValue = data?.linkValue ?? '';
         this.loadInternalPages();
     }
 
@@ -182,6 +192,17 @@ export class HomeButtonDialogComponent implements OnInit {
 
     markLinkValueTouched(): void {
         this.linkValueTouched = true;
+    }
+
+    private isButtonNamePatternValid(): boolean {
+        const value = this.label.trim();
+        if (!value) {
+            return false;
+        }
+
+        return this.isArabic
+            ? this.arabicPattern.test(value)
+            : this.englishPattern.test(value);
     }
 
     save(): void {

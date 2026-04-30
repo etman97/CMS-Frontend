@@ -6,7 +6,9 @@
 
 <main class="hero-section" [class.page-hidden]="isLoading" [class.about-page--preview]="isPreviewMode" (click)="onPreviewSurfaceClick($event)">
   @if (heroImageUrl) {
-    <div class="hero-bg-image" [style.background-image]="'linear-gradient(to bottom, rgba(0, 0, 0, 0) 24%, rgba(0, 0, 0, 1) 100%), url(' + heroImageUrl + ')'" ></div>
+    <div class="hero-bg-image" aria-hidden="true">
+      <img [src]="heroImageUrl" alt="" />
+    </div>
   }
   <div class="hero-bg-overlay"></div>
   <div class="hero-glow hero-glow-left"></div>

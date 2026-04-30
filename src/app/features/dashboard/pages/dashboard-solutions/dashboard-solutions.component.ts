@@ -90,20 +90,18 @@ export class DashboardSolutionsComponent {
                 if (!result) return;
 
                 this.idCounter += 1;
-                const imageUrl = result.imageFile ? URL.createObjectURL(result.imageFile) : null;
-
                 this.solutionsByLang.en.push({
                     id: this.idCounter,
                     title: result.groupNameEn.trim(),
                     content: result.briefEn.trim(),
-                    imageUrl
+                    imageUrl: result.imageUrl
                 });
 
                 this.solutionsByLang.ar.push({
                     id: this.idCounter,
                     title: result.groupNameAr.trim(),
                     content: result.briefAr.trim(),
-                    imageUrl
+                    imageUrl: result.imageUrl
                 });
 
                 this.cdr.detectChanges();
@@ -152,11 +150,8 @@ export class DashboardSolutionsComponent {
                     arCard.content = result.briefAr.trim();
                 }
 
-                if (result.imageFile) {
-                    const imageUrl = URL.createObjectURL(result.imageFile);
-                    if (enCard) enCard.imageUrl = imageUrl;
-                    if (arCard) arCard.imageUrl = imageUrl;
-                }
+                if (enCard) enCard.imageUrl = result.imageUrl;
+                if (arCard) arCard.imageUrl = result.imageUrl;
 
                 this.cdr.detectChanges();
             });

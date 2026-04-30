@@ -25,7 +25,11 @@ export class EditSectionDialogComponent implements OnInit, OnDestroy {
     imageUrl: string | null = null;
     private persistedImageUrl: string | null = null;
     isUploading = false;
+    attemptedSave = false;
+    contentTouched = false;
     private localPreviewUrl: string | null = null;
+    private readonly englishPattern = /^[A-Za-z0-9\s.,!?'"():;&%+\-_/–—‘’“”]+$/;
+    private readonly arabicPattern = /^[A-Za-z\u0600-\u06FF\u0660-\u06690-9\s.,!?'"():;&%+\-_/،؛؟٪ـ–—‘’“”]+$/;
 
     get placeholder(): string {
         return this.lang === 'ar' ? 'أدخل المحتوى...' : 'Enter content...';
@@ -35,6 +39,27 @@ export class EditSectionDialogComponent implements OnInit, OnDestroy {
         return this.lang === 'ar'
             ? 'ارفع الصور، يتم قبول صيغ PNG و JPEG.'
             : 'Upload images, PNG and JPEG formats are accepted.';
+    }
+
+    get showContentRequired(): boolean {
+        return (this.attemptedSave || this.contentTouched) && !this.content.trim();
+    }
+
+    get showContentPattern(): boolean {
+        const value = this.content.trim();
+        return (this.attemptedSave || this.contentTouched) && !!value && !this.isContentPatternValid();
+    }
+
+    get canSave(): boolean {
+        return !this.isUploading && !!this.content.trim() && this.isContentPatternValid();
+    }
+
+    get requiredMessage(): string {
+        return this.lang === 'ar' ? '\u0647\u0630\u0627 \u0627\u0644\u062d\u0642\u0644 \u0645\u0637\u0644\u0648\u0628.' : 'This field is required.';
+    }
+
+    get patternMessage(): string {
+        return this.lang === 'ar' ? '\u064a\u0631\u062c\u0649 \u0625\u062f\u062e\u0627\u0644 \u0646\u0635 \u0639\u0631\u0628\u064a \u0623\u0648 \u0625\u0646\u062c\u0644\u064a\u0632\u064a \u0641\u0642\u0637.' : 'Please enter English text only.';
     }
 
     ngOnInit(): void {
@@ -134,11 +159,31 @@ export class EditSectionDialogComponent implements OnInit, OnDestroy {
         }
     }
 
+    markContentTouched(): void {
+        this.contentTouched = true;
+    }
+
+    private isContentPatternValid(): boolean {
+        const value = this.content.trim();
+        if (!value) {
+            return false;
+        }
+
+        return this.lang === 'ar'
+            ? this.arabicPattern.test(value)
+            : this.englishPattern.test(value);
+    }
+
     save(): void {
-        if (this.isUploading) return;
+        this.attemptedSave = true;
+
+        if (!this.canSave) {
+            this.cdr.detectChanges();
+            return;
+        }
 
         const result: EditSectionDialogResult = {
-            content: this.content,
+            content: this.content.trim(),
             imageUrl: this.persistedImageUrl
         };
         this.ref.close(result);

@@ -1,9 +1,11 @@
 <main class="partners-page" [class.partners-page--preview]="isPreviewMode" [attr.dir]="isRtl ? 'rtl' : 'ltr'">
   <section class="hero">
-    <div class="hero-bg-wrap">
-      <img class="hero-bg" [src]="heroImageUrl || ''" alt="" />
-      <div class="hero-overlay"></div>
-    </div>
+    @if (heroImageUrl) {
+      <div class="hero-bg-wrap">
+        <img class="hero-bg" [src]="heroImageUrl" alt="" />
+        <div class="hero-overlay"></div>
+      </div>
+    }
 
     <div class="hero-blur hero-blur-left"></div>
     <div class="hero-blur hero-blur-right"></div>

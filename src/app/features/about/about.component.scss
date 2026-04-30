@@ -44,9 +44,23 @@
   inset: 0 auto auto 0;
   width: 100%;
   height: 341px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+  overflow: hidden;
+
+  img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    object-position: center top;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba($black, 0) 24%, rgba($black, 1) 100%);
+  }
 }
 
 .hero-bg-overlay {

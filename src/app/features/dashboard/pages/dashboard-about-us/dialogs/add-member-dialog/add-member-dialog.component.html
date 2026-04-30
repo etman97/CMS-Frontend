@@ -1,56 +1,118 @@
 <div class="add-member-dialog">
     <div class="dialog-body">
         <div class="row g-3">
-            <!-- English fields -->
             <div class="col-6">
                 <label class="field">
                     <span class="field-label">{{ dir === 'rtl' ? 'الاسم (EN)' : 'Name (EN)' }}</span>
-                    <input type="text" class="field-input" [(ngModel)]="nameEn" [placeholder]="dir === 'rtl' ? 'أدخل الاسم' : 'Enter name'"  [disabled]="isUploading" />
+                    <input type="text" class="field-input" [(ngModel)]="nameEn"
+                        [class.is-invalid]="showRequiredError('nameEn') || showPatternError('nameEn')"
+                        [placeholder]="dir === 'rtl' ? 'Enter name' : 'Enter name'"
+                        (ngModelChange)="markFieldTouched('nameEn')"
+                        (input)="markFieldTouched('nameEn')"
+                        (blur)="markFieldTouched('nameEn')"
+                        [disabled]="isUploading" />
+                    @if (showRequiredError('nameEn')) {
+                        <span class="validation-message">{{ requiredMessage('en') }}</span>
+                    } @else if (showPatternError('nameEn')) {
+                        <span class="validation-message">{{ patternMessage('en') }}</span>
+                    }
                 </label>
             </div>
+
             <div class="col-6">
                 <label class="field">
                     <span class="field-label">{{ dir === 'rtl' ? 'المسمى الوظيفي (EN)' : 'Job Title (EN)' }}</span>
-                    <input type="text" class="field-input" [(ngModel)]="jobTitleEn" [placeholder]="dir === 'rtl' ? 'أدخل المسمى الوظيفي' : 'Enter job title'"  [disabled]="isUploading" />
+                    <input type="text" class="field-input" [(ngModel)]="jobTitleEn"
+                        [class.is-invalid]="showRequiredError('jobTitleEn') || showPatternError('jobTitleEn')"
+                        [placeholder]="dir === 'rtl' ? 'Enter job title' : 'Enter job title'"
+                        (ngModelChange)="markFieldTouched('jobTitleEn')"
+                        (input)="markFieldTouched('jobTitleEn')"
+                        (blur)="markFieldTouched('jobTitleEn')"
+                        [disabled]="isUploading" />
+                    @if (showRequiredError('jobTitleEn')) {
+                        <span class="validation-message">{{ requiredMessage('en') }}</span>
+                    } @else if (showPatternError('jobTitleEn')) {
+                        <span class="validation-message">{{ patternMessage('en') }}</span>
+                    }
                 </label>
             </div>
+
             <div class="col-12">
                 <label class="field">
                     <span class="field-label">{{ dir === 'rtl' ? 'نبذة (EN)' : 'Brief (EN)' }}</span>
-                    <textarea
-                        class="field-input field-input--textarea"
-                        rows="3"
-                        [(ngModel)]="briefEn"
-                        [placeholder]="dir === 'rtl' ? 'أدخل نبذة مختصرة' : 'Enter a brief description'"
-                     [disabled]="isUploading"></textarea>
+                    <textarea class="field-input field-input--textarea" rows="3" [(ngModel)]="briefEn"
+                        [class.is-invalid]="showRequiredError('briefEn') || showPatternError('briefEn')"
+                        [placeholder]="dir === 'rtl' ? 'Enter a brief description' : 'Enter a brief description'"
+                        (ngModelChange)="markFieldTouched('briefEn')"
+                        (input)="markFieldTouched('briefEn')"
+                        (blur)="markFieldTouched('briefEn')"
+                        [disabled]="isUploading"></textarea>
+                    @if (showRequiredError('briefEn')) {
+                        <span class="validation-message">{{ requiredMessage('en') }}</span>
+                    } @else if (showPatternError('briefEn')) {
+                        <span class="validation-message">{{ patternMessage('en') }}</span>
+                    }
                 </label>
             </div>
 
-            <!-- Arabic fields -->
             <div class="col-6" dir="rtl">
                 <label class="field">
                     <span class="field-label">الاسم (AR)</span>
-                    <input type="text" class="field-input" [(ngModel)]="nameAr" placeholder="أدخل الاسم"  [disabled]="isUploading" />
-                </label>
-            </div>
-            <div class="col-6" dir="rtl">
-                <label class="field">
-                    <span class="field-label">المسمى الوظيفي (AR)</span>
-                    <input type="text" class="field-input" [(ngModel)]="jobTitleAr" placeholder="أدخل المسمى الوظيفي"  [disabled]="isUploading" />
-                </label>
-            </div>
-            <div class="col-12" dir="rtl">
-                <label class="field">
-                    <span class="field-label">نبذة (AR)</span>
-                    <textarea class="field-input field-input--textarea" rows="3" [(ngModel)]="briefAr" placeholder="أدخل نبذة مختصرة" [disabled]="isUploading"></textarea>
+                    <input type="text" class="field-input" [(ngModel)]="nameAr"
+                        [class.is-invalid]="showRequiredError('nameAr') || showPatternError('nameAr')"
+                        placeholder="أدخل الاسم"
+                        (ngModelChange)="markFieldTouched('nameAr')"
+                        (input)="markFieldTouched('nameAr')"
+                        (blur)="markFieldTouched('nameAr')"
+                        [disabled]="isUploading" />
+                    @if (showRequiredError('nameAr')) {
+                        <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                    } @else if (showPatternError('nameAr')) {
+                        <span class="validation-message">{{ patternMessage('ar') }}</span>
+                    }
                 </label>
             </div>
 
-            <!-- Shared image -->
+            <div class="col-6" dir="rtl">
+                <label class="field">
+                    <span class="field-label">المسمى الوظيفي (AR)</span>
+                    <input type="text" class="field-input" [(ngModel)]="jobTitleAr"
+                        [class.is-invalid]="showRequiredError('jobTitleAr') || showPatternError('jobTitleAr')"
+                        placeholder="أدخل المسمى الوظيفي"
+                        (ngModelChange)="markFieldTouched('jobTitleAr')"
+                        (input)="markFieldTouched('jobTitleAr')"
+                        (blur)="markFieldTouched('jobTitleAr')"
+                        [disabled]="isUploading" />
+                    @if (showRequiredError('jobTitleAr')) {
+                        <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                    } @else if (showPatternError('jobTitleAr')) {
+                        <span class="validation-message">{{ patternMessage('ar') }}</span>
+                    }
+                </label>
+            </div>
+
+            <div class="col-12" dir="rtl">
+                <label class="field">
+                    <span class="field-label">نبذة (AR)</span>
+                    <textarea class="field-input field-input--textarea" rows="3" [(ngModel)]="briefAr"
+                        [class.is-invalid]="showRequiredError('briefAr') || showPatternError('briefAr')"
+                        placeholder="أدخل نبذة مختصرة"
+                        (ngModelChange)="markFieldTouched('briefAr')"
+                        (input)="markFieldTouched('briefAr')"
+                        (blur)="markFieldTouched('briefAr')"
+                        [disabled]="isUploading"></textarea>
+                    @if (showRequiredError('briefAr')) {
+                        <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                    } @else if (showPatternError('briefAr')) {
+                        <span class="validation-message">{{ patternMessage('ar') }}</span>
+                    }
+                </label>
+            </div>
+
             <div class="col-12">
                 <div class="field">
                     <span class="field-label">{{ dir === 'rtl' ? 'رفع صورة' : 'Upload Image' }}</span>
-                    <div class="upload-area" (click)="!isUploading && fileInput.click()">
+                    <div class="upload-area" (click)="markImageTouched(); !isUploading && fileInput.click()">
                         <input #fileInput type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onFileChange($event)" />
                         @if (imagePreview) {
                             <img [src]="imagePreview" alt="preview" class="upload-preview" />
@@ -61,6 +123,9 @@
                             <span>{{ dir === 'rtl' ? 'ارفع صورة، يتم قبول صيغ PNG و JPEG.' : 'Upload image, PNG and JPEG formats are accepted.' }}</span>
                         }
                     </div>
+                    @if (showImageRequired) {
+                        <span class="validation-message">{{ imageRequiredMessage }}</span>
+                    }
                 </div>
             </div>
         </div>
@@ -68,8 +133,6 @@
 
     <div class="dialog-footer">
         <button type="button" class="btn cancel-btn" (click)="cancel()" [disabled]="isUploading">{{ dir === 'rtl' ? 'إلغاء' : 'Cancel' }}</button>
-        <button type="button" class="btn save-btn" (click)="save()" [disabled]="isUploading">{{ dir === 'rtl' ? 'حفظ' : 'Save' }}</button>
+        <button type="button" class="btn save-btn" (click)="save()" [disabled]="!canSave">{{ dir === 'rtl' ? 'حفظ' : 'Save' }}</button>
     </div>
 </div>
-
-

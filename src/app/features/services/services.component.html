@@ -7,11 +7,19 @@
     <div class="hero-blur hero-blur-bottom"></div>
 
     <div class="hero-image-wrap">
-      <img
-        class="hero-image"
-        [src]="heroImageUrl || ''"
-        alt=""
-      />
+      @if (heroImageUrl) {
+        <img
+          class="hero-image-backdrop"
+          [src]="heroImageUrl"
+          alt=""
+          aria-hidden="true"
+        />
+        <img
+          class="hero-image"
+          [src]="heroImageUrl"
+          alt=""
+        />
+      }
       <div class="hero-overlay"></div>
     </div>
 

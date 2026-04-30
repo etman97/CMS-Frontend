@@ -5,14 +5,17 @@
             <input
                 type="text"
                 class="field-input"
-                [class.is-invalid]="showButtonNameRequired"
+                [class.is-invalid]="showButtonNameRequired || showButtonNamePattern"
                 [(ngModel)]="label"
+                (ngModelChange)="markLabelTouched()"
                 [placeholder]="labels.buttonNamePlaceholder"
                 (blur)="markLabelTouched()"
                 required
             />
             @if (showButtonNameRequired) {
                 <span class="validation-message">{{ labels.buttonNameRequired }}</span>
+            } @else if (showButtonNamePattern) {
+                <span class="validation-message">{{ labels.buttonNamePattern }}</span>
             }
         </label>
 

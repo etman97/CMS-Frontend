@@ -4,8 +4,17 @@
             class="content-input"
             rows="6"
             [(ngModel)]="content"
+            [class.is-invalid]="showContentRequired || showContentPattern"
             [placeholder]="placeholder"
-         [disabled]="isUploading"></textarea>
+            (ngModelChange)="markContentTouched()"
+            (input)="markContentTouched()"
+            (blur)="markContentTouched()"
+            [disabled]="isUploading"></textarea>
+        @if (showContentRequired) {
+            <span class="validation-message">{{ requiredMessage }}</span>
+        } @else if (showContentPattern) {
+            <span class="validation-message">{{ patternMessage }}</span>
+        }
 
         <div class="field">
             <span class="field-label">{{ lang === 'ar' ? 'رفع صورة' : 'Upload Image' }}</span>
@@ -25,7 +34,7 @@
 
     <div class="dialog-footer">
         <button type="button" class="btn cancel-btn" (click)="cancel()" [disabled]="isUploading">{{ lang === 'ar' ? 'إلغاء' : 'Cancel' }}</button>
-        <button type="button" class="btn save-btn" (click)="save()" [disabled]="isUploading">{{ lang === 'ar' ? 'حفظ' : 'Save' }}</button>
+        <button type="button" class="btn save-btn" (click)="save()" [disabled]="!canSave">{{ lang === 'ar' ? 'حفظ' : 'Save' }}</button>
     </div>
 </div>
 

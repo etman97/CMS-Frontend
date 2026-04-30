@@ -1,12 +1,17 @@
 @use 'variables' as *;
 
+.home-page {
+  overflow-x: hidden;
+  background: $primary;
+}
+
 // ─── Hero ────────────────────────────────────────
 .hero-section {
   position: relative;
   min-height: 1024px;
   background: linear-gradient(rgba(45, 46, 131, 0.25), rgba(45, 46, 131, 0.25));
   overflow: hidden;
-  padding-top: 120px;
+  padding: 72px 0 96px;
 }
 
 .hero-overlay {
@@ -45,11 +50,12 @@
 }
 
 .hero-title {
-  font-size: 80px;
+  font-size: clamp(52px, 5vw, 80px);
   font-weight: 700;
   line-height: 1.2;
   max-width: 1100px;
   margin: 0 auto 16px;
+  overflow-wrap: anywhere;
   background: linear-gradient(90deg, #f2f2f2 0%, #a0a0ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -66,7 +72,7 @@
 
 .hero-text {
   max-width: 980px;
-  font-size: 24px;
+  font-size: clamp(18px, 1.5vw, 24px);
   font-weight: 300;
   line-height: 1.5;
   color: $white;
@@ -75,9 +81,10 @@
 
 .hero-actions .btn {
   border-radius: 8px;
-  font-size: 20px;
+  font-size: clamp(16px, 1.25vw, 20px);
   padding: 10px 18px;
   transition: 0.3s ease;
+  white-space: normal;
 }
 
 .btn-contact {
@@ -148,8 +155,9 @@
 .solution-card {
   position: relative;
   display: block;
-  min-height: 341px;
-  height: 341px;
+  min-height: clamp(300px, 26vw, 341px);
+  height: auto;
+  aspect-ratio: 640 / 341;
   overflow: hidden;
   isolation: isolate;
   background: #111111;
@@ -183,7 +191,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 0 48px 24px;
+  padding: 0 clamp(24px, 3.75vw, 48px) 24px;
   z-index: 2;
 
   h3 {
@@ -191,7 +199,7 @@
     align-items: center;
     gap: 24px;
     margin: 0 0 16px;
-    font-size: 24px;
+    font-size: clamp(20px, 1.6vw, 24px);
     font-weight: 700;
     line-height: 1.2;
     color: $white;
@@ -210,7 +218,7 @@
 
   p {
     margin: 0;
-    font-size: 18px;
+    font-size: clamp(15px, 1.2vw, 18px);
     font-weight: 500;
     line-height: 1.5;
     color: $white;
@@ -222,22 +230,15 @@
 }
 
 .partners-strip {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 48px;
-  overflow-x: auto;
   padding: 0 0 48px;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .home-partner-card {
-  flex: 0 0 auto;
-  min-width: 132px;
-  min-height: 120px;
-  padding: 0 12px;
+  min-height: 160px;
+  padding: 0;
   border-radius: 16px;
   background: $white;
   display: flex;
@@ -245,45 +246,86 @@
   justify-content: center;
 
   img {
-    width: 120px;
-    height: 120px;
+    width: 160px;
+    height: 160px;
     object-fit: contain;
+    border-radius: 16px;
   }
 }
 
 // ─── Responsive ──────────────────────────────────
 @media (max-width: 1199.98px) {
-  .hero-title { font-size: 64px; }
-  .hero-text  { font-size: 22px; }
+  .hero-section {
+    min-height: 760px;
+    padding: 72px 0 88px;
+  }
+
+  .hero-title { font-size: 56px; }
+  .hero-text  { font-size: 20px; }
+
+  .partners-strip {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 32px;
+  }
 }
 
 @media (max-width: 991.98px) {
   .hero-section {
-    min-height: 850px;
-    padding-top: 140px;
+    min-height: 680px;
+    padding: 72px 0 72px;
   }
-  .hero-title { font-size: 48px; }
-  .hero-text  { font-size: 20px; }
+  .hero-title { font-size: 46px; }
+  .hero-text  { font-size: 18px; }
+
+  .hero-light-left {
+    width: 280px;
+    height: 280px;
+  }
+
+  .hero-light-right {
+    width: 320px;
+    height: 320px;
+    right: -80px;
+    bottom: 40px;
+  }
 
   .solutions-section {
+    .container-fluid {
+      width: min(calc(100% - 48px), 1280px);
+    }
+
     .row {
       grid-template-columns: 1fr;
+      gap: 20px;
     }
   }
 
-  .solution-card { height: 300px; }
+  .partners-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
+  }
+
+  .solution-card {
+    min-height: 320px;
+    aspect-ratio: 16 / 7;
+  }
 }
 
 @media (max-width: 767.98px) {
   .hero-section {
-    min-height: auto;
-    padding: 140px 0 80px;
+    min-height: 560px;
+    padding: 72px 0 56px;
   }
   .hero-title { font-size: 36px; }
   .hero-text  { font-size: 16px; }
 
   .section-title-wrap {
-    padding: 32px 0;
+    padding: 36px 0 28px;
+  }
+
+  .section-title,
+  .partners-title {
+    font-size: 28px;
   }
 
   .solutions-section {
@@ -295,21 +337,36 @@
   .hero-actions .btn {
     font-size: 16px;
     width: 100%;
-    max-width: 220px;
+    max-width: 280px;
+    min-height: 44px;
   }
 
-  .solution-card { height: 260px; }
+  .solution-card {
+    min-height: 300px;
+    aspect-ratio: auto;
+  }
 
   .partners-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
   }
 
+  .home-partner-card {
+    min-height: 130px;
+
+    img {
+      width: 130px;
+      height: 130px;
+    }
+  }
+
   .solution-content {
-    padding: 0 20px 20px;
+    padding: 0 20px 22px;
 
     h3 {
       font-size: 20px;
       gap: 12px;
+      margin-bottom: 10px;
     }
 
     p { font-size: 14px; }
@@ -317,6 +374,49 @@
 }
 
 // ─── 1920px Desktop ──────────────────────────────
+@media (max-width: 479.98px) {
+  .hero-section {
+    min-height: 520px;
+    padding: 72px 0 48px;
+  }
+
+  .hero-title {
+    font-size: 32px;
+  }
+
+  .hero-text {
+    font-size: 15px;
+  }
+
+  .solutions-section {
+    .container-fluid {
+      width: min(calc(100% - 24px), 1280px);
+    }
+  }
+
+  .solution-card {
+    min-height: 330px;
+  }
+
+  .solution-content {
+    padding: 0 16px 18px;
+  }
+
+  .partners-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
+
+  .home-partner-card {
+    min-height: 120px;
+
+    img {
+      width: 110px;
+      height: 110px;
+    }
+  }
+}
+
 @media (min-width: 1920px) {
   .container {
     max-width: 1760px;

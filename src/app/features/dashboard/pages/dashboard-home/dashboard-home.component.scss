@@ -246,11 +246,29 @@
             border-color: $primary;
             box-shadow: 0 0 0 0.1rem rgba(45, 46, 131, 0.16);
         }
+
+        &.is-invalid {
+            border-color: #dc2626;
+            background-image: none;
+            padding-right: 0.8rem;
+        }
     }
 
     textarea.form-control {
         min-height: 68px;
         resize: vertical;
+    }
+}
+
+.validation-message {
+    color: #dc2626;
+    font-size: 0.8125rem;
+    line-height: 1.3;
+    margin-top: -0.95rem;
+
+    &--center {
+        margin-top: -0.85rem;
+        text-align: center;
     }
 }
 
@@ -270,6 +288,16 @@
         max-width: 160px;
         min-width: 140px;
         padding: 0.5rem 0.75rem;
+    }
+}
+
+.button-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+
+    .validation-message {
+        margin-top: 0;
     }
 }
 

@@ -9,7 +9,7 @@
         title="About Us"
         [(active)]="isActive"
         [isSaving]="isSaving"
-        [saveDisabled]="isSaving || isUploadingHero || !!uploadingSectionImage"
+        [saveDisabled]="isSaving || isUploadingHero || !!uploadingSectionImage || !canSave"
         (preview)="onPreview()"
         (save)="save()"
     />
@@ -38,42 +38,110 @@
 
                         <article class="text-box">
                             <h2>About Us</h2>
-                            <textarea class="content-input" rows="3" [(ngModel)]="aboutUsContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                            <textarea class="content-input" rows="3" [(ngModel)]="aboutUsContentEn"
+                                [class.is-invalid]="showRequiredError('aboutUsContentEn') || showPatternError('aboutUsContentEn')"
+                                (ngModelChange)="markFieldTouched('aboutUsContentEn')"
+                                (input)="markFieldTouched('aboutUsContentEn')"
+                                (blur)="markFieldTouched('aboutUsContentEn')"
+                                placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                            @if (showRequiredError('aboutUsContentEn')) {
+                                <span class="validation-message">{{ requiredMessage('en') }}</span>
+                            } @else if (showPatternError('aboutUsContentEn')) {
+                                <span class="validation-message">{{ patternMessage('en') }}</span>
+                            }
                         </article>
                     </div>
 
                     <div class="editor-bottom">
                         <div class="row">
                             <article class="text-box">
-                                <textarea class="content-input" rows="2" [(ngModel)]="subContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <textarea class="content-input" rows="2" [(ngModel)]="subContentEn"
+                                    [class.is-invalid]="showRequiredError('subContentEn') || showPatternError('subContentEn')"
+                                    (ngModelChange)="markFieldTouched('subContentEn')"
+                                    (input)="markFieldTouched('subContentEn')"
+                                    (blur)="markFieldTouched('subContentEn')"
+                                    placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                @if (showRequiredError('subContentEn')) {
+                                    <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                } @else if (showPatternError('subContentEn')) {
+                                    <span class="validation-message">{{ patternMessage('en') }}</span>
+                                }
                             </article>
                         </div>
 
                         <div class="row row-two-columns">
                             <article class="text-box text-box--large">
                                 <h2>Why WES</h2>
-                                <textarea class="content-input" rows="8" [(ngModel)]="whyUsContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <textarea class="content-input" rows="8" [(ngModel)]="whyUsContentEn"
+                                    [class.is-invalid]="showRequiredError('whyUsContentEn') || showPatternError('whyUsContentEn')"
+                                    (ngModelChange)="markFieldTouched('whyUsContentEn')"
+                                    (input)="markFieldTouched('whyUsContentEn')"
+                                    (blur)="markFieldTouched('whyUsContentEn')"
+                                    placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                @if (showRequiredError('whyUsContentEn')) {
+                                    <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                } @else if (showPatternError('whyUsContentEn')) {
+                                    <span class="validation-message">{{ patternMessage('en') }}</span>
+                                }
                             </article>
 
                             <article class="text-box text-box--numbers">
                                 <h2>WES in numbers</h2>
-                                <textarea class="content-input" rows="2" [(ngModel)]="numbersSubtitleEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <textarea class="content-input" rows="2" [(ngModel)]="numbersSubtitleEn"
+                                    [class.is-invalid]="showRequiredError('numbersSubtitleEn') || showPatternError('numbersSubtitleEn')"
+                                    (ngModelChange)="markFieldTouched('numbersSubtitleEn')"
+                                    (input)="markFieldTouched('numbersSubtitleEn')"
+                                    (blur)="markFieldTouched('numbersSubtitleEn')"
+                                    placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                @if (showRequiredError('numbersSubtitleEn')) {
+                                    <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                } @else if (showPatternError('numbersSubtitleEn')) {
+                                    <span class="validation-message">{{ patternMessage('en') }}</span>
+                                }
                                 <div class="numbers-grid">
                                     <label class="metric-field">
                                         <span>Number of employees</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfEmployees" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfEmployees"
+                                            [class.is-invalid]="showRequiredError('numberOfEmployees')"
+                                            (ngModelChange)="markFieldTouched('numberOfEmployees')"
+                                            (input)="markFieldTouched('numberOfEmployees')"
+                                            (blur)="markFieldTouched('numberOfEmployees')" />
+                                        @if (showRequiredError('numberOfEmployees')) {
+                                            <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                        }
                                     </label>
                                     <label class="metric-field">
                                         <span>Number of products</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfProducts" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfProducts"
+                                            [class.is-invalid]="showRequiredError('numberOfProducts')"
+                                            (ngModelChange)="markFieldTouched('numberOfProducts')"
+                                            (input)="markFieldTouched('numberOfProducts')"
+                                            (blur)="markFieldTouched('numberOfProducts')" />
+                                        @if (showRequiredError('numberOfProducts')) {
+                                            <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                        }
                                     </label>
                                     <label class="metric-field">
                                         <span>Number of clients</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfClients" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfClients"
+                                            [class.is-invalid]="showRequiredError('numberOfClients')"
+                                            (ngModelChange)="markFieldTouched('numberOfClients')"
+                                            (input)="markFieldTouched('numberOfClients')"
+                                            (blur)="markFieldTouched('numberOfClients')" />
+                                        @if (showRequiredError('numberOfClients')) {
+                                            <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                        }
                                     </label>
                                     <label class="metric-field">
                                         <span>Number of partners</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfPartners" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfPartners"
+                                            [class.is-invalid]="showRequiredError('numberOfPartners')"
+                                            (ngModelChange)="markFieldTouched('numberOfPartners')"
+                                            (input)="markFieldTouched('numberOfPartners')"
+                                            (blur)="markFieldTouched('numberOfPartners')" />
+                                        @if (showRequiredError('numberOfPartners')) {
+                                            <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                        }
                                     </label>
                                 </div>
                             </article>
@@ -87,7 +155,17 @@
                                         <i class="bi bi-pen"></i>
                                     </button>
                                 </div>
-                                <textarea class="content-input" rows="4" [(ngModel)]="missionContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <textarea class="content-input" rows="4" [(ngModel)]="missionContentEn"
+                                    [class.is-invalid]="showRequiredError('missionContentEn') || showPatternError('missionContentEn')"
+                                    (ngModelChange)="markFieldTouched('missionContentEn')"
+                                    (input)="markFieldTouched('missionContentEn')"
+                                    (blur)="markFieldTouched('missionContentEn')"
+                                    placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                @if (showRequiredError('missionContentEn')) {
+                                    <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                } @else if (showPatternError('missionContentEn')) {
+                                    <span class="validation-message">{{ patternMessage('en') }}</span>
+                                }
                                 <div class="upload-area" (click)="missionInputEn.click()">
                                     <input #missionInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'mission')" />
                                     @if (sectionImages.mission) {
@@ -108,7 +186,17 @@
                                         <i class="bi bi-pen"></i>
                                     </button>
                                 </div>
-                                <textarea class="content-input" rows="4" [(ngModel)]="visionContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <textarea class="content-input" rows="4" [(ngModel)]="visionContentEn"
+                                    [class.is-invalid]="showRequiredError('visionContentEn') || showPatternError('visionContentEn')"
+                                    (ngModelChange)="markFieldTouched('visionContentEn')"
+                                    (input)="markFieldTouched('visionContentEn')"
+                                    (blur)="markFieldTouched('visionContentEn')"
+                                    placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                @if (showRequiredError('visionContentEn')) {
+                                    <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                } @else if (showPatternError('visionContentEn')) {
+                                    <span class="validation-message">{{ patternMessage('en') }}</span>
+                                }
                                 <div class="upload-area" (click)="visionInputEn.click()">
                                     <input #visionInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'vision')" />
                                     @if (sectionImages.vision) {
@@ -129,7 +217,17 @@
                                         <i class="bi bi-pen"></i>
                                     </button>
                                 </div>
-                                <textarea class="content-input" rows="4" [(ngModel)]="leadershipContentEn" placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                <textarea class="content-input" rows="4" [(ngModel)]="leadershipContentEn"
+                                    [class.is-invalid]="showRequiredError('leadershipContentEn') || showPatternError('leadershipContentEn')"
+                                    (ngModelChange)="markFieldTouched('leadershipContentEn')"
+                                    (input)="markFieldTouched('leadershipContentEn')"
+                                    (blur)="markFieldTouched('leadershipContentEn')"
+                                    placeholder="Enter content, for ex: At WES, we empower businesses to navigate the complexities of the digital age"></textarea>
+                                @if (showRequiredError('leadershipContentEn')) {
+                                    <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                } @else if (showPatternError('leadershipContentEn')) {
+                                    <span class="validation-message">{{ patternMessage('en') }}</span>
+                                }
                                 <div class="upload-area" (click)="leadershipInputEn.click()">
                                     <input #leadershipInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'leadership')" />
                                     @if (sectionImages.leadership) {
@@ -206,42 +304,110 @@
 
                         <article class="text-box">
                             <h2>من نحن</h2>
-                            <textarea class="content-input" rows="3" [(ngModel)]="aboutUsContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                            <textarea class="content-input" rows="3" [(ngModel)]="aboutUsContentAr"
+                                [class.is-invalid]="showRequiredError('aboutUsContentAr') || showPatternError('aboutUsContentAr')"
+                                (ngModelChange)="markFieldTouched('aboutUsContentAr')"
+                                (input)="markFieldTouched('aboutUsContentAr')"
+                                (blur)="markFieldTouched('aboutUsContentAr')"
+                                placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                            @if (showRequiredError('aboutUsContentAr')) {
+                                <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                            } @else if (showPatternError('aboutUsContentAr')) {
+                                <span class="validation-message">{{ patternMessage('ar') }}</span>
+                            }
                         </article>
                     </div>
 
                     <div class="editor-bottom">
                         <div class="row">
                             <article class="text-box">
-                                <textarea class="content-input" rows="2" [(ngModel)]="subContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                <textarea class="content-input" rows="2" [(ngModel)]="subContentAr"
+                                    [class.is-invalid]="showRequiredError('subContentAr') || showPatternError('subContentAr')"
+                                    (ngModelChange)="markFieldTouched('subContentAr')"
+                                    (input)="markFieldTouched('subContentAr')"
+                                    (blur)="markFieldTouched('subContentAr')"
+                                    placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                @if (showRequiredError('subContentAr')) {
+                                    <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                } @else if (showPatternError('subContentAr')) {
+                                    <span class="validation-message">{{ patternMessage('ar') }}</span>
+                                }
                             </article>
                         </div>
 
                         <div class="row row-two-columns">
                             <article class="text-box text-box--large">
                                 <h2>لماذا WES</h2>
-                                <textarea class="content-input" rows="8" [(ngModel)]="whyUsContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                <textarea class="content-input" rows="8" [(ngModel)]="whyUsContentAr"
+                                    [class.is-invalid]="showRequiredError('whyUsContentAr') || showPatternError('whyUsContentAr')"
+                                    (ngModelChange)="markFieldTouched('whyUsContentAr')"
+                                    (input)="markFieldTouched('whyUsContentAr')"
+                                    (blur)="markFieldTouched('whyUsContentAr')"
+                                    placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                @if (showRequiredError('whyUsContentAr')) {
+                                    <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                } @else if (showPatternError('whyUsContentAr')) {
+                                    <span class="validation-message">{{ patternMessage('ar') }}</span>
+                                }
                             </article>
 
                             <article class="text-box text-box--numbers">
                                 <h2>WES بالأرقام</h2>
-                                <textarea class="content-input" rows="2" [(ngModel)]="numbersSubtitleAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                <textarea class="content-input" rows="2" [(ngModel)]="numbersSubtitleAr"
+                                    [class.is-invalid]="showRequiredError('numbersSubtitleAr') || showPatternError('numbersSubtitleAr')"
+                                    (ngModelChange)="markFieldTouched('numbersSubtitleAr')"
+                                    (input)="markFieldTouched('numbersSubtitleAr')"
+                                    (blur)="markFieldTouched('numbersSubtitleAr')"
+                                    placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                @if (showRequiredError('numbersSubtitleAr')) {
+                                    <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                } @else if (showPatternError('numbersSubtitleAr')) {
+                                    <span class="validation-message">{{ patternMessage('ar') }}</span>
+                                }
                                 <div class="numbers-grid">
                                     <label class="metric-field">
                                         <span>عدد الموظفين</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfEmployees" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfEmployees"
+                                            [class.is-invalid]="showRequiredError('numberOfEmployees')"
+                                            (ngModelChange)="markFieldTouched('numberOfEmployees')"
+                                            (input)="markFieldTouched('numberOfEmployees')"
+                                            (blur)="markFieldTouched('numberOfEmployees')" />
+                                        @if (showRequiredError('numberOfEmployees')) {
+                                            <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                        }
                                     </label>
                                     <label class="metric-field">
                                         <span>عدد المنتجات</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfProducts" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfProducts"
+                                            [class.is-invalid]="showRequiredError('numberOfProducts')"
+                                            (ngModelChange)="markFieldTouched('numberOfProducts')"
+                                            (input)="markFieldTouched('numberOfProducts')"
+                                            (blur)="markFieldTouched('numberOfProducts')" />
+                                        @if (showRequiredError('numberOfProducts')) {
+                                            <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                        }
                                     </label>
                                     <label class="metric-field">
                                         <span>عدد العملاء</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfClients" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfClients"
+                                            [class.is-invalid]="showRequiredError('numberOfClients')"
+                                            (ngModelChange)="markFieldTouched('numberOfClients')"
+                                            (input)="markFieldTouched('numberOfClients')"
+                                            (blur)="markFieldTouched('numberOfClients')" />
+                                        @if (showRequiredError('numberOfClients')) {
+                                            <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                        }
                                     </label>
                                     <label class="metric-field">
                                         <span>عدد الشركاء</span>
-                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfPartners" />
+                                        <input type="number" min="0" class="number-input" placeholder="0" [(ngModel)]="numberOfPartners"
+                                            [class.is-invalid]="showRequiredError('numberOfPartners')"
+                                            (ngModelChange)="markFieldTouched('numberOfPartners')"
+                                            (input)="markFieldTouched('numberOfPartners')"
+                                            (blur)="markFieldTouched('numberOfPartners')" />
+                                        @if (showRequiredError('numberOfPartners')) {
+                                            <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                        }
                                     </label>
                                 </div>
                             </article>
@@ -255,7 +421,17 @@
                                         <i class="bi bi-pen"></i>
                                     </button>
                                 </div>
-                                <textarea class="content-input" rows="4" [(ngModel)]="missionContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                <textarea class="content-input" rows="4" [(ngModel)]="missionContentAr"
+                                    [class.is-invalid]="showRequiredError('missionContentAr') || showPatternError('missionContentAr')"
+                                    (ngModelChange)="markFieldTouched('missionContentAr')"
+                                    (input)="markFieldTouched('missionContentAr')"
+                                    (blur)="markFieldTouched('missionContentAr')"
+                                    placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                @if (showRequiredError('missionContentAr')) {
+                                    <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                } @else if (showPatternError('missionContentAr')) {
+                                    <span class="validation-message">{{ patternMessage('ar') }}</span>
+                                }
                                 <div class="upload-area" (click)="missionInputAr.click()">
                                     <input #missionInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'mission')" />
                                     @if (sectionImages.mission) {
@@ -276,7 +452,17 @@
                                         <i class="bi bi-pen"></i>
                                     </button>
                                 </div>
-                                <textarea class="content-input" rows="4" [(ngModel)]="visionContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                <textarea class="content-input" rows="4" [(ngModel)]="visionContentAr"
+                                    [class.is-invalid]="showRequiredError('visionContentAr') || showPatternError('visionContentAr')"
+                                    (ngModelChange)="markFieldTouched('visionContentAr')"
+                                    (input)="markFieldTouched('visionContentAr')"
+                                    (blur)="markFieldTouched('visionContentAr')"
+                                    placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                @if (showRequiredError('visionContentAr')) {
+                                    <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                } @else if (showPatternError('visionContentAr')) {
+                                    <span class="validation-message">{{ patternMessage('ar') }}</span>
+                                }
                                 <div class="upload-area" (click)="visionInputAr.click()">
                                     <input #visionInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'vision')" />
                                     @if (sectionImages.vision) {
@@ -297,7 +483,17 @@
                                         <i class="bi bi-pen"></i>
                                     </button>
                                 </div>
-                                <textarea class="content-input" rows="4" [(ngModel)]="leadershipContentAr" placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                <textarea class="content-input" rows="4" [(ngModel)]="leadershipContentAr"
+                                    [class.is-invalid]="showRequiredError('leadershipContentAr') || showPatternError('leadershipContentAr')"
+                                    (ngModelChange)="markFieldTouched('leadershipContentAr')"
+                                    (input)="markFieldTouched('leadershipContentAr')"
+                                    (blur)="markFieldTouched('leadershipContentAr')"
+                                    placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
+                                @if (showRequiredError('leadershipContentAr')) {
+                                    <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                } @else if (showPatternError('leadershipContentAr')) {
+                                    <span class="validation-message">{{ patternMessage('ar') }}</span>
+                                }
                                 <div class="upload-area" (click)="leadershipInputAr.click()">
                                     <input #leadershipInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden (change)="onSectionImageSelected($event, 'leadership')" />
                                     @if (sectionImages.leadership) {

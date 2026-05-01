@@ -112,7 +112,7 @@
 .contact-section__container {
   position: relative;
   z-index: 2;
-  width: min(1280px, calc(100% - 160px));
+  width: min($public-container-max-width, calc(100% - #{$public-container-gutter}));
   margin: 0 auto;
   padding-top: 164px;
   padding-bottom: 148px;
@@ -350,10 +350,6 @@ a.info-text:hover {
 }
 
 @media (max-width: 1320px) {
-  .contact-section__container {
-    width: min(1280px, calc(100% - 64px));
-  }
-
   .contact-content {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -365,6 +361,7 @@ a.info-text:hover {
   }
 
   .contact-section__container {
+    width: min($public-container-max-width, calc(100% - #{$public-container-gutter-tablet}));
     padding-top: 140px;
     padding-bottom: 96px;
   }
@@ -389,7 +386,7 @@ a.info-text:hover {
 
 @media (max-width: 768px) {
   .contact-section__container {
-    width: calc(100% - 32px);
+    width: min($public-container-max-width, calc(100% - #{$public-container-gutter-mobile}));
     padding-top: 104px;
     padding-bottom: 72px;
   }
@@ -448,7 +445,7 @@ a.info-text:hover {
 
 @media (max-width: 480px) {
   .contact-section__container {
-    width: calc(100% - 24px);
+    width: min($public-container-max-width, calc(100% - #{$public-container-gutter-small}));
   }
 
   .contact-hero h1 {

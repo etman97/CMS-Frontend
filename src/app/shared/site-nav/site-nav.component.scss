@@ -14,10 +14,36 @@
   padding: 12px 0;
 }
 
+.wes-navbar .container {
+  width: min(calc(100% - #{$public-container-gutter}), $public-container-max-width);
+  max-width: none;
+  padding-left: 0;
+  padding-right: 0;
+}
+
 .wes-logo {
   width: 80px;
   height: 24px;
   object-fit: contain;
+}
+
+.navbar-toggler {
+  width: 42px;
+  height: 38px;
+  padding: 8px;
+  border-radius: 8px;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+.navbar-toggler-line {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: $white;
+  border-radius: 999px;
 }
 
 .wes-navbar .nav-link {
@@ -79,25 +105,67 @@
 }
 
 @media (max-width: 991.98px) {
+  .wes-navbar .container {
+    width: min(calc(100% - #{$public-container-gutter-tablet}), $public-container-max-width);
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .navbar-toggler {
+    display: inline-flex;
+  }
+
   .navbar-collapse {
     background: rgba(20, 20, 40, 0.95);
+    flex-basis: 100%;
     margin-top: 16px;
     border-radius: 12px;
-    padding: 16px;
+    padding: 12px 16px 16px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.22);
   }
 
   .wes-nav-list {
     gap: 0;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .wes-navbar .nav-link {
+    width: 100%;
+    padding: 12px 4px;
+
+    &.active {
+      border-bottom: 0;
+      color: $white;
+    }
   }
 
   .nav-item--language {
     margin-inline-start: 0;
+  }
+
+  .btn-language {
+    justify-content: center;
+    width: 100%;
+    margin-top: 4px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .wes-navbar .container {
+    width: min(calc(100% - #{$public-container-gutter-mobile}), $public-container-max-width);
+  }
+}
+
+@media (max-width: 479.98px) {
+  .wes-navbar .container {
+    width: min(calc(100% - #{$public-container-gutter-small}), $public-container-max-width);
   }
 }
 
 // ─── 1920px Desktop ──────────────────────────────
 @media (min-width: 1920px) {
   .wes-navbar .container {
-    max-width: 1760px;
+    width: min(calc(100% - #{$public-container-gutter}), $public-container-max-width);
   }
 }

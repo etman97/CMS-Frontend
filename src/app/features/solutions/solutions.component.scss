@@ -87,9 +87,10 @@
 .hero__content {
   position: relative;
   z-index: 1;
-  max-width: 1280px;
+  width: min(calc(100% - #{v.$public-container-gutter}), v.$public-container-max-width);
+  max-width: none;
   margin: 0 auto;
-  padding: 164px 80px 45px;
+  padding: 164px 0 45px;
 }
 
 .hero__title {
@@ -115,6 +116,49 @@
 // ─── Solutions Grid ──────────────────────────────
 .solutions-section {
   position: relative;
+  padding-bottom: 72px;
+
+  .container {
+    width: min(calc(100% - #{v.$public-container-gutter}), v.$public-container-max-width);
+    max-width: none;
+    margin: 0 auto;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .container-fluid {
+    width: min(calc(100% - #{v.$public-container-gutter}), v.$public-container-max-width);
+    max-width: none;
+    margin: 0 auto;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin: 0;
+  }
+
+  [class*='col-'] {
+    width: auto;
+    max-width: none;
+    padding: 0;
+  }
+}
+
+.section-title-wrap {
+  padding: 46px 0;
+  text-align: center;
+}
+
+.section-title {
+  margin: 0;
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 700;
+  line-height: 1.2;
+  background: linear-gradient(90deg, #f2f2f2 0%, #a0a0ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .solution-card {
@@ -148,7 +192,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 0 80px 24px;
+  padding: 0 clamp(24px, 3.75vw, 48px) 24px;
   z-index: 2;
 
   h3 {
@@ -179,15 +223,30 @@
 /* Responsive */
 @media (max-width: 1199.98px) {
   .hero__content {
-    padding: 130px 40px 36px;
-  }
-
-  .solution-content {
-    padding: 0 40px 24px;
+    padding-top: 130px;
+    padding-bottom: 36px;
   }
 }
 
 @media (max-width: 991.98px) {
+  .hero__content {
+    width: min(calc(100% - #{v.$public-container-gutter-tablet}), v.$public-container-max-width);
+  }
+
+  .solutions-section {
+    .container {
+      width: min(calc(100% - #{v.$public-container-gutter-tablet}), v.$public-container-max-width);
+    }
+
+    .container-fluid {
+      width: min(calc(100% - #{v.$public-container-gutter-tablet}), v.$public-container-max-width);
+    }
+
+    .row {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .solution-card {
     height: 300px;
   }
@@ -205,9 +264,28 @@
   }
 
   .hero__content {
+    width: min(calc(100% - #{v.$public-container-gutter-mobile}), v.$public-container-max-width);
     padding-top: 150px;
-    padding-left: 24px;
-    padding-right: 24px;
+  }
+
+  .solutions-section {
+    padding-bottom: 56px;
+
+    .container {
+      width: min(calc(100% - #{v.$public-container-gutter-mobile}), v.$public-container-max-width);
+    }
+
+    .container-fluid {
+      width: min(calc(100% - #{v.$public-container-gutter-mobile}), v.$public-container-max-width);
+    }
+  }
+
+  .section-title-wrap {
+    padding: 36px 0 28px;
+  }
+
+  .section-title {
+    font-size: 28px;
   }
 
   .hero__title {
@@ -238,8 +316,19 @@
 
 @media (max-width: 480px) {
   .hero__content {
-    padding-left: 16px;
-    padding-right: 16px;
+    width: min(calc(100% - #{v.$public-container-gutter-small}), v.$public-container-max-width);
+  }
+
+  .solutions-section {
+    padding-bottom: 48px;
+
+    .container {
+      width: min(calc(100% - #{v.$public-container-gutter-small}), v.$public-container-max-width);
+    }
+
+    .container-fluid {
+      width: min(calc(100% - #{v.$public-container-gutter-small}), v.$public-container-max-width);
+    }
   }
 
   .hero__title {
@@ -250,8 +339,16 @@
 // ─── 1920px Desktop ──────────────────────────────
 @media (min-width: 1920px) {
   .hero__content {
-    max-width: 1760px;
-    padding-left: 0;
-    padding-right: 0;
+    width: min(calc(100% - #{v.$public-container-gutter}), v.$public-container-max-width);
+  }
+
+  .solutions-section {
+    .container {
+      width: min(calc(100% - #{v.$public-container-gutter}), v.$public-container-max-width);
+    }
+
+    .container-fluid {
+      width: min(calc(100% - #{v.$public-container-gutter}), v.$public-container-max-width);
+    }
   }
 }

@@ -8,6 +8,9 @@ $accent-dark: #5E5C9A;
 $white: #FFFFFF;
 $black: #000000;
 $gray: #949494;
+$gray-light: #D9D9D9;
+$solution-title-gradient-start: #F2F2F2;
+$solution-title-gradient-end: #A0A0FF;
 
 // ─── Text Colors ───────────────────────────────
 $text-dark: #333333;
@@ -32,6 +35,13 @@ $error-border: #fecaca;
 $sidebar-width: 260px;
 $sidebar-collapsed-width: 72px;
 $header-height: 64px;
+$container-max-width: 1280px;
+$public-container-max-width: 1280px;
+$public-container-wide-max-width: 1760px;
+$public-container-gutter: 64px;
+$public-container-gutter-tablet: 48px;
+$public-container-gutter-mobile: 32px;
+$public-container-gutter-small: 24px;
 
 // ─── Font ──────────────────────────────────────
 $font-family: 'Alexandria', sans-serif;

@@ -47,6 +47,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     isLoading = true;
     showSolutions = false;
     showPartners = false;
+    discoverSolutionsTitle = 'Discover Our Solutions';
+    valuedPartnersTitle = 'Our Valued Partners';
     partnerLogos: { id: number; logoImageUrl: string | null }[] = [];
 
     ngOnInit(): void {
@@ -90,6 +92,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     private populate(data: HomePageDto, lang: 'en' | 'ar'): void {
         this.isRtl = lang === 'ar';
+        this.discoverSolutionsTitle = lang === 'ar' ? 'اكتشف حلولنا' : 'Discover Our Solutions';
+        this.valuedPartnersTitle = lang === 'ar' ? 'شركاؤنا المميزون' : 'Our Valued Partners';
 
         if (lang === 'ar') {
             this.heroTitle = data.heroTitleAr ?? '';

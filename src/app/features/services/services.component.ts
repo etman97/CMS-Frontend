@@ -97,9 +97,13 @@ export class ServicesComponent implements OnInit, OnDestroy {
             .map(item => ({
                 id: item.id,
                 title: lang === 'ar' ? item.groupNameAr : item.groupNameEn,
-                brief: lang === 'ar' ? item.briefAr : item.briefEn,
+                brief: this.formatBrief(lang === 'ar' ? item.briefAr : item.briefEn),
                 imageUrl: item.imageUrl
             }));
+    }
+
+    private formatBrief(value: string): string {
+        return value.replace(/\.\s+/g, '.\n\n');
     }
 
     private applyCurrentLanguage(): void {

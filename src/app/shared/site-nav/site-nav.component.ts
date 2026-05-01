@@ -15,6 +15,7 @@ export class SiteNavComponent implements OnInit {
     private readonly directionService = inject(DirectionService);
     private readonly translate = inject(TranslateService);
     private readonly pageStatusService = inject(PageStatusService);
+    isMenuOpen = false;
 
     readonly navItems: Array<{ key: PublicPageKey; route: string; labelKey: string; exact?: boolean }> = [
         { key: 'home', route: '/', labelKey: 'nav.home', exact: true },
@@ -49,9 +50,18 @@ export class SiteNavComponent implements OnInit {
         return this.pageStatuses[key];
     }
 
+    toggleMenu(): void {
+        this.isMenuOpen = !this.isMenuOpen;
+    }
+
+    closeMenu(): void {
+        this.isMenuOpen = false;
+    }
+
     toggleLanguage(): void {
         const nextLang = this.isArabic ? 'en' : 'ar';
         this.translate.use(nextLang);
         this.directionService.setDirection(nextLang);
+        this.closeMenu();
     }
 }

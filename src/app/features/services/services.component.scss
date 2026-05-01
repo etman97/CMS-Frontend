@@ -16,6 +16,15 @@
   }
 }
 
+.container {
+  width: min(calc(100% - #{v.$public-container-gutter}), v.$public-container-max-width);
+  max-width: none;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 0;
+  padding-left: 0;
+}
+
 // ─── Hero ────────────────────────────────────────
 .hero {
   position: relative;
@@ -123,7 +132,7 @@
 
 // ─── Services List ───────────────────────────────
 .services-list {
-  padding: 24px 0 72px;
+  padding: 24px 0;
   background: v.$primary;
 }
 
@@ -135,44 +144,48 @@
 
 .service-row {
   display: grid;
-  grid-template-columns: 1fr 628px;
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 628px);
   align-items: center;
   gap: 24px;
 }
 
 .service-row-image-first {
-  grid-template-columns: 628px 1fr;
+  grid-template-columns: minmax(380px, 628px) minmax(0, 1fr);
 }
 
 .service-copy {
+  min-width: 0;
+
   h2 {
     margin: 0 0 16px;
+    color: v.$gray-light;
     font-size: 24px;
-    line-height: 1.2;
     font-weight: 700;
-    color: #d9d9d9;
+    line-height: 1.2;
   }
 
   p {
     margin: 0;
-    font-size: 18px;
-    line-height: 1.5;
-    font-weight: 400;
     color: v.$white;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+    white-space: pre-line;
 
     & + p {
-      margin-top: 1.5em;
+      margin-top: 27px;
     }
   }
 }
 
 .service-image {
-  width: 628px;
   height: 500px;
-  border-radius: 16px;
+  margin: 0;
   overflow: hidden;
+  border-radius: 16px;
 
   img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -183,33 +196,33 @@
 @media (max-width: 1199.98px) {
   .service-row,
   .service-row-image-first {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 48%);
   }
 
   .service-image {
-    width: 100%;
-    height: auto;
-    aspect-ratio: 628 / 500;
+    height: 430px;
   }
 }
 
 @media (max-width: 991.98px) {
+  .container {
+    width: min(calc(100% - #{v.$public-container-gutter-tablet}), v.$public-container-max-width);
+  }
+
   .service-row,
   .service-row-image-first {
     grid-template-columns: 1fr;
-    gap: 20px;
   }
 
   .service-row-image-first .service-image {
-    order: 1;
+    order: 0;
   }
 
   .service-row-image-first .service-copy {
-    order: 2;
+    order: 0;
   }
 
   .service-image {
-    width: 100%;
     height: auto;
     aspect-ratio: 628 / 500;
   }
@@ -220,6 +233,10 @@
 }
 
 @media (max-width: 767.98px) {
+  .container {
+    width: min(calc(100% - #{v.$public-container-gutter-mobile}), v.$public-container-max-width);
+  }
+
   .hero {
     min-height: auto;
     padding-top: 104px;
@@ -245,20 +262,34 @@
     font-size: 16px;
   }
 
-  .service-copy h2 {
-    font-size: 22px;
+  .service-copy {
+    h2 {
+      font-size: 22px;
+    }
+
+    p + p {
+      margin-top: 24px;
+    }
   }
 
   .services-grid {
-    gap: 32px;
+    gap: 40px;
+  }
+
+  .service-image {
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 479.98px) {
+  .container {
+    width: min(calc(100% - #{v.$public-container-gutter-small}), v.$public-container-max-width);
   }
 }
 
 // ─── 1920px Desktop ──────────────────────────────
 @media (min-width: 1920px) {
   .container {
-    max-width: 1760px;
-    padding-left: 0;
-    padding-right: 0;
+    width: min(calc(100% - #{v.$public-container-gutter}), v.$public-container-max-width);
   }
 }

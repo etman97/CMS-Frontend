@@ -1,0 +1,35 @@
+<main class="solution-detail">
+  <div class="solution-detail__glow solution-detail__glow--left"></div>
+  <div class="solution-detail__glow solution-detail__glow--right"></div>
+  <div class="solution-detail__glow solution-detail__glow--bottom"></div>
+
+  <div class="solution-detail__inner">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a class="breadcrumb__back" routerLink="/solutions" aria-label="Back to solutions">
+        <span aria-hidden="true">&larr;</span>
+      </a>
+      <a class="breadcrumb__link" routerLink="/">Home</a>
+      <span class="breadcrumb__separator" aria-hidden="true">/</span>
+      <a class="breadcrumb__link" routerLink="/solutions">Solutions</a>
+    </nav>
+
+    <h1 class="solution-detail__title">IT Solutions</h1>
+
+    <div class="solution-detail__sections">
+      @for (section of sections; track section.title) {
+        <article class="solution-block" [class.solution-block--reverse]="section.reverse">
+          <div class="solution-block__copy">
+            <h2>{{ section.title }}</h2>
+            @for (paragraph of section.paragraphs; track paragraph) {
+              <p>{{ paragraph }}</p>
+            }
+          </div>
+
+          <figure class="solution-block__media">
+            <img [src]="section.image" [alt]="section.imageAlt" loading="lazy" />
+          </figure>
+        </article>
+      }
+    </div>
+  </div>
+</main>

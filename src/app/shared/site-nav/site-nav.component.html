@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg wes-navbar fixed-top">
   <div class="container">
 
-    <a class="navbar-brand" routerLink="/" [attr.aria-label]="'nav.brandAria' | translate">
+    <a class="navbar-brand" routerLink="/" [attr.aria-label]="'nav.brandAria' | translate" (click)="closeMenu()">
       <img
         src="/wes-logo-primary.png"
         alt="WES Logo"
@@ -12,16 +12,17 @@
     <button
       class="navbar-toggler border-0 shadow-none"
       type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#wesNavbar"
       aria-controls="wesNavbar"
-      aria-expanded="false"
+      [attr.aria-expanded]="isMenuOpen"
       aria-label="Toggle navigation"
+      (click)="toggleMenu()"
     >
-      <span class="navbar-toggler-icon"></span>
+      <span class="navbar-toggler-line"></span>
+      <span class="navbar-toggler-line"></span>
+      <span class="navbar-toggler-line"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="wesNavbar">
+    <div class="collapse navbar-collapse" [class.show]="isMenuOpen" id="wesNavbar">
       <ul class="navbar-nav wes-nav-list align-items-lg-center">
         @for (item of navItems; track item.key) {
           <li class="nav-item">
@@ -31,6 +32,7 @@
                 [routerLink]="item.route"
                 routerLinkActive="active"
                 [routerLinkActiveOptions]="{ exact: item.exact ?? false }"
+                (click)="closeMenu()"
               >
                 {{ item.labelKey | translate }}
               </a>

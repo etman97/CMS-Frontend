@@ -226,13 +226,13 @@
 
 @media (max-width: 767px) {
   .hero {
-    min-height: auto;
+    min-height: 341px;
   }
 
   .hero__lamp-wrap,
   .hero__lamp,
   .hero__lamp-overlay {
-    height: 280px;
+    height: 341px;
   }
 
   .hero__content {
@@ -253,11 +253,11 @@
   }
 
   .hero__title {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .hero__text {
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .solution-card {
@@ -284,7 +284,11 @@
   }
 
   .hero__title {
-    font-size: 26px;
+    font-size: 23px;
+  }
+
+  .hero__text {
+    font-size: 14px;
   }
 }
 

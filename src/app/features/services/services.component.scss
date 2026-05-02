@@ -27,9 +27,18 @@
 
 .hero-image-wrap {
   position: absolute;
-  inset: 0;
+  inset: 0 0 auto;
   height: 341px;
   overflow: hidden;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(v.$black, 0) 24%, rgba(v.$black, 0.5) 100%);
+    transform: scaleY(-1);
+    transform-origin: center;
+  }
 }
 
 .hero-image-backdrop,
@@ -37,14 +46,11 @@
   position: absolute;
   inset: 0;
   width: 100%;
-  height: 341px;
+  height: 100%;
 }
 
 .hero-image-backdrop {
-  object-fit: cover;
-  object-position: center top;
-  filter: brightness(0.65);
-  opacity: 1;
+  display: none;
 }
 
 .hero-image {
@@ -55,7 +61,7 @@
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 25%, #000000 100%);
+  background: linear-gradient(to bottom, rgba(v.$black, 0) 24%, v.$black 100%);
 }
 
 .hero-blur {
@@ -99,11 +105,14 @@
 .hero-content {
   position: relative;
   z-index: 2;
-  padding-bottom: 45px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-start;
 }
 
 .hero-label {
-  margin: 0 0 24px;
+  margin: 0;
   font-size: 32px;
   line-height: 1.2;
   font-weight: 700;
@@ -222,23 +231,18 @@
 
 @media (max-width: 767.98px) {
   .hero {
-    min-height: auto;
+    min-height: 341px;
     padding-top: v.$navbar-content-spacing-mobile;
   }
 
   .hero-image-wrap,
   .hero-image-backdrop,
   .hero-image {
-    height: 260px;
-  }
-
-  .hero-content {
-    padding-bottom: 32px;
+    height: 341px;
   }
 
   .hero-label {
-    font-size: 28px;
-    margin-bottom: 18px;
+    font-size: 26px;
   }
 
   .hero-text,
@@ -262,6 +266,34 @@
 
   .service-image {
     border-radius: 12px;
+  }
+
+  .hero-blur-left {
+    width: 260px;
+    height: 260px;
+  }
+
+  .hero-blur-right {
+    left: auto;
+    right: -100px;
+    width: 320px;
+    height: 320px;
+    transform: rotate(180deg) scaleY(-1);
+  }
+
+  .hero-blur-bottom {
+    width: 220px;
+    height: 220px;
+  }
+}
+
+@media (max-width: 479px) {
+  .hero-label {
+    font-size: 23px;
+  }
+
+  .hero-text {
+    font-size: 14px;
   }
 }
 

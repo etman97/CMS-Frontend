@@ -412,7 +412,7 @@
   }
 
   .intro h1 {
-    font-size: 28px;
+    font-size: 26px;
   }
 
   .intro p,
@@ -451,5 +451,13 @@
 @media (max-width: 480px) {
   .hero-section {
     padding-top: $navbar-content-spacing-mobile;
+  }
+
+  .intro h1 {
+    font-size: 23px;
+  }
+
+  .intro p {
+    font-size: 14px;
   }
 }

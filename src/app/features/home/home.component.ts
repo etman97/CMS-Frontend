@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { ButtonDirection, HomePageDto, HomePageService } from '../../core/services/home-page.service';
+import { SolutionsPageDto, SolutionsPageService } from '../../core/services/solutions-page.service';
 import { PageStatusService } from '../../core/services/page-status.service';
 import { PartnersPageService } from '../../core/services/partners-page.service';
 
@@ -25,11 +26,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly homePageService = inject(HomePageService);
     private readonly pageStatusService = inject(PageStatusService);
     private readonly partnersPageService = inject(PartnersPageService);
+    private readonly solutionsPageService = inject(SolutionsPageService);
     private readonly dialogConfig = inject(DynamicDialogConfig<HomeDialogData>, { optional: true });
     private readonly messageService = inject(MessageService, { optional: true });
     private dirObserver: MutationObserver | null = null;
     private partnersSub: Subscription | null = null;
+    private solutionsSub: Subscription | null = null;
     private pageStatusSub: Subscription | null = null;
+    private solutionsDataSource: SolutionsPageDto | null = null;
     private dataSource: HomePageDto | null = null;
     private routeLang: 'en' | 'ar' | null = null;
 
@@ -50,6 +54,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     discoverSolutionsTitle = 'Discover Our Solutions';
     valuedPartnersTitle = 'Our Valued Partners';
     partnerLogos: { id: number; logoImageUrl: string | null }[] = [];
+    solutionCards: { id: number; title: string; brief: string; imageUrl: string | null }[] = [];
 
     ngOnInit(): void {
         this.routeLang = this.resolveRouteLang(this.route.snapshot.queryParamMap.get('lang'));
@@ -74,6 +79,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
 
         this.loadPartnerLogos();
+        this.loadSolutionCards();
 
         this.pageStatusSub = this.pageStatusService.getStatuses().subscribe(statuses => {
             this.showSolutions = statuses.solutions;
@@ -86,6 +92,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.dirObserver = null;
         this.partnersSub?.unsubscribe();
         this.partnersSub = null;
+        this.solutionsSub?.unsubscribe();
+        this.solutionsSub = null;
         this.pageStatusSub?.unsubscribe();
         this.pageStatusSub = null;
     }
@@ -147,6 +155,32 @@ export class HomeComponent implements OnInit, OnDestroy {
         });
     }
 
+    private loadSolutionCards(): void {
+        this.solutionsSub = this.solutionsPageService.get().subscribe({
+            next: (data) => {
+                if (data) {
+                    this.solutionsDataSource = data;
+                    const lang = this.routeLang ?? this.getLangFromDocumentDir();
+                    this.populateSolutionCards(data, lang);
+                }
+            },
+            error: () => {
+                this.solutionCards = [];
+            }
+        });
+    }
+
+    private populateSolutionCards(data: SolutionsPageDto, lang: 'en' | 'ar'): void {
+        this.solutionCards = [...data.solutionCards]
+            .sort((a, b) => a.displayOrder - b.displayOrder)
+            .map(card => ({
+                id: card.id,
+                title: lang === 'ar' ? card.groupNameAr : card.groupNameEn,
+                brief: lang === 'ar' ? card.briefAr : card.briefEn,
+                imageUrl: card.imageUrl
+            }));
+    }
+
     private loadPartnerLogos(): void {
         this.partnersSub = this.partnersPageService.get().subscribe({
             next: (data) => {
@@ -168,12 +202,15 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     private applyCurrentLanguage(): void {
-        if (!this.dataSource) {
-            return;
+        const lang = this.routeLang ?? this.getLangFromDocumentDir();
+
+        if (this.dataSource) {
+            this.populate(this.dataSource, lang);
         }
 
-        const lang = this.routeLang ?? this.getLangFromDocumentDir();
-        this.populate(this.dataSource, lang);
+        if (this.solutionsDataSource) {
+            this.populateSolutionCards(this.solutionsDataSource, lang);
+        }
     }
 
     private getLangFromDocumentDir(): 'en' | 'ar' {

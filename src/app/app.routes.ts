@@ -92,7 +92,7 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/dashboard/pages/dashboard-solutions/dashboard-solutions.component').then(m => m.DashboardSolutionsComponent)
             },
             {
-                path: 'dashboard/solutions/access',
+                path: 'dashboard/solutions/access/:cardId',
                 loadComponent: () => import('./features/dashboard/pages/dashboard-solutions-access/dashboard-solutions-access.component').then(m => m.DashboardSolutionsAccessComponent)
             },
             {

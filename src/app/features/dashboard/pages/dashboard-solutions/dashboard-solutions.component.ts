@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
@@ -9,11 +9,9 @@ import { DashboardPageHeaderComponent } from '../../components/dashboard-page-he
 import { AddSectionDialogComponent } from '../dashboard-services/dialogs/add-section-dialog/add-section-dialog.component';
 import { AddSectionDialogResult } from '../dashboard-services/dialogs/add-section-dialog/add-section-dialog.model';
 import { SolutionsPageService } from '../../../../core/services/solutions-page.service';
-import { MediaService } from '../../../../core/services/media.service';
 import { SolutionsComponent, SolutionsDialogData } from '../../../solutions/solutions.component';
 
 type SolutionsLang = 'en' | 'ar';
-type SolutionsFieldKey = 'heroTextEn' | 'heroTextAr';
 
 interface SolutionCard {
     id: number;
@@ -30,9 +28,8 @@ interface SolutionCard {
     templateUrl: './dashboard-solutions.component.html',
     styleUrl: './dashboard-solutions.component.scss'
 })
-export class DashboardSolutionsComponent implements OnInit, OnDestroy {
+export class DashboardSolutionsComponent implements OnInit {
     private readonly solutionsPageService = inject(SolutionsPageService);
-    private readonly mediaService = inject(MediaService);
     private readonly dialogService = inject(DialogService);
     private readonly messageService = inject(MessageService);
     private readonly cdr = inject(ChangeDetectorRef);
@@ -43,31 +40,20 @@ export class DashboardSolutionsComponent implements OnInit, OnDestroy {
     isActive = true;
     isLoading = true;
     isSaving = false;
-    isUploadingImage = false;
-    attemptedSave = false;
-    touchedFields: Partial<Record<SolutionsFieldKey, boolean>> = {};
-
     topImageUrl: string | null = null;
     private persistedTopImageUrl: string | null = null;
-    private localTopPreviewUrl: string | null = null;
     openMenuCardId: number | null = null;
 
-    private idCounter = 0;
-    private readonly englishPattern = /^[A-Za-z0-9\s.,!?'"():;&%+\-_/–—''""]+$/;
-    private readonly mixedLanguagePattern = /^[A-Za-z\u0600-\u06FF\u0660-\u06690-9\s.,!?'"():;&%+\-_/،؛؟٪ـ–—''""]+$/;
-
     get canSave(): boolean {
-        const fields: SolutionsFieldKey[] = ['heroTextEn', 'heroTextAr'];
         return !!this.persistedTopImageUrl
-            && fields.every(f => !!this.getFieldValue(f).trim() && this.isFieldPatternValid(f))
+            && !!this.introContentByLang.en.trim()
+            && !!this.introContentByLang.ar.trim()
             && this.solutionsByLang.en.length > 0
             && this.solutionsByLang.en.every(c => !!c.imageUrl && !!c.title.trim() && !!c.content.trim())
             && this.solutionsByLang.ar.every(c => !!c.title.trim() && !!c.content.trim());
     }
 
-    get anyUploading(): boolean {
-        return this.isUploadingImage;
-    }
+    private idCounter = 0;
 
     readonly solutionsByLang: Record<SolutionsLang, SolutionCard[]> = {
         en: [],
@@ -121,41 +107,13 @@ export class DashboardSolutionsComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {
-        this.revokeTopPreviewUrl();
-    }
-
     onTopImageSelected(event: Event): void {
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0];
-        if (!file) return;
-
-        const previousUrl = this.topImageUrl;
-        this.isUploadingImage = true;
-        this.revokeTopPreviewUrl();
-        this.localTopPreviewUrl = URL.createObjectURL(file);
-        this.topImageUrl = this.localTopPreviewUrl;
-        this.cdr.detectChanges();
-
-        this.mediaService.upload(file, 'cms/solutions').subscribe({
-            next: (res) => {
-                this.persistedTopImageUrl = res.url;
-                this.isUploadingImage = false;
-                input.value = '';
-                this.messageService.add({ severity: 'success', summary: 'Uploaded', detail: 'Image uploaded.' });
-                this.swapToRemoteTopImageWhenReady(res.url);
-                this.cdr.detectChanges();
-            },
-            error: () => {
-                this.revokeTopPreviewUrl();
-                this.topImageUrl = previousUrl;
-                this.persistedTopImageUrl = previousUrl;
-                this.isUploadingImage = false;
-                input.value = '';
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Image upload failed.' });
-                this.cdr.detectChanges();
-            }
-        });
+        if (file) {
+            this.topImageUrl = URL.createObjectURL(file);
+            this.cdr.detectChanges();
+        }
     }
 
     onCardImageSelected(event: Event, lang: SolutionsLang, cardId: number): void {
@@ -171,27 +129,6 @@ export class DashboardSolutionsComponent implements OnInit, OnDestroy {
             }
             this.cdr.detectChanges();
         }
-    }
-
-    markFieldTouched(field: SolutionsFieldKey): void {
-        this.touchedFields[field] = true;
-    }
-
-    showRequiredError(field: SolutionsFieldKey): boolean {
-        return (this.attemptedSave || !!this.touchedFields[field]) && !this.getFieldValue(field).trim();
-    }
-
-    showPatternError(field: SolutionsFieldKey): boolean {
-        const value = this.getFieldValue(field).trim();
-        return (this.attemptedSave || !!this.touchedFields[field]) && !!value && !this.isFieldPatternValid(field);
-    }
-
-    requiredMessage(lang: SolutionsLang): string {
-        return lang === 'ar' ? 'هذا الحقل مطلوب.' : 'This field is required.';
-    }
-
-    patternMessage(lang: SolutionsLang): string {
-        return lang === 'ar' ? 'يرجى إدخال نص عربي أو إنجليزي فقط.' : 'Please enter English text only.';
     }
 
     addSolutionsGroup(): void {
@@ -282,14 +219,7 @@ export class DashboardSolutionsComponent implements OnInit, OnDestroy {
     }
 
     save(): void {
-        this.attemptedSave = true;
-
-        if (this.isSaving || this.anyUploading) return;
-        if (!this.canSave) {
-            this.showValidationWarning();
-            this.cdr.detectChanges();
-            return;
-        }
+        if (this.isSaving || !this.canSave) return;
 
         this.isSaving = true;
         this.solutionsPageService.save({
@@ -362,48 +292,6 @@ export class DashboardSolutionsComponent implements OnInit, OnDestroy {
             maximizable: false,
             closable: true
         });
-    }
-
-    private swapToRemoteTopImageWhenReady(url: string): void {
-        const img = new Image();
-        img.onload = () => {
-            this.topImageUrl = url;
-            this.revokeTopPreviewUrl();
-            this.cdr.detectChanges();
-        };
-        img.onerror = () => {
-            this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Image uploaded but preview is not ready yet.' });
-            this.cdr.detectChanges();
-        };
-        img.src = url;
-    }
-
-    private revokeTopPreviewUrl(): void {
-        if (this.localTopPreviewUrl) {
-            URL.revokeObjectURL(this.localTopPreviewUrl);
-            this.localTopPreviewUrl = null;
-        }
-    }
-
-    private showValidationWarning(): void {
-        const isArabic = this.activeTab === 'ar';
-        this.messageService.add({
-            severity: 'warn',
-            summary: isArabic ? 'تنبيه' : 'Validation',
-            detail: isArabic ? 'يرجى ملء جميع الحقول المطلوبة.' : 'Please fill all required fields.'
-        });
-    }
-
-    private getFieldValue(field: SolutionsFieldKey): string {
-        return field === 'heroTextAr' ? this.introContentByLang.ar : this.introContentByLang.en;
-    }
-
-    private isFieldPatternValid(field: SolutionsFieldKey): boolean {
-        const value = this.getFieldValue(field).trim();
-        if (!value) return false;
-        return field === 'heroTextAr'
-            ? this.mixedLanguagePattern.test(value)
-            : this.englishPattern.test(value);
     }
 
     private openSectionDialog(initial?: {

@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { finalize, shareReplay, tap } from 'rxjs/operators';
+import { catchError, finalize, map, shareReplay, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface PartnerLogoDto {
@@ -27,6 +27,38 @@ export class PartnersPageService {
     private cachedData: PartnersPageDto | null | undefined;
     private cacheTimestamp = 0;
     private inFlightRequest$: Observable<PartnersPageDto | null> | null = null;
+
+    private readonly _data = signal<PartnersPageDto | null>(null);
+    private readonly _isLoading = signal(false);
+    private readonly _error = signal<string | null>(null);
+    private readonly _hasLoaded = signal(false);
+
+    readonly data = this._data.asReadonly();
+    readonly isLoading = this._isLoading.asReadonly();
+    readonly error = this._error.asReadonly();
+    readonly hasLoaded = this._hasLoaded.asReadonly();
+
+    load(forceRefresh = false): Observable<void> {
+        if (!forceRefresh && this._hasLoaded()) {
+            return of(undefined);
+        }
+        if (this._isLoading() && !forceRefresh) {
+            return (this.inFlightRequest$ ?? this.get({ forceRefresh })).pipe(
+                map(() => undefined),
+                catchError(() => of(undefined))
+            );
+        }
+        this._isLoading.set(true);
+        this._error.set(null);
+        return this.get({ forceRefresh }).pipe(
+            catchError(() => {
+                this._error.set('Failed to load partners page data.');
+                return of(null as PartnersPageDto | null);
+            }),
+            finalize(() => this._isLoading.set(false)),
+            map(() => undefined)
+        );
+    }
 
     get(options?: { forceRefresh?: boolean }): Observable<PartnersPageDto | null> {
         if (!options?.forceRefresh && this.hasFreshCache()) {
@@ -56,6 +88,9 @@ export class PartnersPageService {
         this.cachedData = undefined;
         this.cacheTimestamp = 0;
         this.inFlightRequest$ = null;
+        this._data.set(null);
+        this._hasLoaded.set(false);
+        this._error.set(null);
     }
 
     private hasFreshCache(): boolean {
@@ -65,5 +100,7 @@ export class PartnersPageService {
     private setCache(data: PartnersPageDto | null): void {
         this.cachedData = data;
         this.cacheTimestamp = Date.now();
+        this._data.set(data);
+        this._hasLoaded.set(true);
     }
 }

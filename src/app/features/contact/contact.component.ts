@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MessageService } from 'primeng/api';
@@ -25,6 +25,7 @@ export class ContactComponent implements OnInit, OnDestroy {
     private readonly dialogConfig = inject(DynamicDialogConfig<ContactDialogData>, { optional: true });
     private readonly messageService = inject(MessageService, { optional: true });
     private readonly sanitizer = inject(DomSanitizer);
+    private readonly injector = inject(Injector);
 
     private dirObserver: MutationObserver | null = null;
     private queryParamSub: Subscription | null = null;
@@ -33,9 +34,15 @@ export class ContactComponent implements OnInit, OnDestroy {
     private previewLang: 'en' | 'ar' | null = null;
 
     isPreviewMode = false;
-    isLoading = true;
-    hasLoadError = false;
     isRtl = false;
+
+    get isLoading(): boolean {
+        return this.contactPageService.isLoading();
+    }
+
+    get hasLoadError(): boolean {
+        return !!this.contactPageService.error();
+    }
 
     heroDescription = '';
     contactTitle = '';
@@ -65,22 +72,33 @@ export class ContactComponent implements OnInit, OnDestroy {
             this.previewLang = lang;
             this.dataSource = dialogData.data;
             this.populate(dialogData.data, lang);
-            this.isLoading = false;
             return;
         }
 
         this.observeDirectionChanges();
         this.observeQueryLangChanges();
 
+        // Synchronous read: data already loaded by AppInitService or resolver
         const resolvedData = this.route.snapshot.data['contactPageData'] as ContactPageDto | null | undefined;
-        if (resolvedData !== undefined) {
-            this.dataSource = resolvedData;
-            this.applyCurrentLanguage();
-            this.isLoading = false;
-            return;
-        }
+        this.dataSource = resolvedData !== undefined ? resolvedData : this.contactPageService.data();
+        this.applyCurrentLanguage();
 
-        this.loadFromApi();
+        // Reactive effect for async data arrival (fallback)
+        effect(() => {
+            const data = this.contactPageService.data();
+            if (!data) return;
+            this.dataSource = data;
+            this.applyCurrentLanguage();
+        }, { injector: this.injector });
+
+        // Error display effect
+        effect(() => {
+            const err = this.contactPageService.error();
+            if (!err) return;
+            this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load contact page data.' });
+        }, { injector: this.injector });
+
+        this.contactPageService.load();
     }
 
     ngOnDestroy(): void {
@@ -130,22 +148,6 @@ export class ContactComponent implements OnInit, OnDestroy {
         }
 
         return trimmed.replace(/&amp;/g, '&');
-    }
-
-    private loadFromApi(): void {
-        this.contactPageService.get().subscribe({
-            next: (data) => {
-                this.dataSource = data;
-                this.applyCurrentLanguage();
-                this.hasLoadError = false;
-                this.isLoading = false;
-            },
-            error: () => {
-                this.hasLoadError = true;
-                this.isLoading = false;
-                this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load contact page data.' });
-            }
-        });
     }
 
     private resolveRouteLang(value: string | null): 'en' | 'ar' | null {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, of, Subscription } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -28,6 +28,7 @@ export class SolutionsComponent implements OnInit, OnDestroy {
     private readonly solutionSectionsService = inject(SolutionSectionsService);
     private readonly dialogConfig = inject(DynamicDialogConfig<SolutionsDialogData>, { optional: true });
     private readonly messageService = inject(MessageService, { optional: true });
+    private readonly injector = inject(Injector);
 
     private dirObserver: MutationObserver | null = null;
     private queryParamSub: Subscription | null = null;
@@ -42,10 +43,16 @@ export class SolutionsComponent implements OnInit, OnDestroy {
     solutionCards: { id: number; title: string; brief: string; imageUrl: string | null }[] = [];
 
     isRtl = false;
-    isLoading = true;
-    hasLoadError = false;
     isPreviewMode = false;
     openingCardId: number | null = null;
+
+    get isLoading(): boolean {
+        return this.solutionsPageService.isLoading();
+    }
+
+    get hasLoadError(): boolean {
+        return !!this.solutionsPageService.error();
+    }
 
     ngOnInit(): void {
         this.routeLang = this.resolveRouteLang(this.route.snapshot.queryParamMap.get('lang'));
@@ -55,23 +62,35 @@ export class SolutionsComponent implements OnInit, OnDestroy {
             this.isPreviewMode = true;
             this.dataSource = dialogData.data;
             this.populate(dialogData.data, dialogData.previewLang ?? 'en');
-            this.isLoading = false;
             return;
         }
 
         this.observeDirectionChanges();
         this.observeQueryLangChanges();
 
+        // Synchronous read: data already loaded by AppInitService or resolver
         const resolvedData = this.route.snapshot.data['solutionsPageData'] as SolutionsPageDto | null | undefined;
-        if (resolvedData !== undefined) {
-            this.dataSource = resolvedData;
+        this.dataSource = resolvedData !== undefined ? resolvedData : this.solutionsPageService.data();
+        this.applyCurrentLanguage();
+        this.prefetchSolutionSections();
+
+        // Reactive effect for async data arrival (fallback)
+        effect(() => {
+            const data = this.solutionsPageService.data();
+            if (!data) return;
+            this.dataSource = data;
             this.applyCurrentLanguage();
             this.prefetchSolutionSections();
-            this.isLoading = false;
-            return;
-        }
+        }, { injector: this.injector });
 
-        this.loadFromApi();
+        // Error display effect
+        effect(() => {
+            const err = this.solutionsPageService.error();
+            if (!err) return;
+            this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load solutions page data.' });
+        }, { injector: this.injector });
+
+        this.solutionsPageService.load();
     }
 
     ngOnDestroy(): void {
@@ -102,23 +121,6 @@ export class SolutionsComponent implements OnInit, OnDestroy {
             error: () => {
                 this.openingCardId = null;
                 this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load solution details.' });
-            }
-        });
-    }
-
-    private loadFromApi(): void {
-        this.solutionsPageService.get().subscribe({
-            next: (data) => {
-                this.dataSource = data;
-                this.applyCurrentLanguage();
-                this.prefetchSolutionSections();
-                this.hasLoadError = false;
-                this.isLoading = false;
-            },
-            error: () => {
-                this.hasLoadError = true;
-                this.isLoading = false;
-                this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load solutions page data.' });
             }
         });
     }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MessageService } from 'primeng/api';
@@ -24,6 +24,7 @@ export class AboutComponent implements OnInit, OnDestroy {
     private readonly aboutPageService = inject(AboutPageService);
     private readonly dialogConfig = inject(DynamicDialogConfig<AboutDialogData>, { optional: true });
     private readonly messageService = inject(MessageService, { optional: true });
+    private readonly injector = inject(Injector);
 
     private dirObserver: MutationObserver | null = null;
     private queryParamSub: Subscription | null = null;
@@ -54,8 +55,14 @@ export class AboutComponent implements OnInit, OnDestroy {
 
     isRtl = false;
     isPreviewMode = false;
-    isLoading = true;
-    hasLoadError = false;
+
+    get isLoading(): boolean {
+        return this.aboutPageService.isLoading();
+    }
+
+    get hasLoadError(): boolean {
+        return !!this.aboutPageService.error();
+    }
 
     private readonly labels = {
         en: {
@@ -102,22 +109,33 @@ export class AboutComponent implements OnInit, OnDestroy {
             this.previewLang = previewLang;
             this.dataSource = dialogData.data;
             this.populate(dialogData.data, previewLang);
-            this.isLoading = false;
             return;
         }
 
         this.observeDirectionChanges();
         this.observeQueryLangChanges();
 
+        // Synchronous read: data already loaded by AppInitService or resolver
         const resolvedData = this.route.snapshot.data['aboutPageData'] as AboutPageDto | null | undefined;
-        if (resolvedData !== undefined) {
-            this.dataSource = resolvedData;
-            this.applyCurrentLanguage();
-            this.isLoading = false;
-            return;
-        }
+        this.dataSource = resolvedData !== undefined ? resolvedData : this.aboutPageService.data();
+        this.applyCurrentLanguage();
 
-        this.loadFromApi();
+        // Reactive effect for async data arrival (fallback)
+        effect(() => {
+            const data = this.aboutPageService.data();
+            if (!data) return;
+            this.dataSource = data;
+            this.applyCurrentLanguage();
+        }, { injector: this.injector });
+
+        // Error display effect
+        effect(() => {
+            const err = this.aboutPageService.error();
+            if (!err) return;
+            this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load about page data.' });
+        }, { injector: this.injector });
+
+        this.aboutPageService.load();
     }
 
     ngOnDestroy(): void {
@@ -161,22 +179,6 @@ export class AboutComponent implements OnInit, OnDestroy {
         };
 
         this.teamMembers = [...data.teamMembers].sort((a, b) => a.displayOrder - b.displayOrder);
-    }
-
-    private loadFromApi(): void {
-        this.aboutPageService.get().subscribe({
-            next: (data) => {
-                this.dataSource = data;
-                this.applyCurrentLanguage();
-                this.hasLoadError = false;
-                this.isLoading = false;
-            },
-            error: () => {
-                this.hasLoadError = true;
-                this.isLoading = false;
-                this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load about page data.' });
-            }
-        });
     }
 
     private resolveRouteLang(value: string | null): 'en' | 'ar' | null {

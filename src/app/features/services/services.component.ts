@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, effect, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MessageService } from 'primeng/api';
@@ -24,6 +24,7 @@ export class ServicesComponent implements OnInit, OnDestroy {
     private readonly servicesPageService = inject(ServicesPageService);
     private readonly dialogConfig = inject(DynamicDialogConfig<ServicesDialogData>, { optional: true });
     private readonly messageService = inject(MessageService, { optional: true });
+    private readonly injector = inject(Injector);
 
     private dirObserver: MutationObserver | null = null;
     private queryParamSub: Subscription | null = null;
@@ -35,9 +36,15 @@ export class ServicesComponent implements OnInit, OnDestroy {
     serviceItems: { id: number; title: string; brief: string; imageUrl: string | null }[] = [];
 
     isRtl = false;
-    isLoading = true;
-    hasLoadError = false;
     isPreviewMode = false;
+
+    get isLoading(): boolean {
+        return this.servicesPageService.isLoading();
+    }
+
+    get hasLoadError(): boolean {
+        return !!this.servicesPageService.error();
+    }
 
     ngOnInit(): void {
         this.routeLang = this.resolveRouteLang(this.route.snapshot.queryParamMap.get('lang'));
@@ -47,22 +54,33 @@ export class ServicesComponent implements OnInit, OnDestroy {
             this.isPreviewMode = true;
             this.dataSource = dialogData.data;
             this.populate(dialogData.data, dialogData.previewLang ?? 'en');
-            this.isLoading = false;
             return;
         }
 
         this.observeDirectionChanges();
         this.observeQueryLangChanges();
 
+        // Synchronous read: data already loaded by AppInitService or resolver
         const resolvedData = this.route.snapshot.data['servicesPageData'] as ServicesPageDto | null | undefined;
-        if (resolvedData !== undefined) {
-            this.dataSource = resolvedData;
-            this.applyCurrentLanguage();
-            this.isLoading = false;
-            return;
-        }
+        this.dataSource = resolvedData !== undefined ? resolvedData : this.servicesPageService.data();
+        this.applyCurrentLanguage();
 
-        this.loadFromApi();
+        // Reactive effect for async data arrival (fallback)
+        effect(() => {
+            const data = this.servicesPageService.data();
+            if (!data) return;
+            this.dataSource = data;
+            this.applyCurrentLanguage();
+        }, { injector: this.injector });
+
+        // Error display effect
+        effect(() => {
+            const err = this.servicesPageService.error();
+            if (!err) return;
+            this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load services page data.' });
+        }, { injector: this.injector });
+
+        this.servicesPageService.load();
     }
 
     ngOnDestroy(): void {
@@ -70,22 +88,6 @@ export class ServicesComponent implements OnInit, OnDestroy {
         this.dirObserver = null;
         this.queryParamSub?.unsubscribe();
         this.queryParamSub = null;
-    }
-
-    private loadFromApi(): void {
-        this.servicesPageService.get().subscribe({
-            next: (data) => {
-                this.dataSource = data;
-                this.applyCurrentLanguage();
-                this.hasLoadError = false;
-                this.isLoading = false;
-            },
-            error: () => {
-                this.hasLoadError = true;
-                this.isLoading = false;
-                this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load services page data.' });
-            }
-        });
     }
 
     private populate(data: ServicesPageDto, lang: 'en' | 'ar'): void {

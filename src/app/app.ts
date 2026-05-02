@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, effect, inject, OnDestroy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Toast } from 'primeng/toast';
@@ -29,9 +30,10 @@ import { LoadingScreenComponent } from './shared/loading-screen/loading-screen.c
     <router-outlet />
   `
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
   protected readonly appInit = inject(AppInitService);
 
+  private readonly document = inject(DOCUMENT);
   private readonly translate = inject(TranslateService);
   private readonly directionService = inject(DirectionService);
 
@@ -45,7 +47,18 @@ export class AppComponent {
       this.directionService.setDirection(lang);
     });
 
+    effect(() => {
+      const isLoading = !this.appInit.isDone();
+      this.document.documentElement.classList.toggle('app-loading-lock', isLoading);
+      this.document.body.classList.toggle('app-loading-lock', isLoading);
+    });
+
     // Kick off parallel API pre-fetching immediately
     this.appInit.init();
+  }
+
+  ngOnDestroy(): void {
+    this.document.documentElement.classList.remove('app-loading-lock');
+    this.document.body.classList.remove('app-loading-lock');
   }
 }

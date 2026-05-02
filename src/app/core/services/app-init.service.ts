@@ -5,6 +5,8 @@ import { HomePageService } from './home-page.service';
 import { AboutPageService } from './about-page.service';
 import { ContactPageService } from './contact-page.service';
 import { PageStatusService } from './page-status.service';
+import { PartnersPageService } from './partners-page.service';
+import { ServicesPageService } from './services-page.service';
 
 @Injectable({ providedIn: 'root' })
 export class AppInitService {
@@ -12,9 +14,11 @@ export class AppInitService {
     private readonly aboutService = inject(AboutPageService);
     private readonly contactService = inject(ContactPageService);
     private readonly pageStatusService = inject(PageStatusService);
+    private readonly partnersService = inject(PartnersPageService);
+    private readonly servicesService = inject(ServicesPageService);
 
     private completedSteps = 0;
-    private readonly totalSteps = 4;
+    private readonly totalSteps = 6;
     private initialized = false;
 
     private readonly _progress = signal(5);
@@ -58,8 +62,18 @@ export class AppInitService {
             catchError(() => { this.onStepComplete('Page configuration ready'); return of(null); })
         );
 
+        const partners$ = this.partnersService.get().pipe(
+            tap(() => this.onStepComplete('Partners loaded')),
+            catchError(() => { this.onStepComplete('Partners loaded'); return of(null); })
+        );
+
+        const services$ = this.servicesService.get().pipe(
+            tap(() => this.onStepComplete('Services loaded')),
+            catchError(() => { this.onStepComplete('Services loaded'); return of(null); })
+        );
+
         // Minimum 2.4s display time so the experience always feels intentional
-        forkJoin([home$, about$, contact$, status$, timer(2400)]).subscribe({
+        forkJoin([home$, about$, contact$, status$, partners$, services$, timer(2400)]).subscribe({
             next: () => this.finish(),
             error: () => this.finish()
         });

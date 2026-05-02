@@ -25,6 +25,17 @@ body {
     overflow-x: hidden;
 }
 
+html.app-loading-lock,
+body.app-loading-lock {
+    height: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+}
+
+body.app-loading-lock {
+    touch-action: none;
+}
+
 // ─── PrimeNG Theme Overrides ───────────────────
 :root {
     --p-primary-color: #{$primary};

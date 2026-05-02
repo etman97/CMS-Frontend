@@ -15,9 +15,9 @@
                         [placeholder]="labels.enterGroupNameEn"
                     />
                     @if (showRequiredError('groupNameEn')) {
-                        <span class="validation-message">{{ requiredMessage('en') }}</span>
+                        <span class="validation-message">{{ requiredMessage(lang) }}</span>
                     } @else if (showPatternError('groupNameEn')) {
-                        <span class="validation-message">{{ patternMessage('en') }}</span>
+                        <span class="validation-message">{{ patternMessage(lang) }}</span>
                     }
                 </label>
             </div>
@@ -36,9 +36,9 @@
                         [placeholder]="labels.enterGroupNameAr"
                     />
                     @if (showRequiredError('groupNameAr')) {
-                        <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                        <span class="validation-message">{{ requiredMessage(lang) }}</span>
                     } @else if (showPatternError('groupNameAr')) {
-                        <span class="validation-message">{{ patternMessage('ar') }}</span>
+                        <span class="validation-message">{{ patternMessage(lang) }}</span>
                     }
                 </label>
             </div>
@@ -57,9 +57,9 @@
                         [placeholder]="labels.enterBriefEn"
                     ></textarea>
                     @if (showRequiredError('briefEn')) {
-                        <span class="validation-message">{{ requiredMessage('en') }}</span>
+                        <span class="validation-message">{{ requiredMessage(lang) }}</span>
                     } @else if (showPatternError('briefEn')) {
-                        <span class="validation-message">{{ patternMessage('en') }}</span>
+                        <span class="validation-message">{{ patternMessage(lang) }}</span>
                     }
                 </label>
             </div>
@@ -78,9 +78,9 @@
                         [placeholder]="labels.enterBriefAr"
                     ></textarea>
                     @if (showRequiredError('briefAr')) {
-                        <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                        <span class="validation-message">{{ requiredMessage(lang) }}</span>
                     } @else if (showPatternError('briefAr')) {
-                        <span class="validation-message">{{ patternMessage('ar') }}</span>
+                        <span class="validation-message">{{ patternMessage(lang) }}</span>
                     }
                 </label>
             </div>

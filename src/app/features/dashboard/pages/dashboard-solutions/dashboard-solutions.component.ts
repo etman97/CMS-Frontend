@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, NgZone, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
@@ -9,9 +9,11 @@ import { DashboardPageHeaderComponent } from '../../components/dashboard-page-he
 import { AddSectionDialogComponent } from '../dashboard-services/dialogs/add-section-dialog/add-section-dialog.component';
 import { AddSectionDialogResult } from '../dashboard-services/dialogs/add-section-dialog/add-section-dialog.model';
 import { SolutionsPageService } from '../../../../core/services/solutions-page.service';
+import { MediaService } from '../../../../core/services/media.service';
 import { SolutionsComponent, SolutionsDialogData } from '../../../solutions/solutions.component';
 
 type SolutionsLang = 'en' | 'ar';
+type SolutionsFieldKey = 'heroTextEn' | 'heroTextAr';
 
 interface SolutionCard {
     id: number;
@@ -28,8 +30,9 @@ interface SolutionCard {
     templateUrl: './dashboard-solutions.component.html',
     styleUrl: './dashboard-solutions.component.scss'
 })
-export class DashboardSolutionsComponent implements OnInit {
+export class DashboardSolutionsComponent implements OnInit, OnDestroy {
     private readonly solutionsPageService = inject(SolutionsPageService);
+    private readonly mediaService = inject(MediaService);
     private readonly dialogService = inject(DialogService);
     private readonly messageService = inject(MessageService);
     private readonly cdr = inject(ChangeDetectorRef);
@@ -40,20 +43,26 @@ export class DashboardSolutionsComponent implements OnInit {
     isActive = true;
     isLoading = true;
     isSaving = false;
+    isUploadingImage = false;
+    attemptedSave = false;
+    touchedFields: Partial<Record<SolutionsFieldKey, boolean>> = {};
     topImageUrl: string | null = null;
     private persistedTopImageUrl: string | null = null;
+    private localTopPreviewUrl: string | null = null;
     openMenuCardId: number | null = null;
 
     get canSave(): boolean {
-        return !!this.persistedTopImageUrl
-            && !!this.introContentByLang.en.trim()
-            && !!this.introContentByLang.ar.trim()
-            && this.solutionsByLang.en.length > 0
-            && this.solutionsByLang.en.every(c => !!c.imageUrl && !!c.title.trim() && !!c.content.trim())
-            && this.solutionsByLang.ar.every(c => !!c.title.trim() && !!c.content.trim());
+        return this.areRequiredFieldsValid() && this.areRequiredCardsValid();
+    }
+
+    get anyUploading(): boolean {
+        return this.isUploadingImage;
     }
 
     private idCounter = 0;
+    private readonly persistedCardIds = new Set<number>();
+    private readonly englishPattern = /^[A-Za-z0-9\s.,!?'"():;&%+\-_/–—‘’“”]+$/;
+    private readonly mixedLanguagePattern = /^[A-Za-z\u0600-\u06FF\u0660-\u06690-9\s.,!?'"():;&%+\-_/،؛؟٪ـ–—‘’“”]+$/;
 
     readonly solutionsByLang: Record<SolutionsLang, SolutionCard[]> = {
         en: [],
@@ -89,9 +98,11 @@ export class DashboardSolutionsComponent implements OnInit {
                     const sorted = [...data.solutionCards].sort((a, b) => a.displayOrder - b.displayOrder);
                     this.solutionsByLang.en = [];
                     this.solutionsByLang.ar = [];
+                    this.persistedCardIds.clear();
 
                     for (const card of sorted) {
                         this.idCounter = Math.max(this.idCounter, card.id);
+                        this.persistedCardIds.add(card.id);
                         this.solutionsByLang.en.push({ id: card.id, title: card.groupNameEn, content: card.briefEn, imageUrl: card.imageUrl });
                         this.solutionsByLang.ar.push({ id: card.id, title: card.groupNameAr, content: card.briefAr, imageUrl: card.imageUrl });
                     }
@@ -107,13 +118,42 @@ export class DashboardSolutionsComponent implements OnInit {
         });
     }
 
+    ngOnDestroy(): void {
+        this.revokeTopPreviewUrl();
+    }
+
     onTopImageSelected(event: Event): void {
         const input = event.target as HTMLInputElement;
         const file = input.files?.[0];
-        if (file) {
-            this.topImageUrl = URL.createObjectURL(file);
-            this.cdr.detectChanges();
-        }
+        if (!file) return;
+
+        const previousUrl = this.topImageUrl;
+        this.isUploadingImage = true;
+        this.revokeTopPreviewUrl();
+        this.localTopPreviewUrl = URL.createObjectURL(file);
+        this.topImageUrl = this.localTopPreviewUrl;
+        this.persistedTopImageUrl = null;
+        this.cdr.detectChanges();
+
+        this.mediaService.upload(file, 'cms/solutions').subscribe({
+            next: (res) => {
+                this.persistedTopImageUrl = res.url;
+                this.isUploadingImage = false;
+                input.value = '';
+                this.messageService.add({ severity: 'success', summary: 'Uploaded', detail: 'Image uploaded.' });
+                this.swapToRemoteTopImageWhenReady(res.url);
+                this.cdr.detectChanges();
+            },
+            error: () => {
+                this.revokeTopPreviewUrl();
+                this.topImageUrl = previousUrl;
+                this.persistedTopImageUrl = previousUrl;
+                this.isUploadingImage = false;
+                input.value = '';
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Image upload failed.' });
+                this.cdr.detectChanges();
+            }
+        });
     }
 
     onCardImageSelected(event: Event, lang: SolutionsLang, cardId: number): void {
@@ -206,9 +246,21 @@ export class DashboardSolutionsComponent implements OnInit {
         });
     }
 
-    openCardAccess(): void {
+    openCardAccess(cardId: number): void {
         this.closeCardMenu();
-        void this.router.navigate(['/dashboard/solutions/access']);
+
+        if (!this.persistedCardIds.has(cardId)) {
+            this.showAccessRequiresSavedCardWarning();
+            return;
+        }
+
+        const cardTitle = this.solutionsByLang[this.activeTab].find((card) => card.id === cardId)?.title
+            ?? this.solutionsByLang.en.find((card) => card.id === cardId)?.title
+            ?? `Card ${cardId}`;
+
+        void this.router.navigate(['/dashboard/solutions/access', cardId], {
+            state: { cardTitle }
+        });
     }
 
     removeSolutionCard(cardId: number): void {
@@ -218,8 +270,36 @@ export class DashboardSolutionsComponent implements OnInit {
         this.cdr.detectChanges();
     }
 
+    markFieldTouched(field: SolutionsFieldKey): void {
+        this.touchedFields[field] = true;
+    }
+
+    showRequiredError(field: SolutionsFieldKey): boolean {
+        return (this.attemptedSave || !!this.touchedFields[field]) && !this.getFieldValue(field).trim();
+    }
+
+    showPatternError(field: SolutionsFieldKey): boolean {
+        const value = this.getFieldValue(field).trim();
+        return (this.attemptedSave || !!this.touchedFields[field]) && !!value && !this.isFieldPatternValid(field);
+    }
+
+    requiredMessage(lang: SolutionsLang): string {
+        return lang === 'ar' ? 'هذا الحقل مطلوب.' : 'This field is required.';
+    }
+
+    patternMessage(lang: SolutionsLang): string {
+        return lang === 'ar' ? 'يرجى إدخال نص عربي أو إنجليزي فقط.' : 'Please enter English text only.';
+    }
+
     save(): void {
-        if (this.isSaving || !this.canSave) return;
+        this.attemptedSave = true;
+
+        if (this.isSaving || this.anyUploading) return;
+        if (!this.canSave) {
+            this.showValidationWarning();
+            this.cdr.detectChanges();
+            return;
+        }
 
         this.isSaving = true;
         this.solutionsPageService.save({
@@ -242,6 +322,8 @@ export class DashboardSolutionsComponent implements OnInit {
         }).subscribe({
             next: () => {
                 this.isSaving = false;
+                this.persistedCardIds.clear();
+                this.solutionsByLang.en.forEach((card) => this.persistedCardIds.add(card.id));
                 this.solutionsPageService.invalidateCache();
                 this.messageService.add({ severity: 'success', summary: 'Saved', detail: 'Solutions page saved.' });
                 this.cdr.markForCheck();
@@ -255,6 +337,14 @@ export class DashboardSolutionsComponent implements OnInit {
     }
 
     onPreview(): void {
+        this.attemptedSave = true;
+
+        if (!this.canSave) {
+            this.showValidationWarning();
+            this.cdr.detectChanges();
+            return;
+        }
+
         const previewLang: 'en' | 'ar' = this.activeTab === 'ar' ? 'ar' : 'en';
         const previewHeader = previewLang === 'ar' ? 'معاينة صفحة الحلول' : 'Solutions Preview';
 
@@ -294,6 +384,82 @@ export class DashboardSolutionsComponent implements OnInit {
         });
     }
 
+    private areRequiredFieldsValid(): boolean {
+        const fields: SolutionsFieldKey[] = ['heroTextEn', 'heroTextAr'];
+        return fields.every((field) => this.getFieldValue(field).trim() && this.isFieldPatternValid(field));
+    }
+
+    private areRequiredCardsValid(): boolean {
+        return !!this.persistedTopImageUrl
+            && this.solutionsByLang.en.length > 0
+            && this.solutionsByLang.en.every((enCard) => {
+                const arCard = this.solutionsByLang.ar.find((card) => card.id === enCard.id);
+                return !!enCard.imageUrl
+                    && !!enCard.title.trim()
+                    && !!enCard.content.trim()
+                    && !!arCard?.title.trim()
+                    && !!arCard?.content.trim()
+                    && this.englishPattern.test(enCard.title.trim())
+                    && this.englishPattern.test(enCard.content.trim())
+                    && this.mixedLanguagePattern.test(arCard.title.trim())
+                    && this.mixedLanguagePattern.test(arCard.content.trim());
+            });
+    }
+
+    private getFieldValue(field: SolutionsFieldKey): string {
+        return field === 'heroTextAr' ? this.introContentByLang.ar : this.introContentByLang.en;
+    }
+
+    private isFieldPatternValid(field: SolutionsFieldKey): boolean {
+        const value = this.getFieldValue(field).trim();
+        if (!value) return false;
+
+        return field === 'heroTextAr'
+            ? this.mixedLanguagePattern.test(value)
+            : this.englishPattern.test(value);
+    }
+
+    private swapToRemoteTopImageWhenReady(url: string): void {
+        const img = new Image();
+        img.onload = () => {
+            this.topImageUrl = url;
+            this.revokeTopPreviewUrl();
+            this.cdr.detectChanges();
+        };
+        img.onerror = () => {
+            this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Image uploaded but preview is not ready yet.' });
+            this.cdr.detectChanges();
+        };
+        img.src = url;
+    }
+
+    private revokeTopPreviewUrl(): void {
+        if (this.localTopPreviewUrl) {
+            URL.revokeObjectURL(this.localTopPreviewUrl);
+            this.localTopPreviewUrl = null;
+        }
+    }
+
+    private showValidationWarning(): void {
+        const isArabic = this.activeTab === 'ar';
+        this.messageService.add({
+            severity: 'warn',
+            summary: isArabic ? 'تنبيه' : 'Validation',
+            detail: isArabic ? 'يرجى ملء جميع الحقول المطلوبة.' : 'Please fill all required fields.'
+        });
+    }
+
+    private showAccessRequiresSavedCardWarning(): void {
+        const isArabic = this.activeTab === 'ar';
+        this.messageService.add({
+            severity: 'warn',
+            summary: isArabic ? 'تنبيه' : 'Warning',
+            detail: isArabic
+                ? 'يرجى حفظ بطاقة الحلول أولا حتى تظهر في الخلفية، ثم افتح الوصول.'
+                : 'Please save this solution card first so it appears in the backend, then open Access.'
+        });
+    }
+
     private openSectionDialog(initial?: {
         groupNameEn: string;
         groupNameAr: string;
@@ -304,8 +470,8 @@ export class DashboardSolutionsComponent implements OnInit {
         const lang = this.activeTab;
         const isRtl = lang === 'ar';
         const header = initial
-            ? (lang === 'ar' ? 'Edit Solutions Group' : 'Edit Solutions Group')
-            : (lang === 'ar' ? 'Add Solutions Group' : 'Add Solutions Group');
+            ? (lang === 'ar' ? 'تعديل مجموعة الحلول' : 'Edit Solutions Group')
+            : (lang === 'ar' ? 'إضافة مجموعة حلول' : 'Add Solutions Group');
 
         return this.dialogService.open(AddSectionDialogComponent, {
             header,

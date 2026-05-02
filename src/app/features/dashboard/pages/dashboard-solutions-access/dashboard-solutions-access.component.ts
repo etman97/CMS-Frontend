@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from 'primeng/tabs';
-import { forkJoin, of } from 'rxjs';
 import { PRIME_NG_CONFIGS } from '../../../../shared/prime-ng-configs';
 import { AddSectionAccessDialogComponent } from './dialogs/add-section-access-dialog/add-section-access-dialog.component';
 import { AddSectionAccessDialogResult } from './dialogs/add-section-access-dialog/add-section-access-dialog.model';
@@ -13,7 +12,6 @@ import {
     ImageChoice,
     UpsertSolutionSectionItem
 } from '../../../../core/services/solution-sections.service';
-import { MediaService } from '../../../../core/services/media.service';
 import { OneImage, OneImageDialogData } from '../../../solutions/one-image/one-image';
 import { TwoImages, TwoImagesDialogData } from '../../../solutions/two-images/two-images';
 
@@ -44,7 +42,6 @@ export class DashboardSolutionsAccessComponent implements OnInit {
     private readonly route = inject(ActivatedRoute);
     private readonly dialogService = inject(DialogService);
     private readonly solutionSectionsService = inject(SolutionSectionsService);
-    private readonly mediaService = inject(MediaService);
     private readonly messageService = inject(MessageService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly ngZone = inject(NgZone);
@@ -55,11 +52,15 @@ export class DashboardSolutionsAccessComponent implements OnInit {
     openMenuSectionId: number | null = null;
     isLoading = true;
     isSaving = false;
-    isUploading = false;
 
     sections: SolutionSection[] = [];
 
     private nextUid = 1;
+
+    get canSave(): boolean {
+        return this.sections.length > 0
+            && this.sections.every((section) => this.isSectionComplete(section));
+    }
 
     private get requiredImageMode(): 'one' | 'two' | null {
         const first = this.sections[0] ?? null;
@@ -109,40 +110,20 @@ export class DashboardSolutionsAccessComponent implements OnInit {
             this.ngZone.run(() => {
                 if (!result) return;
 
-                this.isUploading = true;
+                const imageChoice: ImageChoice = result.imageMode === 'two' ? 'TwoImages' : 'OneImage';
+                this.sections = [...this.sections, {
+                    uid: this.nextUid++,
+                    id: 0,
+                    titleEn: result.titleEn,
+                    titleAr: result.titleAr,
+                    paragraphEn: result.paragraphEn,
+                    paragraphAr: result.paragraphAr,
+                    imageChoice,
+                    imageUrl1: result.imageUrl1,
+                    imageUrl2: result.imageMode === 'two' ? result.imageUrl2 : null,
+                    displayOrder: this.sections.length
+                }];
                 this.cdr.detectChanges();
-
-                const upload1$ = result.firstImageFile
-                    ? this.mediaService.upload(result.firstImageFile, 'cms/solutions/sections')
-                    : of(null);
-                const upload2$ = result.imageMode === 'two' && result.secondImageFile
-                    ? this.mediaService.upload(result.secondImageFile, 'cms/solutions/sections')
-                    : of(null);
-
-                forkJoin([upload1$, upload2$]).subscribe({
-                    next: ([res1, res2]) => {
-                        const imageChoice: ImageChoice = result.imageMode === 'two' ? 'TwoImages' : 'OneImage';
-                        this.sections = [...this.sections, {
-                            uid: this.nextUid++,
-                            id: 0,
-                            titleEn: result.titleEn,
-                            titleAr: result.titleAr,
-                            paragraphEn: result.paragraphEn,
-                            paragraphAr: result.paragraphAr,
-                            imageChoice,
-                            imageUrl1: res1?.url ?? null,
-                            imageUrl2: res2?.url ?? null,
-                            displayOrder: this.sections.length
-                        }];
-                        this.isUploading = false;
-                        this.cdr.detectChanges();
-                    },
-                    error: () => {
-                        this.isUploading = false;
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Image upload failed.' });
-                        this.cdr.detectChanges();
-                    }
-                });
             });
         });
     }
@@ -176,40 +157,18 @@ export class DashboardSolutionsAccessComponent implements OnInit {
             this.ngZone.run(() => {
                 if (!result) return;
 
-                this.isUploading = true;
-                this.cdr.detectChanges();
-
-                const upload1$ = result.firstImageFile
-                    ? this.mediaService.upload(result.firstImageFile, 'cms/solutions/sections')
-                    : of(null);
-                const upload2$ = result.imageMode === 'two' && result.secondImageFile
-                    ? this.mediaService.upload(result.secondImageFile, 'cms/solutions/sections')
-                    : of(null);
-
-                forkJoin([upload1$, upload2$]).subscribe({
-                    next: ([res1, res2]) => {
-                        const imageChoice: ImageChoice = result.imageMode === 'two' ? 'TwoImages' : 'OneImage';
-                        this.sections = this.sections.map(s => s.uid !== uid ? s : {
-                            ...s,
-                            titleEn: result.titleEn,
-                            titleAr: result.titleAr,
-                            paragraphEn: result.paragraphEn,
-                            paragraphAr: result.paragraphAr,
-                            imageChoice,
-                            imageUrl1: res1?.url ?? section.imageUrl1,
-                            imageUrl2: imageChoice === 'TwoImages'
-                                ? (res2?.url ?? section.imageUrl2)
-                                : null
-                        });
-                        this.isUploading = false;
-                        this.cdr.detectChanges();
-                    },
-                    error: () => {
-                        this.isUploading = false;
-                        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Image upload failed.' });
-                        this.cdr.detectChanges();
-                    }
+                const imageChoice: ImageChoice = result.imageMode === 'two' ? 'TwoImages' : 'OneImage';
+                this.sections = this.sections.map(s => s.uid !== uid ? s : {
+                    ...s,
+                    titleEn: result.titleEn,
+                    titleAr: result.titleAr,
+                    paragraphEn: result.paragraphEn,
+                    paragraphAr: result.paragraphAr,
+                    imageChoice,
+                    imageUrl1: result.imageUrl1,
+                    imageUrl2: imageChoice === 'TwoImages' ? result.imageUrl2 : null
                 });
+                this.cdr.detectChanges();
             });
         });
     }
@@ -232,6 +191,11 @@ export class DashboardSolutionsAccessComponent implements OnInit {
     }
 
     onPreview(): void {
+        if (!this.canSave) {
+            this.showValidationWarning('preview');
+            return;
+        }
+
         const lang = this.activeTab;
         const isRtl = lang === 'ar';
         const imageChoice = this.sections[0]?.imageChoice ?? 'OneImage';
@@ -288,7 +252,11 @@ export class DashboardSolutionsAccessComponent implements OnInit {
     }
 
     save(): void {
-        if (this.isSaving || this.isUploading) return;
+        if (this.isSaving) return;
+        if (!this.canSave) {
+            this.showValidationWarning('save');
+            return;
+        }
 
         this.isSaving = true;
         const items: UpsertSolutionSectionItem[] = this.sections.map((s, index) => ({
@@ -334,4 +302,32 @@ export class DashboardSolutionsAccessComponent implements OnInit {
             }
         });
     }
+
+    private isSectionComplete(section: SolutionSection): boolean {
+        return Boolean(
+            section.titleEn.trim()
+            && section.titleAr.trim()
+            && section.paragraphEn.trim()
+            && section.paragraphAr.trim()
+            && section.imageUrl1
+            && (section.imageChoice !== 'TwoImages' || section.imageUrl2)
+        );
+    }
+
+    private showValidationWarning(action: 'preview' | 'save'): void {
+        const isArabic = this.activeTab === 'ar';
+        const englishDetail = action === 'preview'
+            ? 'Please add a complete section before preview.'
+            : 'Please add a complete section before saving.';
+        const arabicDetail = action === 'preview'
+            ? 'يرجى إضافة قسم مكتمل قبل المعاينة.'
+            : 'يرجى إضافة قسم مكتمل قبل الحفظ.';
+
+        this.messageService.add({
+            severity: 'warn',
+            summary: isArabic ? 'تنبيه' : 'Validation',
+            detail: isArabic ? arabicDetail : englishDetail
+        });
+    }
+
 }

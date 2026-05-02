@@ -63,7 +63,15 @@
     }
 
     .preview-btn {
+        border: 0;
         color: $primary;
+
+        &:hover,
+        &:focus,
+        &:active {
+            border: 0;
+            box-shadow: none;
+        }
     }
 
     .save-btn {

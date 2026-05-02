@@ -5,6 +5,7 @@ import { aboutPageResolver } from './core/resolvers/about-page.resolver';
 import { contactPageResolver } from './core/resolvers/contact-page.resolver';
 import { partnersPageResolver } from './core/resolvers/partners-page.resolver';
 import { servicesPageResolver } from './core/resolvers/services-page.resolver';
+import { solutionsPageResolver } from './core/resolvers/solutions-page.resolver';
 
 export const routes: Routes = [
     {
@@ -28,7 +29,8 @@ export const routes: Routes = [
             },
             {
                 path: 'solutions',
-                loadComponent: () => import('./features/solutions/solutions.component').then(m => m.SolutionsComponent)
+                loadComponent: () => import('./features/solutions/solutions.component').then(m => m.SolutionsComponent),
+                resolve: { solutionsPageData: solutionsPageResolver }
             },
             {
                 path: 'services',

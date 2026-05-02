@@ -10,6 +10,16 @@
   background: var(--color-primary, #2d2e83);
 }
 
+.solutions-page--preview {
+  min-height: unset;
+
+  a,
+  button,
+  [role='button'] {
+    pointer-events: none;
+  }
+}
+
 /* Hero */
 .hero {
   position: relative;

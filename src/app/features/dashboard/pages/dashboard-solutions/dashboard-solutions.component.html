@@ -1,8 +1,12 @@
-<div class="dashboard-solutions-page">
-    <app-dashboard-page-header
-        title="Solutions"
-        [(active)]="isActive"
-    />
+@if (isLoading) {
+<div class="page-loader">
+    <div class="spinner"></div>
+</div>
+}
+
+<div class="dashboard-solutions-page" [class.page-hidden]="isLoading">
+    <app-dashboard-page-header title="Solutions" [(active)]="isActive" [isSaving]="isSaving"
+        [saveDisabled]="isSaving || anyUploading || !canSave" (preview)="onPreview()" (save)="save()" />
 
     <p-tabs [(value)]="activeTab" class="solutions-tabs">
         <p-tablist>
@@ -13,16 +17,15 @@
         <p-tabpanels>
             <p-tabpanel value="en">
                 <section class="editor-card">
-                    <div
-                        class="editor-top"
-                        [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
-                        [class.editor-top--has-image]="topImageUrl"
-                    >
+                    <div class="editor-top" [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
+                        [class.editor-top--has-image]="topImageUrl">
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputEn.click()">
+                            <button type="button" class="icon-btn" aria-label="Upload image"
+                                (click)="topImageInputEn.click()" [disabled]="isUploadingImage">
                                 <i class="bi bi-upload"></i>
                             </button>
-                            <input #topImageInputEn type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <input #topImageInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden
+                                (change)="onTopImageSelected($event)" />
 
                             <button type="button" class="icon-btn" aria-label="Add link">
                                 <i class="bi bi-link-45deg"></i>
@@ -31,7 +34,16 @@
 
                         <article class="text-box">
                             <h2>{{ introByLang.en.title }}</h2>
-                            <textarea class="content-input" rows="3" [(ngModel)]="introContentByLang.en" [placeholder]="introByLang.en.placeholder"></textarea>
+                            <textarea class="content-input" rows="3" [(ngModel)]="introContentByLang.en"
+                                [class.is-invalid]="showRequiredError('heroTextEn') || showPatternError('heroTextEn')"
+                                (ngModelChange)="markFieldTouched('heroTextEn')"
+                                (blur)="markFieldTouched('heroTextEn')"
+                                [placeholder]="introByLang.en.placeholder"></textarea>
+                            @if (showRequiredError('heroTextEn')) {
+                                <span class="validation-message">{{ requiredMessage('en') }}</span>
+                            } @else if (showPatternError('heroTextEn')) {
+                                <span class="validation-message">{{ patternMessage('en') }}</span>
+                            }
                         </article>
                     </div>
 
@@ -42,24 +54,26 @@
                                 <div class="solution-card__head">
                                     <h3>{{ card.title }}</h3>
                                     <div class="solution-card__menu" (click)="closeCardMenu()">
-                                        <button type="button" class="menu-btn" aria-label="Card actions" (click)="toggleCardMenu(card.id, $event)">
+                                        <button type="button" class="menu-btn" aria-label="Card actions"
+                                            (click)="toggleCardMenu(card.id, $event)">
                                             <i class="bi bi-three-dots-vertical"></i>
                                         </button>
                                         @if (openMenuCardId === card.id) {
-                                            <div class="solution-actions-menu" (click)="$event.stopPropagation()">
-                                                <button type="button" (click)="editSolutionCard(card.id)">
-                                                    <i class="bi bi-pen"></i>
-                                                    <span>Edit</span>
-                                                </button>
-                                                <button type="button" (click)="openCardAccess()">
-                                                    <i class="bi bi-key"></i>
-                                                    <span>Access</span>
-                                                </button>
-                                                <button type="button" class="solution-actions-menu__delete" (click)="removeSolutionCard(card.id)">
-                                                    <i class="bi bi-trash3"></i>
-                                                    <span>Delete</span>
-                                                </button>
-                                            </div>
+                                        <div class="solution-actions-menu" (click)="$event.stopPropagation()">
+                                            <button type="button" (click)="editSolutionCard(card.id)">
+                                                <i class="bi bi-pen"></i>
+                                                <span>Edit</span>
+                                            </button>
+                                            <button type="button" (click)="openCardAccess()">
+                                                <i class="bi bi-key"></i>
+                                                <span>Access</span>
+                                            </button>
+                                            <button type="button" class="solution-actions-menu__delete"
+                                                (click)="removeSolutionCard(card.id)">
+                                                <i class="bi bi-trash3"></i>
+                                                <span>Delete</span>
+                                            </button>
+                                        </div>
                                         }
                                     </div>
                                 </div>
@@ -68,10 +82,10 @@
 
                                 <div class="solution-card__media" [class.solution-card__media--filled]="card.imageUrl">
                                     @if (card.imageUrl) {
-                                        <img [src]="card.imageUrl" [alt]="card.title" class="media-preview" />
+                                    <img [src]="card.imageUrl" [alt]="card.title" class="media-preview" />
                                     } @else {
-                                        <i class="bi bi-camera"></i>
-                                        <span>No image selected.</span>
+                                    <i class="bi bi-camera"></i>
+                                    <span>No image selected.</span>
                                     }
                                 </div>
                             </article>
@@ -88,16 +102,15 @@
 
             <p-tabpanel value="ar">
                 <section class="editor-card" dir="rtl">
-                    <div
-                        class="editor-top"
-                        [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
-                        [class.editor-top--has-image]="topImageUrl"
-                    >
+                    <div class="editor-top" [style.background-image]="topImageUrl ? 'url(' + topImageUrl + ')' : null"
+                        [class.editor-top--has-image]="topImageUrl">
                         <div class="panel-tools">
-                            <button type="button" class="icon-btn" aria-label="Upload image" (click)="topImageInputAr.click()">
+                            <button type="button" class="icon-btn" aria-label="Upload image"
+                                (click)="topImageInputAr.click()" [disabled]="isUploadingImage">
                                 <i class="bi bi-upload"></i>
                             </button>
-                            <input #topImageInputAr type="file" accept="image/png,image/jpeg" hidden (change)="onTopImageSelected($event)" />
+                            <input #topImageInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden
+                                (change)="onTopImageSelected($event)" />
 
                             <button type="button" class="icon-btn" aria-label="Add link">
                                 <i class="bi bi-link-45deg"></i>
@@ -106,7 +119,16 @@
 
                         <article class="text-box">
                             <h2>{{ introByLang.ar.title }}</h2>
-                            <textarea class="content-input" rows="3" [(ngModel)]="introContentByLang.ar" [placeholder]="introByLang.ar.placeholder"></textarea>
+                            <textarea class="content-input" rows="3" [(ngModel)]="introContentByLang.ar"
+                                [class.is-invalid]="showRequiredError('heroTextAr') || showPatternError('heroTextAr')"
+                                (ngModelChange)="markFieldTouched('heroTextAr')"
+                                (blur)="markFieldTouched('heroTextAr')"
+                                [placeholder]="introByLang.ar.placeholder"></textarea>
+                            @if (showRequiredError('heroTextAr')) {
+                                <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                            } @else if (showPatternError('heroTextAr')) {
+                                <span class="validation-message">{{ patternMessage('ar') }}</span>
+                            }
                         </article>
                     </div>
 
@@ -117,24 +139,26 @@
                                 <div class="solution-card__head">
                                     <h3>{{ card.title }}</h3>
                                     <div class="solution-card__menu" (click)="closeCardMenu()">
-                                        <button type="button" class="menu-btn" aria-label="Card actions" (click)="toggleCardMenu(card.id, $event)">
+                                        <button type="button" class="menu-btn" aria-label="Card actions"
+                                            (click)="toggleCardMenu(card.id, $event)">
                                             <i class="bi bi-three-dots-vertical"></i>
                                         </button>
                                         @if (openMenuCardId === card.id) {
-                                            <div class="solution-actions-menu" (click)="$event.stopPropagation()">
-                                                <button type="button" (click)="editSolutionCard(card.id)">
-                                                    <i class="bi bi-pen"></i>
-                                                    <span>تعديل</span>
-                                                </button>
-                                                <button type="button" (click)="openCardAccess()">
-                                                    <i class="bi bi-key"></i>
-                                                    <span>الوصول</span>
-                                                </button>
-                                                <button type="button" class="solution-actions-menu__delete" (click)="removeSolutionCard(card.id)">
-                                                    <i class="bi bi-trash3"></i>
-                                                    <span>حذف</span>
-                                                </button>
-                                            </div>
+                                        <div class="solution-actions-menu" (click)="$event.stopPropagation()">
+                                            <button type="button" (click)="editSolutionCard(card.id)">
+                                                <i class="bi bi-pen"></i>
+                                                <span>تعديل</span>
+                                            </button>
+                                            <button type="button" (click)="openCardAccess()">
+                                                <i class="bi bi-key"></i>
+                                                <span>الوصول</span>
+                                            </button>
+                                            <button type="button" class="solution-actions-menu__delete"
+                                                (click)="removeSolutionCard(card.id)">
+                                                <i class="bi bi-trash3"></i>
+                                                <span>حذف</span>
+                                            </button>
+                                        </div>
                                         }
                                     </div>
                                 </div>
@@ -143,10 +167,10 @@
 
                                 <div class="solution-card__media" [class.solution-card__media--filled]="card.imageUrl">
                                     @if (card.imageUrl) {
-                                        <img [src]="card.imageUrl" [alt]="card.title" class="media-preview" />
+                                    <img [src]="card.imageUrl" [alt]="card.title" class="media-preview" />
                                     } @else {
-                                        <i class="bi bi-camera"></i>
-                                        <span>لا توجد صورة.</span>
+                                    <i class="bi bi-camera"></i>
+                                    <span>لا توجد صورة.</span>
                                     }
                                 </div>
                             </article>

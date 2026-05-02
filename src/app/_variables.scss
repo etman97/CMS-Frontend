@@ -36,12 +36,41 @@ $sidebar-width: 260px;
 $sidebar-collapsed-width: 72px;
 $header-height: 64px;
 $container-max-width: 1280px;
+
+// Public spacing system
+$padding-horizontal-desktop: 32px;
+$padding-horizontal-tablet: 24px;
+$padding-horizontal-mobile: 16px;
+$padding-horizontal-small: 12px;
+
+$section-spacing-desktop: 48px;
+$section-spacing-tablet: 40px;
+$section-spacing-mobile: 32px;
+
+$navbar-content-spacing-desktop: 164px;
+$navbar-content-spacing-tablet: 120px;
+$navbar-content-spacing-mobile: 104px;
+
+$layout-gap-desktop: 24px;
+$layout-gap-tablet: 24px;
+$layout-gap-mobile: 20px;
+
+$breakpoint-tablet: 1024px;
+$breakpoint-mobile: 767px;
+
 $public-container-max-width: 1280px;
 $public-container-wide-max-width: 1760px;
-$public-container-gutter: 64px;
-$public-container-gutter-tablet: 48px;
-$public-container-gutter-mobile: 32px;
-$public-container-gutter-small: 24px;
+$layout-container-max-width: $public-container-max-width + ($padding-horizontal-desktop * 2);
+$layout-container-wide-max-width: $public-container-wide-max-width + ($padding-horizontal-desktop * 2);
+
+// Backward-compatible aliases for existing component styles.
+$public-container-gutter: $padding-horizontal-desktop * 2;
+$public-container-gutter-tablet: $padding-horizontal-tablet * 2;
+$public-container-gutter-mobile: $padding-horizontal-mobile * 2;
+$public-container-gutter-small: $padding-horizontal-small * 2;
+$public-page-top-space-desktop: $navbar-content-spacing-desktop;
+$public-page-top-space-tablet: $navbar-content-spacing-tablet;
+$public-page-top-space-mobile: $navbar-content-spacing-mobile;
 
 // ─── Font ──────────────────────────────────────
 $font-family: 'Alexandria', sans-serif;

@@ -16,12 +16,12 @@
   <div class="hero-glow hero-glow-bottom"></div>
 
   @if (hasLoadError && !isLoading) {
-    <section class="about-content" [attr.dir]="isRtl ? 'rtl' : 'ltr'">
+    <section class="layout-container about-content" [attr.dir]="isRtl ? 'rtl' : 'ltr'">
       <p class="load-error">{{ getLabel('loadError') }}</p>
     </section>
   }
 
-  <section class="about-content" [attr.dir]="isRtl ? 'rtl' : 'ltr'">
+  <section class="layout-container about-content" [attr.dir]="isRtl ? 'rtl' : 'ltr'">
     <div class="intro">
       <h1>{{ getLabel('title') }}</h1>
       <p>{{ aboutUsContent }}</p>
@@ -110,7 +110,7 @@
   </section>
 
   <section class="team-section" [attr.dir]="isRtl ? 'rtl' : 'ltr'">
-    <div class="team-content">
+    <div class="layout-container team-content">
       <h2>{{ getLabel('ourTeam') }}</h2>
 
       <div class="team-grid">

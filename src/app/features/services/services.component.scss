@@ -16,21 +16,12 @@
   }
 }
 
-.container {
-  width: min(calc(100% - #{v.$public-container-gutter}), v.$public-container-max-width);
-  max-width: none;
-  margin-right: auto;
-  margin-left: auto;
-  padding-right: 0;
-  padding-left: 0;
-}
-
 // ─── Hero ────────────────────────────────────────
 .hero {
   position: relative;
   background: v.$primary;
   min-height: 341px;
-  padding-top: 164px;
+  padding-top: v.$navbar-content-spacing-desktop;
   overflow: hidden;
 }
 
@@ -132,7 +123,7 @@
 
 // ─── Services List ───────────────────────────────
 .services-list {
-  padding: 24px 0;
+  padding: v.$section-spacing-desktop 0;
   background: v.$primary;
 }
 
@@ -194,6 +185,10 @@
 
 // ─── Responsive ──────────────────────────────────
 @media (max-width: 1199.98px) {
+  .hero {
+    padding-top: v.$navbar-content-spacing-tablet;
+  }
+
   .service-row,
   .service-row-image-first {
     grid-template-columns: minmax(0, 1fr) minmax(320px, 48%);
@@ -205,10 +200,6 @@
 }
 
 @media (max-width: 991.98px) {
-  .container {
-    width: min(calc(100% - #{v.$public-container-gutter-tablet}), v.$public-container-max-width);
-  }
-
   .service-row,
   .service-row-image-first {
     grid-template-columns: 1fr;
@@ -227,19 +218,12 @@
     aspect-ratio: 628 / 500;
   }
 
-  .hero {
-    padding-top: 120px;
-  }
 }
 
 @media (max-width: 767.98px) {
-  .container {
-    width: min(calc(100% - #{v.$public-container-gutter-mobile}), v.$public-container-max-width);
-  }
-
   .hero {
     min-height: auto;
-    padding-top: 104px;
+    padding-top: v.$navbar-content-spacing-mobile;
   }
 
   .hero-image-wrap,
@@ -281,15 +265,4 @@
   }
 }
 
-@media (max-width: 479.98px) {
-  .container {
-    width: min(calc(100% - #{v.$public-container-gutter-small}), v.$public-container-max-width);
-  }
-}
-
 // ─── 1920px Desktop ──────────────────────────────
-@media (min-width: 1920px) {
-  .container {
-    width: min(calc(100% - #{v.$public-container-gutter}), v.$public-container-max-width);
-  }
-}

@@ -112,9 +112,7 @@
 .contact-section__container {
   position: relative;
   z-index: 2;
-  width: min($public-container-max-width, calc(100% - #{$public-container-gutter}));
-  margin: 0 auto;
-  padding-top: 164px;
+  padding-top: $navbar-content-spacing-desktop;
   padding-bottom: 148px;
 }
 
@@ -355,14 +353,19 @@ a.info-text:hover {
   }
 }
 
+@media (max-width: 1199.98px) {
+  .contact-section__container {
+    padding-top: $navbar-content-spacing-tablet;
+  }
+}
+
 @media (max-width: 1024px) {
   .contact-section {
     min-height: auto;
   }
 
   .contact-section__container {
-    width: min($public-container-max-width, calc(100% - #{$public-container-gutter-tablet}));
-    padding-top: 140px;
+    padding-top: $navbar-content-spacing-tablet;
     padding-bottom: 96px;
   }
 
@@ -386,8 +389,7 @@ a.info-text:hover {
 
 @media (max-width: 768px) {
   .contact-section__container {
-    width: min($public-container-max-width, calc(100% - #{$public-container-gutter-mobile}));
-    padding-top: 104px;
+    padding-top: $navbar-content-spacing-mobile;
     padding-bottom: 72px;
   }
 
@@ -444,10 +446,6 @@ a.info-text:hover {
 }
 
 @media (max-width: 480px) {
-  .contact-section__container {
-    width: min($public-container-max-width, calc(100% - #{$public-container-gutter-small}));
-  }
-
   .contact-hero h1 {
     font-size: 24px;
   }

@@ -14,11 +14,11 @@
   padding: 12px 0;
 }
 
-.wes-navbar .container {
-  width: min(calc(100% - #{$public-container-gutter}), $public-container-max-width);
-  max-width: none;
-  padding-left: 0;
-  padding-right: 0;
+.wes-navbar .layout-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: inherit;
 }
 
 .wes-logo {
@@ -105,8 +105,7 @@
 }
 
 @media (max-width: 991.98px) {
-  .wes-navbar .container {
-    width: min(calc(100% - #{$public-container-gutter-tablet}), $public-container-max-width);
+  .wes-navbar .layout-container {
     align-items: center;
     flex-wrap: wrap;
   }
@@ -151,21 +150,6 @@
   }
 }
 
-@media (max-width: 767.98px) {
-  .wes-navbar .container {
-    width: min(calc(100% - #{$public-container-gutter-mobile}), $public-container-max-width);
-  }
-}
-
-@media (max-width: 479.98px) {
-  .wes-navbar .container {
-    width: min(calc(100% - #{$public-container-gutter-small}), $public-container-max-width);
-  }
-}
+ 
 
 // ─── 1920px Desktop ──────────────────────────────
-@media (min-width: 1920px) {
-  .wes-navbar .container {
-    width: min(calc(100% - #{$public-container-gutter}), $public-container-max-width);
-  }
-}

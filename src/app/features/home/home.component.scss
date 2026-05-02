@@ -5,20 +5,13 @@
   background: $primary;
 }
 
-.home-page .container {
-  width: min(calc(100% - #{$public-container-gutter}), $public-container-max-width);
-  max-width: none;
-  padding-left: 0;
-  padding-right: 0;
-}
-
 // ─── Hero ────────────────────────────────────────
 .hero-section {
   position: relative;
   min-height: 1024px;
   background: linear-gradient(rgba(45, 46, 131, 0.25), rgba(45, 46, 131, 0.25));
   overflow: hidden;
-  padding: 72px 0 96px;
+  padding: $navbar-content-spacing-desktop 0 96px;
 }
 
 .hero-overlay {
@@ -123,11 +116,6 @@
   position: relative;
   background: $primary;
 
-  .container-fluid {
-    width: min(calc(100% - #{$public-container-gutter}), $public-container-max-width);
-    margin: 0 auto;
-  }
-
   .row {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -142,7 +130,7 @@
 }
 
 .section-title-wrap {
-  padding: 46px 0;
+  padding: $section-spacing-desktop 0;
   text-align: center;
 }
 
@@ -249,7 +237,8 @@
 @media (max-width: 1199.98px) {
   .hero-section {
     min-height: 760px;
-    padding: 72px 0 88px;
+    padding: $navbar-content-spacing-tablet 0 88px;
+    align-items: flex-start !important;
   }
 
   .hero-title { font-size: 56px; }
@@ -264,11 +253,7 @@
 @media (max-width: 991.98px) {
   .hero-section {
     min-height: 680px;
-    padding: 72px 0 72px;
-  }
-
-  .home-page .container {
-    width: min(calc(100% - #{$public-container-gutter-tablet}), $public-container-max-width);
+    padding: $navbar-content-spacing-tablet 0 72px;
   }
 
   .hero-title { font-size: 46px; }
@@ -287,10 +272,6 @@
   }
 
   .solutions-section {
-    .container-fluid {
-      width: min(calc(100% - #{$public-container-gutter-tablet}), $public-container-max-width);
-    }
-
     .row {
       grid-template-columns: 1fr;
     }
@@ -309,29 +290,19 @@
 @media (max-width: 767.98px) {
   .hero-section {
     min-height: 560px;
-    padding: 72px 0 56px;
+    padding: $navbar-content-spacing-mobile 0 56px;
   }
 
   .hero-title { font-size: 36px; }
   .hero-text  { font-size: 16px; }
 
   .section-title-wrap {
-    padding: 36px 0 28px;
+    padding: $section-spacing-mobile 0 28px;
   }
 
   .section-title,
   .partners-title {
     font-size: 28px;
-  }
-
-  .solutions-section {
-    .container-fluid {
-      width: min(calc(100% - #{$public-container-gutter-mobile}), $public-container-max-width);
-    }
-  }
-
-  .home-page .container {
-    width: min(calc(100% - #{$public-container-gutter-mobile}), $public-container-max-width);
   }
 
   .hero-actions .btn {
@@ -376,7 +347,7 @@
 @media (max-width: 479.98px) {
   .hero-section {
     min-height: 520px;
-    padding: 72px 0 48px;
+    padding: $navbar-content-spacing-mobile 0 48px;
   }
 
   .hero-title {
@@ -385,16 +356,6 @@
 
   .hero-text {
     font-size: 15px;
-  }
-
-  .solutions-section {
-    .container-fluid {
-      width: min(calc(100% - #{$public-container-gutter-small}), $public-container-max-width);
-    }
-  }
-
-  .home-page .container {
-    width: min(calc(100% - #{$public-container-gutter-small}), $public-container-max-width);
   }
 
   .solution-card {
@@ -420,8 +381,3 @@
   }
 }
 
-@media (min-width: 1920px) {
-  .container {
-    width: min(calc(100% - #{$public-container-gutter}), $public-container-wide-max-width);
-  }
-}

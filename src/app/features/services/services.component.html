@@ -23,7 +23,7 @@
       <div class="hero-overlay"></div>
     </div>
 
-    <div class="container hero-content">
+    <div class="layout-container hero-content">
       <h1 class="hero-label">{{ isRtl ? 'الخدمات' : 'Services' }}</h1>
       <p class="hero-text">{{ heroText }}</p>
     </div>
@@ -31,7 +31,7 @@
 
   <!-- Services List -->
   <section class="services-list">
-    <div class="container services-grid">
+    <div class="layout-container services-grid">
       @for (item of serviceItems; track item.id; let i = $index) {
         <article class="service-row" [class.service-row-text-first]="i % 2 === 0" [class.service-row-image-first]="i % 2 === 1">
           @if (i % 2 === 0) {

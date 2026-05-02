@@ -33,7 +33,7 @@
 .hero-section {
   position: relative;
   min-height: 1483px;
-  padding-top: 154px;
+  padding-top: $navbar-content-spacing-desktop;
   padding-bottom: 80px;
   background: $primary;
   overflow: hidden;
@@ -104,8 +104,6 @@
 .about-content {
   position: relative;
   z-index: 3;
-  width: min(calc(100% - #{$public-container-gutter}), $public-container-max-width);
-  margin: 0 auto;
 }
 
 .load-error {
@@ -272,14 +270,11 @@
 .team-section {
   position: relative;
   z-index: 3;
-  padding: 46px 0 48px;
+  padding: $section-spacing-desktop 0;
   background: $primary;
 }
 
 .team-content {
-  width: min(calc(100% - #{$public-container-gutter}), $public-container-max-width);
-  margin: 0 auto;
-
   h2 {
     margin: 0;
     font-size: 40px;
@@ -369,12 +364,9 @@
 }
 
 @media (max-width: 1200px) {
-  .about-content {
-    width: min(calc(100% - #{$public-container-gutter-tablet}), $public-container-max-width);
-  }
-
-  .team-content {
-    width: min(calc(100% - #{$public-container-gutter-tablet}), $public-container-max-width);
+  .hero-section {
+    min-height: auto;
+    padding-top: $navbar-content-spacing-tablet;
   }
 
   .cards {
@@ -392,8 +384,7 @@
 
 @media (max-width: 992px) {
   .hero-section {
-    min-height: auto;
-    padding-top: 120px;
+    padding-top: $navbar-content-spacing-tablet;
     padding-bottom: 64px;
   }
 
@@ -417,15 +408,7 @@
 
 @media (max-width: 640px) {
   .hero-section {
-    padding-top: 104px;
-  }
-
-  .about-content {
-    width: min(calc(100% - #{$public-container-gutter-mobile}), $public-container-max-width);
-  }
-
-  .team-content {
-    width: min(calc(100% - #{$public-container-gutter-mobile}), $public-container-max-width);
+    padding-top: $navbar-content-spacing-mobile;
   }
 
   .intro h1 {
@@ -467,24 +450,6 @@
 
 @media (max-width: 480px) {
   .hero-section {
-    padding-top: 96px;
-  }
-
-  .about-content {
-    width: min(calc(100% - #{$public-container-gutter-small}), $public-container-max-width);
-  }
-
-  .team-content {
-    width: min(calc(100% - #{$public-container-gutter-small}), $public-container-max-width);
-  }
-}
-
-@media (min-width: 1920px) {
-  .about-content {
-    width: min(calc(100% - #{$public-container-gutter}), $public-container-max-width);
-  }
-
-  .team-content {
-    width: min(calc(100% - #{$public-container-gutter}), $public-container-max-width);
+    padding-top: $navbar-content-spacing-mobile;
   }
 }

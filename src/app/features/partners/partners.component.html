@@ -11,14 +11,14 @@
     <div class="hero-blur hero-blur-right"></div>
     <div class="hero-blur hero-blur-bottom"></div>
 
-    <div class="container hero-content">
+    <div class="layout-container hero-content">
       <h1 class="page-title">{{ isRtl ? 'شركاؤنا' : 'Our Partners' }}</h1>
       <p class="page-subtitle">{{ subtitle }}</p>
     </div>
   </section>
 
   <section class="partners-section">
-    <div class="container">
+    <div class="layout-container">
       <div class="partners-grid">
         @for (logo of partnerLogos; track logo.id) {
           <article class="partner-card">

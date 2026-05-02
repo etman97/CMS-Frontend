@@ -352,6 +352,11 @@ select {
     overflow: hidden;
 }
 
+.page-hidden * {
+    animation: none !important;
+    transition: none !important;
+}
+
 // Shared dashboard responsiveness guards
 @media (max-width: 992px) {
     .dashboard,
@@ -377,5 +382,505 @@ select {
     .p-dialog {
         margin: 0 0.5rem;
         width: calc(100vw - 1rem) !important;
+    }
+}
+
+// Dashboard motion layer
+:where(
+    .dashboard,
+    .dashboard-home-page:not(.page-hidden),
+    .dashboard-about-us-page:not(.page-hidden),
+    .dashboard-solutions-page:not(.page-hidden),
+    .dashboard-solutions-access-page:not(.page-hidden),
+    .dashboard-services-page:not(.page-hidden),
+    .dashboard-partners-page:not(.page-hidden),
+    .dashboard-contact-us-page:not(.page-hidden)
+) {
+    animation: dashboard-page-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.solutions-access-page:not(.page-hidden) {
+    animation: dashboard-page-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.solutions-access-page .page-header {
+    animation: dashboard-slide-down 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.solutions-access-page :where(.solutions-tabs, .editor-card) {
+    animation: dashboard-card-reveal 0.55s 0.08s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.solutions-access-page :where(.editor-bottom, .service-row, .add-section-btn) {
+    animation: dashboard-item-reveal 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.solutions-access-page .service-row:nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+.solutions-access-page .service-row:nth-child(2) {
+    animation-delay: 0.14s;
+}
+
+.solutions-access-page .service-row:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.solutions-access-page .service-row:nth-child(n + 4) {
+    animation-delay: 0.26s;
+}
+
+.solutions-access-page :where(.back-link, .menu-btn, .preview-btn, .save-btn, .add-section-btn) {
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
+}
+
+.solutions-access-page :where(.back-link, .menu-btn, .preview-btn, .save-btn, .add-section-btn):where(:hover, :focus-visible) {
+    transform: translateY(-2px);
+    filter: saturate(1.08);
+}
+
+.solutions-access-page :where(.back-link, .menu-btn, .preview-btn, .save-btn, .add-section-btn):active {
+    transform: translateY(0) scale(0.97);
+}
+
+.solutions-access-page :where(.service-row, .editor-card) {
+    transition:
+        transform 0.28s ease,
+        box-shadow 0.28s ease,
+        border-color 0.28s ease;
+}
+
+.solutions-access-page .service-row:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(45, 46, 131, 0.08);
+}
+
+.solutions-access-page .section-actions-menu {
+    animation: dashboard-menu-pop 0.18s ease both;
+    transform-origin: top right;
+}
+
+.solutions-access-page [dir='rtl'] .section-actions-menu {
+    transform-origin: top left;
+}
+
+.solutions-access-page .service-row__media img {
+    transition:
+        transform 0.45s ease,
+        filter 0.45s ease;
+}
+
+.solutions-access-page .service-row__media:hover img {
+    transform: scale(1.035);
+    filter: saturate(1.06);
+}
+
+.solutions-access-page .add-section-btn:hover i {
+    animation: dashboard-plus-spark 0.42s ease both;
+}
+
+.solutions-access-page :where(.p-tab) {
+    transition:
+        color 0.24s ease,
+        border-color 0.24s ease,
+        transform 0.24s ease;
+}
+
+.solutions-access-page :where(.p-tab:hover, .p-tab-active) {
+    transform: translateY(-1px);
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) app-dashboard-page-header {
+    animation: dashboard-slide-down 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    display: block;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.editor-card, .home-tabs, .about-tabs, .solutions-tabs, .services-tabs, .partners-tabs, .contact-tabs) {
+    animation: dashboard-card-reveal 0.55s 0.08s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.editor-top, .editor-bottom, .hero-fields, .text-box, .service-row, .solution-card, .partner-card, .team-card, .add-section-btn, .add-group-card, .add-partner-card, .add-member) {
+    animation: dashboard-item-reveal 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.text-box, .service-row, .solution-card, .partner-card, .team-card):nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.text-box, .service-row, .solution-card, .partner-card, .team-card):nth-child(2) {
+    animation-delay: 0.14s;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.text-box, .service-row, .solution-card, .partner-card, .team-card):nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.text-box, .service-row, .solution-card, .partner-card, .team-card):nth-child(n + 4) {
+    animation-delay: 0.26s;
+}
+
+:where(.stats-grid, .sections-grid, .activity-list) > * {
+    animation: dashboard-item-reveal 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+:where(.stats-grid, .sections-grid, .activity-list) > *:nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+:where(.stats-grid, .sections-grid, .activity-list) > *:nth-child(2) {
+    animation-delay: 0.14s;
+}
+
+:where(.stats-grid, .sections-grid, .activity-list) > *:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+:where(.stats-grid, .sections-grid, .activity-list) > *:nth-child(n + 4) {
+    animation-delay: 0.26s;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.icon-btn, .edit-btn, .menu-btn, .delete-btn, .team-more, .preview-btn, .save-btn, .add-section-btn, .add-group-card, .add-partner-card, .add-member) {
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.icon-btn, .edit-btn, .menu-btn, .delete-btn, .team-more, .preview-btn, .save-btn, .add-section-btn, .add-group-card, .add-partner-card, .add-member):where(:hover, :focus-visible) {
+    transform: translateY(-2px);
+    filter: saturate(1.08);
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.icon-btn, .edit-btn, .menu-btn, .delete-btn, .team-more, .preview-btn, .save-btn, .add-section-btn, .add-group-card, .add-partner-card, .add-member):active {
+    transform: translateY(0) scale(0.97);
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.text-box, .service-row, .solution-card, .partner-card, .team-card, .editor-card) {
+    transition:
+        transform 0.28s ease,
+        box-shadow 0.28s ease,
+        border-color 0.28s ease;
+}
+
+:where(
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.text-box, .service-row, .solution-card, .partner-card, .team-card):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(45, 46, 131, 0.08);
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.field-input, .content-input, .form-control, .number-input):focus {
+    animation: dashboard-focus-pulse 0.45s ease both;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.section-actions-menu, .solution-actions-menu, .team-actions-menu) {
+    animation: dashboard-menu-pop 0.18s ease both;
+    transform-origin: top right;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where([dir='rtl'] .section-actions-menu, [dir='rtl'] .solution-actions-menu, [dir='rtl'] .team-actions-menu) {
+    transform-origin: top left;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.solution-card__media img, .service-row__media img, .partner-card__logo img, .team-card img, .upload-preview, .media-preview) {
+    transition:
+        transform 0.45s ease,
+        filter 0.45s ease;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.solution-card__media:hover img, .service-row__media:hover img, .partner-card__logo:hover img, .team-card:hover img, .upload-area:hover .upload-preview) {
+    transform: scale(1.035);
+    filter: saturate(1.06);
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.add-group-card:hover .add-group-icon, .add-member:hover .add-member__plus, .add-section-btn:hover i, .add-partner-card:hover i) {
+    animation: dashboard-plus-spark 0.42s ease both;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.p-tab) {
+    transition:
+        color 0.24s ease,
+        border-color 0.24s ease,
+        transform 0.24s ease;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.p-tab:hover, .p-tab-active) {
+    transform: translateY(-1px);
+}
+
+@keyframes dashboard-page-rise {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes dashboard-slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes dashboard-card-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes dashboard-item-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes dashboard-menu-pop {
+    from {
+        opacity: 0;
+        transform: translateY(-4px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes dashboard-focus-pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.006);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes dashboard-plus-spark {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(90deg) scale(1.12);
+    }
+
+    100% {
+        transform: rotate(90deg) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :where(
+        .dashboard,
+        .dashboard-home-page,
+        .dashboard-about-us-page,
+        .dashboard-solutions-page,
+        .dashboard-solutions-access-page,
+        .solutions-access-page,
+        .dashboard-services-page,
+        .dashboard-partners-page,
+        .dashboard-contact-us-page,
+        .dashboard *,
+        .dashboard-home-page *,
+        .dashboard-about-us-page *,
+        .dashboard-solutions-page *,
+        .dashboard-solutions-access-page *,
+        .solutions-access-page *,
+        .dashboard-services-page *,
+        .dashboard-partners-page *,
+        .dashboard-contact-us-page *
+    ) {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
     }
 }

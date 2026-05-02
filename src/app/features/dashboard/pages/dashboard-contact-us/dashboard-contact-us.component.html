@@ -100,6 +100,34 @@
                                             <span class="validation-message">{{ patternMessage('address', 'en') }}</span>
                                         }
                                     </div>
+
+                                    <div class="field-group">
+                                        <input type="text" class="field-input" [(ngModel)]="facebookUrl"
+                                            [class.is-invalid]="showRequiredError('facebookUrl') || showPatternError('facebookUrl')"
+                                            (ngModelChange)="markFieldTouched('facebookUrl')"
+                                            (input)="markFieldTouched('facebookUrl')"
+                                            (blur)="markFieldTouched('facebookUrl')"
+                                            placeholder="Facebook URL" />
+                                        @if (showRequiredError('facebookUrl')) {
+                                            <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                        } @else if (showPatternError('facebookUrl')) {
+                                            <span class="validation-message">{{ patternMessage('facebookUrl', 'en') }}</span>
+                                        }
+                                    </div>
+
+                                    <div class="field-group">
+                                        <input type="text" class="field-input" [(ngModel)]="linkedInUrl"
+                                            [class.is-invalid]="showRequiredError('linkedInUrl') || showPatternError('linkedInUrl')"
+                                            (ngModelChange)="markFieldTouched('linkedInUrl')"
+                                            (input)="markFieldTouched('linkedInUrl')"
+                                            (blur)="markFieldTouched('linkedInUrl')"
+                                            placeholder="LinkedIn URL" />
+                                        @if (showRequiredError('linkedInUrl')) {
+                                            <span class="validation-message">{{ requiredMessage('en') }}</span>
+                                        } @else if (showPatternError('linkedInUrl')) {
+                                            <span class="validation-message">{{ patternMessage('linkedInUrl', 'en') }}</span>
+                                        }
+                                    </div>
                                 </div>
                             </article>
 
@@ -199,6 +227,34 @@
                                             <span class="validation-message">{{ requiredMessage('ar') }}</span>
                                         } @else if (showPatternError('address')) {
                                             <span class="validation-message">{{ patternMessage('address', 'ar') }}</span>
+                                        }
+                                    </div>
+
+                                    <div class="field-group">
+                                        <input type="text" class="field-input" [(ngModel)]="facebookUrl"
+                                            [class.is-invalid]="showRequiredError('facebookUrl') || showPatternError('facebookUrl')"
+                                            (ngModelChange)="markFieldTouched('facebookUrl')"
+                                            (input)="markFieldTouched('facebookUrl')"
+                                            (blur)="markFieldTouched('facebookUrl')"
+                                            placeholder="رابط فيسبوك" />
+                                        @if (showRequiredError('facebookUrl')) {
+                                            <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                        } @else if (showPatternError('facebookUrl')) {
+                                            <span class="validation-message">{{ patternMessage('facebookUrl', 'ar') }}</span>
+                                        }
+                                    </div>
+
+                                    <div class="field-group">
+                                        <input type="text" class="field-input" [(ngModel)]="linkedInUrl"
+                                            [class.is-invalid]="showRequiredError('linkedInUrl') || showPatternError('linkedInUrl')"
+                                            (ngModelChange)="markFieldTouched('linkedInUrl')"
+                                            (input)="markFieldTouched('linkedInUrl')"
+                                            (blur)="markFieldTouched('linkedInUrl')"
+                                            placeholder="رابط لينكد إن" />
+                                        @if (showRequiredError('linkedInUrl')) {
+                                            <span class="validation-message">{{ requiredMessage('ar') }}</span>
+                                        } @else if (showPatternError('linkedInUrl')) {
+                                            <span class="validation-message">{{ patternMessage('linkedInUrl', 'ar') }}</span>
                                         }
                                     </div>
                                 </div>

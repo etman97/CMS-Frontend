@@ -16,12 +16,16 @@
 
         <div class="footer-social d-flex align-items-center gap-3">
           <span>{{ 'footer.followUs' | translate }}</span>
-          <a href="#" aria-label="Facebook">
-            <i class="bi bi-facebook footer-social-icon"></i>
-          </a>
-          <a href="#" aria-label="LinkedIn">
-            <i class="bi bi-linkedin footer-social-icon"></i>
-          </a>
+          @if (facebookUrl) {
+            <a [href]="facebookUrl" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+              <i class="bi bi-facebook footer-social-icon"></i>
+            </a>
+          }
+          @if (linkedInUrl) {
+            <a [href]="linkedInUrl" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <i class="bi bi-linkedin footer-social-icon"></i>
+            </a>
+          }
         </div>
 
         <p class="footer-copy mt-4 mb-0">
@@ -49,26 +53,32 @@
       <div class="col-lg-4 footer-contact-col">
         <h4 class="footer-title">{{ 'footer.contactUs' | translate }}</h4>
         <ul class="footer-contact list-unstyled mb-0">
-          <li>
-            <i class="bi bi-telephone footer-contact-icon"></i>
-            <span>+2 010 9333 4886</span>
-          </li>
-          <li>
-            <i class="bi bi-envelope footer-contact-icon"></i>
-            <span>info&#64;wes.com</span>
-          </li>
-          <li>
-            <i class="bi bi bi-map footer-contact-icon"></i>
-            <span>25-Corniche EL Nile-Tower 3-Floor 23, Maadi, Cairo, Egypt.</span>
-          </li>
+          @if (phone) {
+            <li>
+              <i class="bi bi-telephone footer-contact-icon"></i>
+              <a [href]="'tel:' + phone">{{ phone }}</a>
+            </li>
+          }
+          @if (email) {
+            <li>
+              <i class="bi bi-envelope footer-contact-icon"></i>
+              <a [href]="'mailto:' + email">{{ email }}</a>
+            </li>
+          }
+          @if (address) {
+            <li>
+              <i class="bi bi-map footer-contact-icon"></i>
+              <span>{{ address }}</span>
+            </li>
+          }
         </ul>
       </div>
 
       <div class="col-12 footer-bottom-col">
         <div class="footer-bottom-links d-flex flex-wrap gap-3">
-          <a href="#">{{ 'footer.privacyPolicy' | translate }}</a>
-          <a href="#">{{ 'footer.termsOfService' | translate }}</a>
-          <a href="#">{{ 'footer.sitemap' | translate }}</a>
+          <a>{{ 'footer.privacyPolicy' | translate }}</a>
+          <a>{{ 'footer.termsOfService' | translate }}</a>
+          <a>{{ 'footer.sitemap' | translate }}</a>
         </div>
       </div>
 

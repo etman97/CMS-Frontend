@@ -10,7 +10,7 @@ import { DashboardPageHeaderComponent } from '../../components/dashboard-page-he
 import { ContactComponent, ContactDialogData } from '../../../contact/contact.component';
 
 type ContactLang = 'en' | 'ar';
-type ContactFieldKey = 'introDescriptionEn' | 'introDescriptionAr' | 'phone' | 'email' | 'address' | 'locationUrl';
+type ContactFieldKey = 'introDescriptionEn' | 'introDescriptionAr' | 'phone' | 'email' | 'address' | 'locationUrl' | 'facebookUrl' | 'linkedInUrl';
 
 @Component({
     selector: 'app-dashboard-contact-us',
@@ -44,6 +44,8 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
     email = '';
     address = '';
     locationUrl = '';
+    facebookUrl = '';
+    linkedInUrl = '';
     private readonly englishPattern = /^[A-Za-z0-9\s.,!?'"():;&%+\-_/–—‘’“”]+$/;
     private readonly mixedLanguagePattern = /^[A-Za-z\u0600-\u06FF\u0660-\u06690-9\s.,!?'"():;&%+\-_/،؛؟٪ـ–—‘’“”]+$/;
     private readonly phonePattern = /^[0-9+\-\s()]{6,20}$/;
@@ -86,6 +88,8 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
         this.email = data.email;
         this.address = data.address;
         this.locationUrl = data.locationUrl;
+        this.facebookUrl = data.facebookUrl ?? '';
+        this.linkedInUrl = data.linkedInUrl ?? '';
         this.heroImageUrl = data.heroImageUrl;
         this.persistedHeroImageUrl = data.heroImageUrl;
     }
@@ -187,7 +191,7 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
         if (field === 'email') {
             return lang === 'ar' ? '\u064a\u0631\u062c\u0649 \u0625\u062f\u062e\u0627\u0644 \u0628\u0631\u064a\u062f \u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a \u0635\u062d\u064a\u062d.' : 'Please enter a valid email address.';
         }
-        if (field === 'locationUrl') {
+        if (field === 'locationUrl' || field === 'facebookUrl' || field === 'linkedInUrl') {
             return lang === 'ar' ? '\u064a\u0631\u062c\u0649 \u0625\u062f\u062e\u0627\u0644 \u0631\u0627\u0628\u0637 \u0635\u062d\u064a\u062d.' : 'Please enter a valid URL.';
         }
 
@@ -195,7 +199,7 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
     }
 
     private areRequiredFieldsValid(): boolean {
-        const fields: ContactFieldKey[] = ['introDescriptionEn', 'introDescriptionAr', 'phone', 'email', 'address', 'locationUrl'];
+        const fields: ContactFieldKey[] = ['introDescriptionEn', 'introDescriptionAr', 'phone', 'email', 'address', 'locationUrl', 'facebookUrl', 'linkedInUrl'];
         return fields.every((field) => this.getFieldValue(field).trim() && this.isFieldPatternValid(field));
     }
 
@@ -206,7 +210,9 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
             phone: this.phone,
             email: this.email,
             address: this.address,
-            locationUrl: this.locationUrl
+            locationUrl: this.locationUrl,
+            facebookUrl: this.facebookUrl,
+            linkedInUrl: this.linkedInUrl
         };
 
         return fieldMap[field] ?? '';
@@ -221,7 +227,7 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
         if (field === 'phone') return this.phonePattern.test(value);
         if (field === 'email') return this.emailPattern.test(value);
 
-        return this.urlPattern.test(this.normalizeMapUrl(value));
+        return this.urlPattern.test(field === 'locationUrl' ? this.normalizeMapUrl(value) : value);
     }
 
     onPreview(): void {
@@ -234,6 +240,8 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
         }
 
         const normalizedLocationUrl = this.normalizeMapUrl(this.locationUrl);
+        const normalizedFacebookUrl = this.facebookUrl.trim();
+        const normalizedLinkedInUrl = this.linkedInUrl.trim();
 
         const payload: ContactPageDto = {
             isActive: this.isActive,
@@ -243,6 +251,8 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
             email: this.email,
             address: this.address,
             locationUrl: normalizedLocationUrl,
+            facebookUrl: normalizedFacebookUrl,
+            linkedInUrl: normalizedLinkedInUrl,
             heroImageUrl: this.heroImageUrl
         };
 
@@ -279,6 +289,8 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
         }
 
         const normalizedLocationUrl = this.normalizeMapUrl(this.locationUrl);
+        const normalizedFacebookUrl = this.facebookUrl.trim();
+        const normalizedLinkedInUrl = this.linkedInUrl.trim();
 
         const dto: ContactPageDto = {
             isActive: this.isActive,
@@ -288,6 +300,8 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
             email: this.email,
             address: this.address,
             locationUrl: normalizedLocationUrl,
+            facebookUrl: normalizedFacebookUrl,
+            linkedInUrl: normalizedLinkedInUrl,
             heroImageUrl: this.persistedHeroImageUrl
         };
 

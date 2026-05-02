@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { ContactPageService } from '../../core/services/contact-page.service';
 import { PageStatusService, PublicPageKey, PublicPageStatusMap } from '../../core/services/page-status.service';
 
 @Component({
@@ -12,6 +13,7 @@ import { PageStatusService, PublicPageKey, PublicPageStatusMap } from '../../cor
 })
 export class SiteFooterComponent implements OnInit {
     private readonly pageStatusService = inject(PageStatusService);
+    private readonly contactPageService = inject(ContactPageService);
 
     readonly quickLinks: Array<{ key: PublicPageKey; route: string; labelKey: string }> = [
         { key: 'home', route: '/', labelKey: 'nav.home' },
@@ -30,10 +32,23 @@ export class SiteFooterComponent implements OnInit {
         services: true,
         contact: true
     };
+    phone = '';
+    email = '';
+    address = '';
+    facebookUrl = '';
+    linkedInUrl = '';
 
     ngOnInit(): void {
         this.pageStatusService.getStatuses().subscribe((statuses) => {
             this.pageStatuses = statuses;
+        });
+
+        this.contactPageService.get().subscribe((data) => {
+            this.phone = data?.phone ?? '';
+            this.email = data?.email ?? '';
+            this.address = data?.address ?? '';
+            this.facebookUrl = data?.facebookUrl ?? '';
+            this.linkedInUrl = data?.linkedInUrl ?? '';
         });
     }
 

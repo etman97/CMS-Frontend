@@ -127,10 +127,20 @@
     flex-shrink: 0;
   }
 
-  span {
+  span,
+  a {
     font-size: 16px;
     line-height: 1.5;
     color: $white;
+    text-decoration: none;
+  }
+
+  a {
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #c9c9ff;
+    }
   }
 }
 

@@ -199,7 +199,9 @@ export class ContactComponent implements OnInit, OnDestroy {
                 email: '',
                 address: '',
                 locationUrl: '',
-                heroImageUrl: null
+                heroImageUrl: null,
+                facebookUrl: null,
+                linkedInUrl: null
             },
             lang
         );

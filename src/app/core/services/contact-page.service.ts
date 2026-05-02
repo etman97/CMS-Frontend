@@ -12,6 +12,8 @@ export interface ContactPageDto {
     email: string;
     address: string;
     locationUrl: string;
+    facebookUrl: string | null;
+    linkedInUrl: string | null;
     heroImageUrl: string | null;
 }
 

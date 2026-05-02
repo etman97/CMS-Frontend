@@ -1,6 +1,9 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
+import { SolutionSectionDto, SolutionSectionsService } from '../../../core/services/solution-sections.service';
+import { SolutionsPageService } from '../../../core/services/solutions-page.service';
 
 export interface TwoImagesSection {
     title: string;
@@ -13,6 +16,7 @@ export interface TwoImagesDialogData {
     source: 'preview';
     sections: TwoImagesSection[];
     previewLang: 'en' | 'ar';
+    title?: string;
 }
 
 @Component({
@@ -23,11 +27,18 @@ export interface TwoImagesDialogData {
 })
 export class TwoImages implements OnInit {
     private readonly dialogConfig = inject(DynamicDialogConfig<TwoImagesDialogData>, { optional: true });
+    private readonly route = inject(ActivatedRoute);
+    private readonly solutionSectionsService = inject(SolutionSectionsService);
+    private readonly solutionsPageService = inject(SolutionsPageService);
+    private readonly messageService = inject(MessageService, { optional: true });
 
     isPreviewMode = false;
     isRtl = false;
+    pageTitle = 'Data Solutions';
 
-    sections: TwoImagesSection[] = [
+    sections: TwoImagesSection[] = [];
+
+    private readonly fallbackSections: TwoImagesSection[] = [
         {
             title: 'Intelligent Backup',
             images: [
@@ -92,7 +103,68 @@ export class TwoImages implements OnInit {
         if (dialogData?.source === 'preview') {
             this.isPreviewMode = true;
             this.isRtl = dialogData.previewLang === 'ar';
+            this.pageTitle = dialogData.title || this.pageTitle;
             this.sections = dialogData.sections;
+            return;
         }
+
+        const cardId = Number(this.route.snapshot.paramMap.get('cardId'));
+        if (!cardId) {
+            this.sections = this.fallbackSections;
+            return;
+        }
+
+        const lang = this.getCurrentLang();
+        this.isRtl = lang === 'ar';
+        const routeState = window.history.state as { title?: string; sections?: SolutionSectionDto[] };
+        this.pageTitle = routeState.title || this.pageTitle;
+        this.loadCardTitle(cardId, lang);
+        if (routeState.sections?.length) {
+            this.populateSections(routeState.sections, lang);
+            return;
+        }
+        this.loadSections(cardId, lang);
+    }
+
+    private loadSections(cardId: number, lang: 'en' | 'ar'): void {
+        this.solutionSectionsService.getByCardId(cardId).subscribe({
+            next: (sections) => {
+                this.populateSections(sections, lang);
+            },
+            error: () => {
+                this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load solution details.' });
+            }
+        });
+    }
+
+    private populateSections(sections: SolutionSectionDto[], lang: 'en' | 'ar'): void {
+        this.sections = [...sections]
+            .sort((a, b) => a.displayOrder - b.displayOrder)
+            .map((section, index) => ({
+                title: lang === 'ar' ? section.titleAr : section.titleEn,
+                images: [
+                    { src: section.imageUrl1 ?? '', alt: lang === 'ar' ? section.titleAr : section.titleEn },
+                    { src: section.imageUrl2 ?? '', alt: lang === 'ar' ? section.titleAr : section.titleEn }
+                ].filter((image) => image.src),
+                paragraphs: [lang === 'ar' ? section.paragraphAr : section.paragraphEn].filter(Boolean),
+                reverse: index % 2 !== 0
+            }));
+    }
+
+    private loadCardTitle(cardId: number, lang: 'en' | 'ar'): void {
+        this.solutionsPageService.get().subscribe({
+            next: (data) => {
+                const card = data?.solutionCards.find((item) => item.id === cardId);
+                if (!card) return;
+                this.pageTitle = lang === 'ar' ? card.groupNameAr : card.groupNameEn;
+            }
+        });
+    }
+
+    private getCurrentLang(): 'en' | 'ar' {
+        const queryLang = this.route.snapshot.queryParamMap.get('lang');
+        if (queryLang === 'ar') return 'ar';
+        if (queryLang === 'en') return 'en';
+        return document.documentElement.getAttribute('dir') === 'rtl' ? 'ar' : 'en';
     }
 }

@@ -156,11 +156,17 @@
 }
 
 .solution-card {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
   position: relative;
   display: block;
   height: 341px;
   overflow: hidden;
+  padding: 0;
   text-decoration: none;
+  text-align: left;
+  width: 100%;
 
   img {
     width: 100%;
@@ -172,6 +178,10 @@
 
   &:hover img {
     transform: scale(1.05);
+  }
+
+  &:disabled {
+    cursor: wait;
   }
 }
 

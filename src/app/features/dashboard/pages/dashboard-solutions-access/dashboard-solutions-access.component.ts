@@ -12,6 +12,7 @@ import {
     ImageChoice,
     UpsertSolutionSectionItem
 } from '../../../../core/services/solution-sections.service';
+import { SolutionsPageService } from '../../../../core/services/solutions-page.service';
 import { OneImage, OneImageDialogData } from '../../../solutions/one-image/one-image';
 import { TwoImages, TwoImagesDialogData } from '../../../solutions/two-images/two-images';
 
@@ -42,12 +43,14 @@ export class DashboardSolutionsAccessComponent implements OnInit {
     private readonly route = inject(ActivatedRoute);
     private readonly dialogService = inject(DialogService);
     private readonly solutionSectionsService = inject(SolutionSectionsService);
+    private readonly solutionsPageService = inject(SolutionsPageService);
     private readonly messageService = inject(MessageService);
     private readonly cdr = inject(ChangeDetectorRef);
     private readonly ngZone = inject(NgZone);
 
     cardId = 0;
-    cardTitle = '';
+    cardTitleEn = '';
+    cardTitleAr = '';
     activeTab: SolutionsLang = 'en';
     openMenuSectionId: number | null = null;
     isLoading = true;
@@ -62,6 +65,12 @@ export class DashboardSolutionsAccessComponent implements OnInit {
             && this.sections.every((section) => this.isSectionComplete(section));
     }
 
+    get cardTitle(): string {
+        return this.activeTab === 'ar'
+            ? (this.cardTitleAr || this.cardTitleEn || `Card ${this.cardId}`)
+            : (this.cardTitleEn || this.cardTitleAr || `Card ${this.cardId}`);
+    }
+
     private get requiredImageMode(): 'one' | 'two' | null {
         const first = this.sections[0] ?? null;
         if (!first) return null;
@@ -70,7 +79,11 @@ export class DashboardSolutionsAccessComponent implements OnInit {
 
     ngOnInit(): void {
         this.cardId = Number(this.route.snapshot.paramMap.get('cardId'));
-        this.cardTitle = (window.history.state as { cardTitle?: string })?.cardTitle || `Card ${this.cardId}`;
+        const state = window.history.state as { cardTitle?: string; cardTitleEn?: string; cardTitleAr?: string };
+        this.cardTitleEn = state.cardTitleEn || state.cardTitle || `Card ${this.cardId}`;
+        this.cardTitleAr = state.cardTitleAr || state.cardTitle || this.cardTitleEn;
+
+        this.loadCardTitle();
 
         this.solutionSectionsService.getByCardId(this.cardId).subscribe({
             next: (data) => {
@@ -199,11 +212,13 @@ export class DashboardSolutionsAccessComponent implements OnInit {
         const lang = this.activeTab;
         const isRtl = lang === 'ar';
         const imageChoice = this.sections[0]?.imageChoice ?? 'OneImage';
+        const title = this.cardTitle;
 
         if (imageChoice === 'TwoImages') {
             const data: TwoImagesDialogData = {
                 source: 'preview',
                 previewLang: lang,
+                title,
                 sections: this.sections.map((s, i) => ({
                     title: lang === 'ar' ? s.titleAr : s.titleEn,
                     images: [
@@ -229,6 +244,7 @@ export class DashboardSolutionsAccessComponent implements OnInit {
             const data: OneImageDialogData = {
                 source: 'preview',
                 previewLang: lang,
+                title,
                 sections: this.sections.map((s, i) => ({
                     title: lang === 'ar' ? s.titleAr : s.titleEn,
                     image: s.imageUrl1 ?? '',
@@ -312,6 +328,19 @@ export class DashboardSolutionsAccessComponent implements OnInit {
             && section.imageUrl1
             && (section.imageChoice !== 'TwoImages' || section.imageUrl2)
         );
+    }
+
+    private loadCardTitle(): void {
+        this.solutionsPageService.get({ forceRefresh: true }).subscribe({
+            next: (data) => {
+                const card = data?.solutionCards.find((item) => item.id === this.cardId);
+                if (!card) return;
+
+                this.cardTitleEn = card.groupNameEn || this.cardTitleEn;
+                this.cardTitleAr = card.groupNameAr || this.cardTitleAr || this.cardTitleEn;
+                this.cdr.markForCheck();
+            }
+        });
     }
 
     private showValidationWarning(action: 'preview' | 'save'): void {

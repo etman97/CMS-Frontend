@@ -1,19 +1,32 @@
-<main class="solution-detail">
+<main class="solution-detail" [attr.dir]="isRtl ? 'rtl' : 'ltr'">
   <div class="solution-detail__glow solution-detail__glow--left"></div>
   <div class="solution-detail__glow solution-detail__glow--right"></div>
   <div class="solution-detail__glow solution-detail__glow--bottom"></div>
 
   <div class="layout-container solution-detail__inner">
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a class="breadcrumb__back" routerLink="/solutions" aria-label="Back to solutions">
-        <span aria-hidden="true">&larr;</span>
-      </a>
-      <a class="breadcrumb__link" routerLink="/">Home</a>
+      @if (isPreviewMode) {
+        <span class="breadcrumb__back" aria-hidden="true">
+          <span aria-hidden="true">&larr;</span>
+        </span>
+        <span class="breadcrumb__link">Home</span>
+      } @else {
+        <a class="breadcrumb__back" routerLink="/solutions" aria-label="Back to solutions">
+          <span aria-hidden="true">&larr;</span>
+        </a>
+        <a class="breadcrumb__link" routerLink="/">Home</a>
+      }
       <span class="breadcrumb__separator" aria-hidden="true">/</span>
-      <a class="breadcrumb__link" routerLink="/solutions">Solutions</a>
+      @if (isPreviewMode) {
+        <span class="breadcrumb__link">Solutions</span>
+      } @else {
+        <a class="breadcrumb__link" routerLink="/solutions">Solutions</a>
+      }
+      <span class="breadcrumb__separator" aria-hidden="true">/</span>
+      <span class="breadcrumb__current">{{ pageTitle }}</span>
     </nav>
 
-    <h1 class="solution-detail__title">Data Solutions</h1>
+    <h1 class="solution-detail__title">{{ pageTitle }}</h1>
 
     <div class="solution-detail__sections">
       @for (section of sections; track section.title) {
@@ -25,13 +38,15 @@
             }
           </div>
 
-          <div class="image-pair" aria-label="Supporting imagery for {{ section.title }}">
-            @for (image of section.images; track image.src; let index = $index) {
-              <figure class="image-pair__item" [class.image-pair__item--offset]="index === 1">
-                <img [src]="image.src" [alt]="image.alt" loading="lazy" />
-              </figure>
-            }
-          </div>
+          @if (section.images.length) {
+            <div class="image-pair" aria-label="Supporting imagery for {{ section.title }}">
+              @for (image of section.images; track image.src; let index = $index) {
+                <figure class="image-pair__item" [class.image-pair__item--offset]="index === 1">
+                  <img [src]="image.src" [alt]="image.alt" loading="lazy" />
+                </figure>
+              }
+            </div>
+          }
         </article>
       }
     </div>

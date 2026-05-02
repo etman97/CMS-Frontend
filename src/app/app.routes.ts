@@ -33,6 +33,14 @@ export const routes: Routes = [
                 resolve: { solutionsPageData: solutionsPageResolver }
             },
             {
+                path: 'solutions/:cardId/one-image',
+                loadComponent: () => import('./features/solutions/one-image/one-image').then(m => m.OneImage)
+            },
+            {
+                path: 'solutions/:cardId/two-images',
+                loadComponent: () => import('./features/solutions/two-images/two-images').then(m => m.TwoImages)
+            },
+            {
                 path: 'services',
                 loadComponent: () => import('./features/services/services.component').then(m => m.ServicesComponent),
                 resolve: { servicesPageData: servicesPageResolver }

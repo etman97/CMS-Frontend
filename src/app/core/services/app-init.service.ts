@@ -1,12 +1,14 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { forkJoin, timer, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, switchMap, tap } from 'rxjs/operators';
 import { HomePageService } from './home-page.service';
 import { AboutPageService } from './about-page.service';
 import { ContactPageService } from './contact-page.service';
 import { PageStatusService } from './page-status.service';
 import { PartnersPageService } from './partners-page.service';
 import { ServicesPageService } from './services-page.service';
+import { SolutionsPageService } from './solutions-page.service';
+import { SolutionSectionsService } from './solution-sections.service';
 
 @Injectable({ providedIn: 'root' })
 export class AppInitService {
@@ -16,9 +18,11 @@ export class AppInitService {
     private readonly pageStatusService = inject(PageStatusService);
     private readonly partnersService = inject(PartnersPageService);
     private readonly servicesService = inject(ServicesPageService);
+    private readonly solutionsService = inject(SolutionsPageService);
+    private readonly solutionSectionsService = inject(SolutionSectionsService);
 
     private completedSteps = 0;
-    private readonly totalSteps = 6;
+    private readonly totalSteps = 8;
     private initialized = false;
 
     private readonly _progress = signal(5);
@@ -72,8 +76,28 @@ export class AppInitService {
             catchError(() => { this.onStepComplete('Services loaded'); return of(null); })
         );
 
+        const solutions$ = this.solutionsService.get().pipe(
+            tap(() => this.onStepComplete('Solutions loaded')),
+            catchError(() => { this.onStepComplete('Solutions loaded'); return of(null); })
+        );
+
+        const solutionSections$ = solutions$.pipe(
+            switchMap((data) => {
+                const cardIds = data?.solutionCards.map((card) => card.id) ?? [];
+                if (!cardIds.length) {
+                    this.onStepComplete('Solution details loaded');
+                    return of([]);
+                }
+
+                return this.solutionSectionsService.prefetchByCardIds(cardIds).pipe(
+                    tap(() => this.onStepComplete('Solution details loaded')),
+                    catchError(() => { this.onStepComplete('Solution details loaded'); return of([]); })
+                );
+            })
+        );
+
         // Minimum 2.4s display time so the experience always feels intentional
-        forkJoin([home$, about$, contact$, status$, partners$, services$, timer(2400)]).subscribe({
+        forkJoin([home$, about$, contact$, status$, partners$, services$, solutionSections$, timer(2400)]).subscribe({
             next: () => this.finish(),
             error: () => this.finish()
         });

@@ -257,9 +257,11 @@ export class DashboardSolutionsComponent implements OnInit, OnDestroy {
         const cardTitle = this.solutionsByLang[this.activeTab].find((card) => card.id === cardId)?.title
             ?? this.solutionsByLang.en.find((card) => card.id === cardId)?.title
             ?? `Card ${cardId}`;
+        const cardTitleEn = this.solutionsByLang.en.find((card) => card.id === cardId)?.title ?? cardTitle;
+        const cardTitleAr = this.solutionsByLang.ar.find((card) => card.id === cardId)?.title ?? cardTitle;
 
         void this.router.navigate(['/dashboard/solutions/access', cardId], {
-            state: { cardTitle }
+            state: { cardTitle, cardTitleEn, cardTitleAr }
         });
     }
 

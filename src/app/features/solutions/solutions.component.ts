@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin, of, Subscription } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { SolutionsPageDto, SolutionsPageService } from '../../core/services/solutions-page.service';
+import { SolutionSectionDto, SolutionSectionsService } from '../../core/services/solution-sections.service';
 
 export interface SolutionsDialogData {
     source?: 'preview' | 'api';
@@ -21,7 +23,9 @@ export interface SolutionsDialogData {
 })
 export class SolutionsComponent implements OnInit, OnDestroy {
     private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
     private readonly solutionsPageService = inject(SolutionsPageService);
+    private readonly solutionSectionsService = inject(SolutionSectionsService);
     private readonly dialogConfig = inject(DynamicDialogConfig<SolutionsDialogData>, { optional: true });
     private readonly messageService = inject(MessageService, { optional: true });
 
@@ -29,6 +33,9 @@ export class SolutionsComponent implements OnInit, OnDestroy {
     private queryParamSub: Subscription | null = null;
     private dataSource: SolutionsPageDto | null = null;
     private routeLang: 'en' | 'ar' | null = null;
+    private sectionPrefetchSub: Subscription | null = null;
+    private readonly sectionsByCardId = new Map<number, SolutionSectionDto[]>();
+    private readonly prefetchedCardIds = new Set<number>();
 
     heroText = '';
     heroImageUrl: string | null = null;
@@ -38,6 +45,7 @@ export class SolutionsComponent implements OnInit, OnDestroy {
     isLoading = true;
     hasLoadError = false;
     isPreviewMode = false;
+    openingCardId: number | null = null;
 
     ngOnInit(): void {
         this.routeLang = this.resolveRouteLang(this.route.snapshot.queryParamMap.get('lang'));
@@ -58,6 +66,7 @@ export class SolutionsComponent implements OnInit, OnDestroy {
         if (resolvedData !== undefined) {
             this.dataSource = resolvedData;
             this.applyCurrentLanguage();
+            this.prefetchSolutionSections();
             this.isLoading = false;
             return;
         }
@@ -70,6 +79,31 @@ export class SolutionsComponent implements OnInit, OnDestroy {
         this.dirObserver = null;
         this.queryParamSub?.unsubscribe();
         this.queryParamSub = null;
+        this.sectionPrefetchSub?.unsubscribe();
+        this.sectionPrefetchSub = null;
+    }
+
+    openSolutionCard(card: { id: number; title: string }): void {
+        if (this.isPreviewMode || this.openingCardId !== null) return;
+
+        const cachedSections = this.sectionsByCardId.get(card.id);
+        if (cachedSections) {
+            this.navigateToSolutionDetails(card, cachedSections);
+            return;
+        }
+
+        this.openingCardId = card.id;
+        this.solutionSectionsService.getByCardId(card.id).subscribe({
+            next: (sections) => {
+                this.openingCardId = null;
+                this.sectionsByCardId.set(card.id, sections);
+                this.navigateToSolutionDetails(card, sections);
+            },
+            error: () => {
+                this.openingCardId = null;
+                this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load solution details.' });
+            }
+        });
     }
 
     private loadFromApi(): void {
@@ -77,6 +111,7 @@ export class SolutionsComponent implements OnInit, OnDestroy {
             next: (data) => {
                 this.dataSource = data;
                 this.applyCurrentLanguage();
+                this.prefetchSolutionSections();
                 this.hasLoadError = false;
                 this.isLoading = false;
             },
@@ -100,6 +135,44 @@ export class SolutionsComponent implements OnInit, OnDestroy {
                 brief: lang === 'ar' ? card.briefAr : card.briefEn,
                 imageUrl: card.imageUrl
             }));
+    }
+
+    private prefetchSolutionSections(): void {
+        if (!this.dataSource?.solutionCards.length || this.isPreviewMode) return;
+
+        const cardsToFetch = this.dataSource.solutionCards.filter((card) => !this.prefetchedCardIds.has(card.id));
+        if (!cardsToFetch.length) return;
+
+        this.sectionPrefetchSub?.unsubscribe();
+        this.sectionPrefetchSub = forkJoin(
+            cardsToFetch.map((card) =>
+                this.solutionSectionsService.getByCardId(card.id).pipe(
+                    catchError(() => of([] as SolutionSectionDto[]))
+                )
+            )
+        ).subscribe((sectionsByIndex) => {
+            sectionsByIndex.forEach((sections, index) => {
+                const cardId = cardsToFetch[index].id;
+                this.prefetchedCardIds.add(cardId);
+                this.sectionsByCardId.set(cardId, sections);
+            });
+        });
+    }
+
+    private navigateToSolutionDetails(card: { id: number; title: string }, sections: SolutionSectionDto[]): void {
+        const firstSection = [...sections].sort((a, b) => a.displayOrder - b.displayOrder)[0];
+        if (!firstSection) {
+            this.messageService?.add({ severity: 'warn', summary: 'Unavailable', detail: 'No details have been added for this solution yet.' });
+            return;
+        }
+
+        const detailType = firstSection.imageChoice === 'TwoImages' ? 'two-images' : 'one-image';
+        const queryParams = this.routeLang ? { lang: this.routeLang } : undefined;
+
+        void this.router.navigate(['/solutions', card.id, detailType], {
+            queryParams,
+            state: { title: card.title, sections }
+        });
     }
 
     private applyCurrentLanguage(): void {

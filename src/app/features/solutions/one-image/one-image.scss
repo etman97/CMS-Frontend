@@ -79,9 +79,14 @@
 }
 
 .breadcrumb__link,
-.breadcrumb__separator {
+.breadcrumb__separator,
+.breadcrumb__current {
   font-size: 16px;
   line-height: 1.5;
+}
+
+.breadcrumb__current {
+  color: rgba(v.$white, 0.78);
 }
 
 .breadcrumb__separator {
@@ -241,7 +246,8 @@
   }
 
   .breadcrumb__link,
-  .breadcrumb__separator {
+  .breadcrumb__separator,
+  .breadcrumb__current {
     font-size: 14px;
   }
 

@@ -231,6 +231,18 @@ a.info-text:hover {
   text-decoration: underline;
 }
 
+.contact-page[dir='rtl'] {
+  input[type='tel'] {
+    direction: rtl;
+    text-align: right;
+  }
+
+  .form-field--email {
+    order: -1;
+    text-align: right;
+  }
+}
+
 .form-block {
   flex: 1 1 auto;
   display: flex;

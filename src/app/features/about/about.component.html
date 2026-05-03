@@ -34,24 +34,24 @@
         <p>{{ whyUsContent }}</p>
       </div>
 
-      <div class="numbers">
+      <div class="numbers" #numbersSection>
         <h2>{{ getLabel('wesInNumbers') }}</h2>
         <p class="numbers-subtitle">{{ numbersSubtitle }}</p>
         <div class="numbers-grid">
           <div class="number-card">
-            <div class="number">+{{ numberOfProducts }}</div>
+            <div class="number">+{{ displayedNumberOfProducts }}</div>
             <div class="label">{{ getLabel('products') }}</div>
           </div>
           <div class="number-card">
-            <div class="number">+{{ numberOfClients }}</div>
+            <div class="number">+{{ displayedNumberOfClients }}</div>
             <div class="label">{{ getLabel('clients') }}</div>
           </div>
           <div class="number-card">
-            <div class="number">+{{ numberOfPartners }}</div>
+            <div class="number">+{{ displayedNumberOfPartners }}</div>
             <div class="label">{{ getLabel('partners') }}</div>
           </div>
           <div class="number-card">
-            <div class="number">+{{ numberOfEmployees }}</div>
+            <div class="number">+{{ displayedNumberOfEmployees }}</div>
             <div class="label">{{ getLabel('employees') }}</div>
           </div>
         </div>

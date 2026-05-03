@@ -1,5 +1,7 @@
 @use 'variables' as *;
 
+$contact-top-image-height: 341px;
+
 .page-loader {
   align-items: center;
   background: rgba(255, 255, 255, 0.7);
@@ -46,8 +48,11 @@
 
 .contact-section__top-bg {
   position: absolute;
-  inset: 0 0 auto;
-  height: 341px;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 100vw;
+  transform: translateX(-50%);
   overflow: hidden;
 }
 
@@ -112,16 +117,21 @@
 .contact-section__container {
   position: relative;
   z-index: 2;
-  padding-top: $navbar-content-spacing-desktop;
   padding-bottom: 148px;
 }
 
 .contact-hero {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 24px;
+  min-height: $contact-top-image-height;
+  padding-top: $navbar-content-spacing-desktop;
+  box-sizing: border-box;
 
   h1 {
+    position: relative;
+    z-index: 1;
     margin: 0;
     font-size: 32px;
     line-height: 1.2;
@@ -133,6 +143,8 @@
   }
 
   p {
+    position: relative;
+    z-index: 1;
     max-width: 100%;
     margin: 0;
     padding-bottom: 45px;
@@ -366,7 +378,7 @@ a.info-text:hover {
 }
 
 @media (max-width: 1199.98px) {
-  .contact-section__container {
+  .contact-hero {
     padding-top: $navbar-content-spacing-tablet;
   }
 }
@@ -377,7 +389,6 @@ a.info-text:hover {
   }
 
   .contact-section__container {
-    padding-top: $navbar-content-spacing-tablet;
     padding-bottom: 96px;
   }
 
@@ -412,16 +423,13 @@ a.info-text:hover {
 }
 
 @media (max-width: 767.98px) {
-  .contact-section__top-bg {
-    height: 341px;
-  }
-
   .contact-section__container {
-    padding-top: $navbar-content-spacing-mobile;
     padding-bottom: 72px;
   }
 
   .contact-hero {
+    padding-top: $navbar-content-spacing-mobile;
+
     h1 {
       font-size: 26px;
     }

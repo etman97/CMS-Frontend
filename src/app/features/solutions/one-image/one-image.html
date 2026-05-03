@@ -7,20 +7,20 @@
     <nav class="breadcrumb" aria-label="Breadcrumb">
       @if (isPreviewMode) {
         <span class="breadcrumb__back" aria-hidden="true">
-          <span aria-hidden="true">&larr;</span>
+          <span aria-hidden="true">{{ isRtl ? '→' : '←' }}</span>
         </span>
-        <span class="breadcrumb__link">Home</span>
+        <span class="breadcrumb__link">{{ isRtl ? 'الرئيسية' : 'Home' }}</span>
       } @else {
         <a class="breadcrumb__back" routerLink="/solutions" aria-label="Back to solutions">
-          <span aria-hidden="true">&larr;</span>
+          <span aria-hidden="true">{{ isRtl ? '→' : '←' }}</span>
         </a>
-        <a class="breadcrumb__link" routerLink="/">Home</a>
+        <a class="breadcrumb__link" routerLink="/">{{ isRtl ? 'الرئيسية' : 'Home' }}</a>
       }
       <span class="breadcrumb__separator" aria-hidden="true">/</span>
       @if (isPreviewMode) {
-        <span class="breadcrumb__link">Solutions</span>
+        <span class="breadcrumb__link">{{ isRtl ? 'الحلول' : 'Solutions' }}</span>
       } @else {
-        <a class="breadcrumb__link" routerLink="/solutions">Solutions</a>
+        <a class="breadcrumb__link" routerLink="/solutions">{{ isRtl ? 'الحلول' : 'Solutions' }}</a>
       }
       <span class="breadcrumb__separator" aria-hidden="true">/</span>
       <span class="breadcrumb__current">{{ pageTitle }}</span>

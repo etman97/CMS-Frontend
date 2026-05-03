@@ -6,20 +6,20 @@
 
 <main class="contact-page" [class.page-hidden]="isLoading" [attr.dir]="isRtl ? 'rtl' : 'ltr'" (click)="onPreviewSurfaceClick($event)">
   <section class="contact-section">
-    @if (heroImageUrl) {
-      <div class="contact-section__top-bg" aria-hidden="true">
-        <img [src]="heroImageUrl" alt="" class="contact-section__top-image" />
-        <div class="contact-section__top-gradient"></div>
-        <div class="contact-section__top-overlay"></div>
-      </div>
-    }
-
     <div class="contact-section__glow contact-section__glow--left" aria-hidden="true"></div>
     <div class="contact-section__glow contact-section__glow--right" aria-hidden="true"></div>
     <div class="contact-section__glow contact-section__glow--bottom" aria-hidden="true"></div>
 
     <div class="layout-container contact-section__container">
       <header class="contact-hero">
+        @if (heroImageUrl) {
+          <div class="contact-section__top-bg" aria-hidden="true">
+            <img [src]="heroImageUrl" alt="" class="contact-section__top-image" />
+            <div class="contact-section__top-gradient"></div>
+            <div class="contact-section__top-overlay"></div>
+          </div>
+        }
+
         <h1>{{ contactTitle }}</h1>
         <p>{{ heroDescription }}</p>
       </header>

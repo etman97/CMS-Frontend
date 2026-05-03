@@ -102,7 +102,7 @@ export class OneImage implements OnInit, OnDestroy {
             this.isPreviewMode = true;
             this.isRtl = dialogData.previewLang === 'ar';
             this.pageTitle = dialogData.title || this.pageTitle;
-            this.sections = dialogData.sections;
+            this.sections = this.formatSections(dialogData.sections);
             return;
         }
 
@@ -112,7 +112,7 @@ export class OneImage implements OnInit, OnDestroy {
 
         this.cardId = Number(this.route.snapshot.paramMap.get('cardId'));
         if (!this.cardId) {
-            this.sections = this.fallbackSections;
+            this.sections = this.formatSections(this.fallbackSections);
             this.applyCurrentLanguage();
             return;
         }
@@ -156,9 +156,20 @@ export class OneImage implements OnInit, OnDestroy {
                 title: lang === 'ar' ? section.titleAr : section.titleEn,
                 image: section.imageUrl1 ?? '',
                 imageAlt: lang === 'ar' ? section.titleAr : section.titleEn,
-                paragraphs: [lang === 'ar' ? section.paragraphAr : section.paragraphEn].filter(Boolean),
+                paragraphs: [this.formatBrief(lang === 'ar' ? section.paragraphAr : section.paragraphEn)].filter(Boolean),
                 reverse: index % 2 !== 0
             }));
+    }
+
+    private formatSections(sections: OneImageSection[]): OneImageSection[] {
+        return sections.map((section) => ({
+            ...section,
+            paragraphs: section.paragraphs.map((paragraph) => this.formatBrief(paragraph))
+        }));
+    }
+
+    private formatBrief(value: string): string {
+        return value.replace(/\.\s+/g, '.\n\n');
     }
 
     private loadCardTitle(cardId: number, lang: 'en' | 'ar'): void {

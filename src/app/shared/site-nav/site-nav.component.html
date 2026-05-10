@@ -41,12 +41,14 @@
             }
           </li>
         }
-        <li class="nav-item nav-item--language mt-3 mt-lg-0">
-          <button type="button" class="btn btn-language" (click)="toggleLanguage()">
-            <i class="bi bi-globe2 lang-icon"></i>
-            {{ (isArabic ? 'nav.languageEnglish' : 'nav.languageArabic') | translate }}
-          </button>
-        </li>
+        @if (isSupportArabic) {
+          <li class="nav-item nav-item--language mt-3 mt-lg-0">
+            <button type="button" class="btn btn-language" (click)="toggleLanguage()">
+              <i class="bi bi-globe2 lang-icon"></i>
+              {{ (isArabic ? 'nav.languageEnglish' : 'nav.languageArabic') | translate }}
+            </button>
+          </li>
+        }
       </ul>
     </div>
 

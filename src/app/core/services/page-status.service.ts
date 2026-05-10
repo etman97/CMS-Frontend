@@ -18,10 +18,12 @@ export class PageStatusService {
     private readonly _statuses = signal<PublicPageStatusMap | null>(null);
     private readonly _isLoading = signal(false);
     private readonly _hasLoaded = signal(false);
+    private readonly _supportArabic = signal(true);
 
     readonly statuses = this._statuses.asReadonly();
     readonly isLoading = this._isLoading.asReadonly();
     readonly hasLoaded = this._hasLoaded.asReadonly();
+    readonly supportArabic = this._supportArabic.asReadonly();
 
     load(forceRefresh = false): Observable<void> {
         if (!forceRefresh && this._hasLoaded()) {
@@ -50,7 +52,10 @@ export class PageStatusService {
         }
 
         const request$ = this.http.get<unknown>(this.apiUrl).pipe(
-            map((response) => this.normalizeResponse(response)),
+            map((response) => {
+                this.extractSupportArabic(response);
+                return this.normalizeResponse(response);
+            }),
             tap((statuses) => this.setStatuses(statuses)),
             catchError(() => of(this.defaultStatuses())),
             finalize(() => {
@@ -67,6 +72,14 @@ export class PageStatusService {
         this.cachedStatuses = statuses;
         this._statuses.set(statuses);
         this._hasLoaded.set(true);
+    }
+
+    private extractSupportArabic(response: unknown): void {
+        if (response && typeof response === 'object') {
+            const record = response as Record<string, unknown>;
+            const val = record['supportArabic'];
+            this._supportArabic.set(typeof val === 'boolean' ? val : true);
+        }
     }
 
     private defaultStatuses(): PublicPageStatusMap {

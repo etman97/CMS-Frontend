@@ -12,6 +12,9 @@ export class DashboardPageHeaderComponent {
     @Input() active = true;
     @Input() activeLabel = 'Active';
 
+    @Input() showSupportArabic = false;
+    @Input() supportArabic = true;
+
     @Input() showPreview = true;
     @Input() showSave = true;
 
@@ -21,12 +24,19 @@ export class DashboardPageHeaderComponent {
     @Input() saveDisabled = false;
 
     @Output() activeChange = new EventEmitter<boolean>();
+    @Output() supportArabicChange = new EventEmitter<boolean>();
     @Output() preview = new EventEmitter<void>();
     @Output() save = new EventEmitter<void>();
 
     onActiveChange(event: Event): void {
         const input = event.target as HTMLInputElement;
         this.activeChange.emit(input.checked);
+        input.blur();
+    }
+
+    onSupportArabicChange(event: Event): void {
+        const input = event.target as HTMLInputElement;
+        this.supportArabicChange.emit(input.checked);
         input.blur();
     }
 

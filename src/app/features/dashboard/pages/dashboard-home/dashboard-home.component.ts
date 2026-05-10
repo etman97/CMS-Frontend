@@ -40,6 +40,7 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
     activeTab = 'en';
     isLoading = true;
     isActive = true;
+    supportArabic = true;
     isSaving = false;
     isUploadingImage = false;
     attemptedSave = false;
@@ -86,6 +87,7 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
 
     private populate(data: HomePageDto): void {
         this.isActive = data.isActive;
+        this.supportArabic = data.supportArabic ?? true;
         this.heroTitleEn = data.heroTitleEn;
         this.heroContentEn = data.heroContentEn;
         this.heroTitleAr = data.heroTitleAr;
@@ -284,6 +286,7 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
 
         const payload: HomePageDto = {
             isActive: this.isActive,
+            supportArabic: this.supportArabic,
             heroTitleEn: this.heroTitleEn,
             heroContentEn: this.heroContentEn,
             heroTitleAr: this.heroTitleAr,
@@ -327,6 +330,7 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
 
         const dto: HomePageDto = {
             isActive: this.isActive,
+            supportArabic: this.supportArabic,
             heroTitleEn: this.heroTitleEn,
             heroContentEn: this.heroContentEn,
             heroTitleAr: this.heroTitleAr,

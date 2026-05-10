@@ -16,6 +16,7 @@ export interface ButtonConfigDto {
 
 export interface HomePageDto {
     isActive: boolean;
+    supportArabic: boolean;
     heroTitleEn: string;
     heroContentEn: string;
     heroTitleAr: string;

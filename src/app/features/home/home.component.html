@@ -78,14 +78,24 @@
       <h2 class="partners-title">{{ valuedPartnersTitle }}</h2>
     </div>
 
-    <div class="partners-strip" aria-label="Partners logos">
-      @for (logo of partnerLogos; track logo.id) {
-        <article class="home-partner-card">
-          @if (logo.logoImageUrl) {
-            <img [src]="logo.logoImageUrl" alt="Partner logo" />
-          }
-        </article>
-      }
+    <div class="partners-slider" aria-label="Partners logos">
+      <div class="partners-strip">
+        @for (logo of partnerLogos; track logo.id) {
+          <article class="home-partner-card">
+            @if (logo.logoImageUrl) {
+              <img [src]="logo.logoImageUrl" alt="Partner logo" />
+            }
+          </article>
+        }
+
+        @for (logo of partnerLogos; track logo.id) {
+          <article class="home-partner-card" aria-hidden="true">
+            @if (logo.logoImageUrl) {
+              <img [src]="logo.logoImageUrl" alt="" />
+            }
+          </article>
+        }
+      </div>
     </div>
   </div>
 </section>

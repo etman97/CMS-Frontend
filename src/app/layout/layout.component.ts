@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../core/auth/auth.service';
+import { IdleService } from '../core/auth/idle.service';
 
 @Component({
     selector: 'app-layout',
@@ -11,11 +12,19 @@ import { AuthService } from '../core/auth/auth.service';
     templateUrl: './layout.component.html',
     styleUrl: './layout.component.scss'
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit, OnDestroy {
     sidebarCollapsed = false;
     isMobileSidebarOpen = false;
 
-    constructor(public authService: AuthService) { }
+    constructor(public authService: AuthService, private idleService: IdleService) { }
+
+    ngOnInit(): void {
+        this.idleService.start();
+    }
+
+    ngOnDestroy(): void {
+        this.idleService.stop();
+    }
 
     toggleSidebar(): void {
         if (typeof window !== 'undefined' && window.innerWidth <= 992) {

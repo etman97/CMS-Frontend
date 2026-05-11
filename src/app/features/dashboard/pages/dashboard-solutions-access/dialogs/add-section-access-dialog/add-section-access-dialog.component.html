@@ -4,28 +4,80 @@
             <div class="form-col form-col--half">
                 <label class="field">
                     <span class="field-label">{{ labels.titleEn }}</span>
-                    <input type="text" class="field-input" [(ngModel)]="titleEn" [placeholder]="labels.titleEnPlaceholder" />
+                    <input
+                        type="text"
+                        class="field-input"
+                        [(ngModel)]="titleEn"
+                        [class.is-invalid]="showRequiredError('titleEn') || showPatternError('titleEn')"
+                        (ngModelChange)="markFieldTouched('titleEn')"
+                        (blur)="markFieldTouched('titleEn')"
+                        [placeholder]="labels.titleEnPlaceholder"
+                    />
+                    @if (showRequiredError('titleEn')) {
+                        <span class="validation-message">{{ requiredMessage(lang) }}</span>
+                    } @else if (showPatternError('titleEn')) {
+                        <span class="validation-message">{{ patternMessage(lang) }}</span>
+                    }
                 </label>
             </div>
 
             <div class="form-col form-col--half">
                 <label class="field">
                     <span class="field-label">{{ labels.titleAr }}</span>
-                    <input type="text" class="field-input" [(ngModel)]="titleAr" [placeholder]="labels.titleArPlaceholder" />
+                    <input
+                        type="text"
+                        class="field-input"
+                        [(ngModel)]="titleAr"
+                        [class.is-invalid]="showRequiredError('titleAr') || showPatternError('titleAr')"
+                        (ngModelChange)="markFieldTouched('titleAr')"
+                        (blur)="markFieldTouched('titleAr')"
+                        [placeholder]="labels.titleArPlaceholder"
+                    />
+                    @if (showRequiredError('titleAr')) {
+                        <span class="validation-message">{{ requiredMessage(lang) }}</span>
+                    } @else if (showPatternError('titleAr')) {
+                        <span class="validation-message">{{ patternMessage(lang) }}</span>
+                    }
                 </label>
             </div>
 
             <div class="form-col form-col--half">
                 <label class="field">
                     <span class="field-label">{{ labels.paragraphEn }}</span>
-                    <textarea class="field-input field-input--textarea" rows="4" [(ngModel)]="paragraphEn" [placeholder]="labels.paragraphEnPlaceholder"></textarea>
+                    <textarea
+                        class="field-input field-input--textarea"
+                        rows="4"
+                        [(ngModel)]="paragraphEn"
+                        [class.is-invalid]="showRequiredError('paragraphEn') || showPatternError('paragraphEn')"
+                        (ngModelChange)="markFieldTouched('paragraphEn')"
+                        (blur)="markFieldTouched('paragraphEn')"
+                        [placeholder]="labels.paragraphEnPlaceholder"
+                    ></textarea>
+                    @if (showRequiredError('paragraphEn')) {
+                        <span class="validation-message">{{ requiredMessage(lang) }}</span>
+                    } @else if (showPatternError('paragraphEn')) {
+                        <span class="validation-message">{{ patternMessage(lang) }}</span>
+                    }
                 </label>
             </div>
 
             <div class="form-col form-col--half">
                 <label class="field">
                     <span class="field-label">{{ labels.paragraphAr }}</span>
-                    <textarea class="field-input field-input--textarea" rows="4" [(ngModel)]="paragraphAr" [placeholder]="labels.paragraphArPlaceholder"></textarea>
+                    <textarea
+                        class="field-input field-input--textarea"
+                        rows="4"
+                        [(ngModel)]="paragraphAr"
+                        [class.is-invalid]="showRequiredError('paragraphAr') || showPatternError('paragraphAr')"
+                        (ngModelChange)="markFieldTouched('paragraphAr')"
+                        (blur)="markFieldTouched('paragraphAr')"
+                        [placeholder]="labels.paragraphArPlaceholder"
+                    ></textarea>
+                    @if (showRequiredError('paragraphAr')) {
+                        <span class="validation-message">{{ requiredMessage(lang) }}</span>
+                    } @else if (showPatternError('paragraphAr')) {
+                        <span class="validation-message">{{ patternMessage(lang) }}</span>
+                    }
                 </label>
             </div>
 
@@ -52,15 +104,20 @@
             <div class="form-col" [class.form-col--half]="imageMode === 'two'" [class.form-col--full]="imageMode !== 'two'">
                 <div class="field">
                     <span class="field-label">{{ labels.firstImage }}</span>
-                    <div class="upload-area" (click)="firstImageInput.click()">
+                    <div class="upload-area" [class.is-invalid]="showFirstImageRequired" (click)="!isUploadingFirstImage && firstImageInput.click()">
                         <input #firstImageInput type="file" accept="image/png,image/jpeg" hidden (change)="onFirstImageChange($event)" />
                         @if (firstImagePreview) {
                             <img [src]="firstImagePreview" alt="first image preview" class="upload-preview" />
+                        } @else if (isUploadingFirstImage) {
+                            <span>{{ lang === 'ar' ? 'جاري الرفع...' : 'Uploading...' }}</span>
                         } @else {
                             <i class="bi bi-camera"></i>
                             <span>{{ labels.uploadHint }}</span>
                         }
                     </div>
+                    @if (showFirstImageRequired) {
+                        <span class="validation-message">{{ requiredMessage(lang) }}</span>
+                    }
                 </div>
             </div>
 
@@ -68,15 +125,20 @@
                 <div class="form-col form-col--half">
                     <div class="field">
                         <span class="field-label">{{ labels.secondImage }}</span>
-                        <div class="upload-area" (click)="secondImageInput.click()">
+                        <div class="upload-area" [class.is-invalid]="showSecondImageRequired" (click)="!isUploadingSecondImage && secondImageInput.click()">
                             <input #secondImageInput type="file" accept="image/png,image/jpeg" hidden (change)="onSecondImageChange($event)" />
                             @if (secondImagePreview) {
                                 <img [src]="secondImagePreview" alt="second image preview" class="upload-preview" />
+                            } @else if (isUploadingSecondImage) {
+                                <span>{{ lang === 'ar' ? 'جاري الرفع...' : 'Uploading...' }}</span>
                             } @else {
                                 <i class="bi bi-camera"></i>
                                 <span>{{ labels.uploadHint }}</span>
                             }
                         </div>
+                        @if (showSecondImageRequired) {
+                            <span class="validation-message">{{ requiredMessage(lang) }}</span>
+                        }
                     </div>
                 </div>
             }
@@ -84,7 +146,7 @@
     </div>
 
     <div class="dialog-footer">
-        <button type="button" class="btn cancel-btn" (click)="cancel()">{{ labels.cancel }}</button>
-        <button type="button" class="btn save-btn" (click)="save()">{{ labels.save }}</button>
+        <button type="button" class="btn cancel-btn" [disabled]="isUploading" (click)="cancel()">{{ labels.cancel }}</button>
+        <button type="button" class="btn save-btn" [disabled]="!canSave" (click)="save()">{{ labels.save }}</button>
     </div>
 </div>

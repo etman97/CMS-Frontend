@@ -50,61 +50,20 @@
   <div class="layout-container">
     <div class="row g-0">
 
-      <div class="col-md-6">
-        <a routerLink="/solutions" class="solution-card">
-          <img
-            src="https://www.figma.com/api/mcp/asset/bd833695-5755-4cfb-ab65-8df84921acde"
-            alt="IT Solutions"
-          />
-          <div class="solution-overlay"></div>
-          <div class="solution-content">
-            <h3>IT Solutions <span>→</span></h3>
-            <p>Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.</p>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-md-6">
-        <a routerLink="/solutions" class="solution-card">
-          <img
-            src="https://www.figma.com/api/mcp/asset/b5bdc7c0-b9b0-4397-9092-d96580b13cb8"
-            alt="Data Solutions"
-          />
-          <div class="solution-overlay"></div>
-          <div class="solution-content">
-            <h3>Data Solutions <span>→</span></h3>
-            <p>Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.</p>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-md-6">
-        <a routerLink="/solutions" class="solution-card">
-          <img
-            src="https://www.figma.com/api/mcp/asset/46989d31-d536-413a-8146-1152436400eb"
-            alt="AI and Data Solutions"
-          />
-          <div class="solution-overlay"></div>
-          <div class="solution-content">
-            <h3>AI and Data Solutions <span>→</span></h3>
-            <p>Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.</p>
-          </div>
-        </a>
-      </div>
-
-      <div class="col-md-6">
-        <a routerLink="/solutions" class="solution-card">
-          <img
-            src="https://www.figma.com/api/mcp/asset/f371c04d-fa8a-4f08-bced-b2300c0c6592"
-            alt="Cybersecurity"
-          />
-          <div class="solution-overlay"></div>
-          <div class="solution-content">
-            <h3>Cybersecurity <span>→</span></h3>
-            <p>Our partnerships power integrated, future-ready solutions that help organizations thrive in a connected world.</p>
-          </div>
-        </a>
-      </div>
+      @for (card of solutionCards; track card.id) {
+        <div class="col-md-6">
+          <a routerLink="/solutions" class="solution-card">
+            @if (card.imageUrl) {
+              <img [src]="card.imageUrl" [alt]="card.title" />
+            }
+            <div class="solution-overlay"></div>
+            <div class="solution-content">
+              <h3>{{ card.title }} <span class="arrow">{{ isRtl ? '←' : '→' }}</span></h3>
+              <p>{{ card.brief }}</p>
+            </div>
+          </a>
+        </div>
+      }
 
     </div>
   </div>
@@ -119,14 +78,24 @@
       <h2 class="partners-title">{{ valuedPartnersTitle }}</h2>
     </div>
 
-    <div class="partners-strip" aria-label="Partners logos">
-      @for (logo of partnerLogos; track logo.id) {
-        <article class="home-partner-card">
-          @if (logo.logoImageUrl) {
-            <img [src]="logo.logoImageUrl" alt="Partner logo" />
-          }
-        </article>
-      }
+    <div class="partners-slider" aria-label="Partners logos">
+      <div class="partners-strip">
+        @for (logo of partnerLogos; track logo.id) {
+          <article class="home-partner-card">
+            @if (logo.logoImageUrl) {
+              <img [src]="logo.logoImageUrl" alt="Partner logo" />
+            }
+          </article>
+        }
+
+        @for (logo of partnerLogos; track logo.id) {
+          <article class="home-partner-card" aria-hidden="true">
+            @if (logo.logoImageUrl) {
+              <img [src]="logo.logoImageUrl" alt="" />
+            }
+          </article>
+        }
+      </div>
     </div>
   </div>
 </section>

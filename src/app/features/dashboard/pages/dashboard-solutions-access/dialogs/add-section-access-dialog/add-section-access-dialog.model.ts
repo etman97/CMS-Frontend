@@ -18,6 +18,6 @@ export interface AddSectionAccessDialogResult {
     paragraphEn: string;
     paragraphAr: string;
     imageMode: SectionImageMode;
-    firstImageFile: File | null;
-    secondImageFile: File | null;
+    imageUrl1: string | null;
+    imageUrl2: string | null;
 }

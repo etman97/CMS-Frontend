@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, finalize, map, shareReplay, tap } from 'rxjs/operators';
@@ -15,6 +15,33 @@ export class PageStatusService {
     private cachedStatuses: PublicPageStatusMap | undefined;
     private inflightRequest$: Observable<PublicPageStatusMap> | null = null;
 
+    private readonly _statuses = signal<PublicPageStatusMap | null>(null);
+    private readonly _isLoading = signal(false);
+    private readonly _hasLoaded = signal(false);
+    private readonly _supportArabic = signal(true);
+
+    readonly statuses = this._statuses.asReadonly();
+    readonly isLoading = this._isLoading.asReadonly();
+    readonly hasLoaded = this._hasLoaded.asReadonly();
+    readonly supportArabic = this._supportArabic.asReadonly();
+
+    load(forceRefresh = false): Observable<void> {
+        if (!forceRefresh && this._hasLoaded()) {
+            return of(undefined);
+        }
+        if (this._isLoading() && !forceRefresh) {
+            return (this.inflightRequest$ ?? this.getStatuses(forceRefresh)).pipe(
+                map(() => undefined),
+                catchError(() => of(undefined))
+            );
+        }
+        this._isLoading.set(true);
+        return this.getStatuses(forceRefresh).pipe(
+            finalize(() => this._isLoading.set(false)),
+            map(() => undefined)
+        );
+    }
+
     getStatuses(forceRefresh = false): Observable<PublicPageStatusMap> {
         if (!forceRefresh && this.cachedStatuses) {
             return of(this.cachedStatuses);
@@ -25,10 +52,11 @@ export class PageStatusService {
         }
 
         const request$ = this.http.get<unknown>(this.apiUrl).pipe(
-            map((response) => this.normalizeResponse(response)),
-            tap((statuses) => {
-                this.cachedStatuses = statuses;
+            map((response) => {
+                this.extractSupportArabic(response);
+                return this.normalizeResponse(response);
             }),
+            tap((statuses) => this.setStatuses(statuses)),
             catchError(() => of(this.defaultStatuses())),
             finalize(() => {
                 this.inflightRequest$ = null;
@@ -38,6 +66,20 @@ export class PageStatusService {
 
         this.inflightRequest$ = request$;
         return request$;
+    }
+
+    private setStatuses(statuses: PublicPageStatusMap): void {
+        this.cachedStatuses = statuses;
+        this._statuses.set(statuses);
+        this._hasLoaded.set(true);
+    }
+
+    private extractSupportArabic(response: unknown): void {
+        if (response && typeof response === 'object') {
+            const record = response as Record<string, unknown>;
+            const val = record['supportArabic'];
+            this._supportArabic.set(typeof val === 'boolean' ? val : true);
+        }
     }
 
     private defaultStatuses(): PublicPageStatusMap {

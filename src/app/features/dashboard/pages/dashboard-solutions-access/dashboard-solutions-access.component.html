@@ -15,11 +15,11 @@
         </div>
 
         <div class="header-actions">
-            <button type="button" class="btn preview-btn" [disabled]="sections.length === 0" (click)="onPreview()">
+            <button type="button" class="btn preview-btn" (click)="onPreview()">
                 <i class="bi bi-eye"></i>
                 <span>Preview</span>
             </button>
-            <button type="button" class="btn save-btn" [disabled]="isSaving || isUploading" (click)="save()">
+            <button type="button" class="btn save-btn" [disabled]="isSaving || !canSave" (click)="save()">
                 {{ isSaving ? 'Saving…' : 'Save' }}
             </button>
         </div>
@@ -80,9 +80,9 @@
                                 </div>
                             </article>
                         }
-                        <button type="button" class="add-section-btn" [disabled]="isUploading" (click)="addSection()">
+                        <button type="button" class="add-section-btn" (click)="addSection()">
                             <i class="bi bi-plus-lg"></i>
-                            <span>{{ isUploading ? 'Uploading…' : 'Add section' }}</span>
+                            <span>Add section</span>
                         </button>
                     </div>
                 </section>
@@ -136,9 +136,9 @@
                                 </div>
                             </article>
                         }
-                        <button type="button" class="add-section-btn" [disabled]="isUploading" (click)="addSection()">
+                        <button type="button" class="add-section-btn" (click)="addSection()">
                             <i class="bi bi-plus-lg"></i>
-                            <span>{{ isUploading ? 'جاري الرفع…' : 'إضافة قسم' }}</span>
+                            <span>إضافة قسم</span>
                         </button>
                     </div>
                 </section>

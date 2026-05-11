@@ -32,16 +32,16 @@
       <div class="row g-0">
         @for (card of solutionCards; track card.id) {
           <div class="col-md-6">
-            <div class="solution-card">
+            <button type="button" class="solution-card" [disabled]="openingCardId !== null" (click)="openSolutionCard(card)">
               @if (card.imageUrl) {
                 <img [src]="card.imageUrl" [alt]="card.title" />
               }
               <div class="solution-overlay"></div>
               <div class="solution-content">
-                <h3>{{ card.title }} <span>→</span></h3>
+                <h3>{{ card.title }} <span class="arrow">{{ isRtl ? '←' : '→' }}</span></h3>
                 <p>{{ card.brief }}</p>
               </div>
-            </div>
+            </button>
           </div>
         }
       </div>

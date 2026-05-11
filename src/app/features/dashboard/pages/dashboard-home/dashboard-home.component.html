@@ -8,6 +8,8 @@
     <app-dashboard-page-header
         title="Home"
         [(active)]="isActive"
+        [showSupportArabic]="true"
+        [(supportArabic)]="supportArabic"
         [isSaving]="isSaving"
         [saveDisabled]="isSaving || isUploadingImage || !canSave"
         (preview)="onPreview()"

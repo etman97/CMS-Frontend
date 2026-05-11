@@ -47,8 +47,10 @@ export class AppComponent implements OnDestroy {
       this.directionService.setDirection(lang);
     });
 
+    // Remove the lock when the loading screen STARTS fading (not when fully gone),
+    // so page animations begin in sync with the fade-out transition.
     effect(() => {
-      const isLoading = !this.appInit.isDone();
+      const isLoading = !this.appInit.isFading();
       this.document.documentElement.classList.toggle('app-loading-lock', isLoading);
       this.document.body.classList.toggle('app-loading-lock', isLoading);
     });

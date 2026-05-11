@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { finalize, shareReplay, tap } from 'rxjs/operators';
+import { catchError, finalize, map, shareReplay, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface ContactPageDto {
@@ -24,6 +24,38 @@ export class ContactPageService {
     private cachedData: ContactPageDto | null | undefined;
     private inflightRequest$: Observable<ContactPageDto | null> | null = null;
 
+    private readonly _data = signal<ContactPageDto | null>(null);
+    private readonly _isLoading = signal(false);
+    private readonly _error = signal<string | null>(null);
+    private readonly _hasLoaded = signal(false);
+
+    readonly data = this._data.asReadonly();
+    readonly isLoading = this._isLoading.asReadonly();
+    readonly error = this._error.asReadonly();
+    readonly hasLoaded = this._hasLoaded.asReadonly();
+
+    load(forceRefresh = false): Observable<void> {
+        if (!forceRefresh && this._hasLoaded()) {
+            return of(undefined);
+        }
+        if (this._isLoading() && !forceRefresh) {
+            return (this.inflightRequest$ ?? this.get(forceRefresh)).pipe(
+                map(() => undefined),
+                catchError(() => of(undefined))
+            );
+        }
+        this._isLoading.set(true);
+        this._error.set(null);
+        return this.get(forceRefresh).pipe(
+            catchError(() => {
+                this._error.set('Failed to load contact page data.');
+                return of(null as ContactPageDto | null);
+            }),
+            finalize(() => this._isLoading.set(false)),
+            map(() => undefined)
+        );
+    }
+
     get(forceRefresh = false): Observable<ContactPageDto | null> {
         if (!forceRefresh && this.cachedData !== undefined) {
             return of(this.cachedData);
@@ -34,9 +66,7 @@ export class ContactPageService {
         }
 
         const request$ = this.http.get<ContactPageDto | null>(this.apiUrl).pipe(
-            tap((data) => {
-                this.cachedData = data;
-            }),
+            tap((data) => this.setCache(data)),
             finalize(() => {
                 this.inflightRequest$ = null;
             }),
@@ -49,14 +79,21 @@ export class ContactPageService {
 
     save(dto: ContactPageDto): Observable<void> {
         return this.http.put<void>(this.apiUrl, dto).pipe(
-            tap(() => {
-                this.cachedData = dto;
-            })
+            tap(() => this.setCache(dto))
         );
     }
 
     invalidateCache(): void {
         this.cachedData = undefined;
         this.inflightRequest$ = null;
+        this._data.set(null);
+        this._hasLoaded.set(false);
+        this._error.set(null);
+    }
+
+    private setCache(data: ContactPageDto | null): void {
+        this.cachedData = data;
+        this._data.set(data);
+        this._hasLoaded.set(true);
     }
 }

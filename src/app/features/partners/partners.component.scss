@@ -23,8 +23,7 @@
 
 .hero-bg-wrap {
   position: absolute;
-  inset: 0 0 auto;
-  height: 341px;
+  inset: 0;
   overflow: hidden;
 
   &::after {
@@ -175,10 +174,6 @@
     padding-top: v.$navbar-content-spacing-mobile;
   }
 
-  .hero-bg-wrap {
-    height: 341px;
-  }
-
   .page-title {
     font-size: 26px;
   }
@@ -226,10 +221,6 @@
 }
 
 @media (max-width: 479px) {
-  .hero-bg-wrap {
-    height: 341px;
-  }
-
   .page-title {
     font-size: 23px;
   }

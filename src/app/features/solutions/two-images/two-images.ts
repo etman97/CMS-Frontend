@@ -1,6 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
+import { Subscription } from 'rxjs';
+import { SolutionSectionDto, SolutionSectionsService } from '../../../core/services/solution-sections.service';
+import { SolutionsPageService } from '../../../core/services/solutions-page.service';
 
 export interface TwoImagesSection {
     title: string;
@@ -13,6 +17,7 @@ export interface TwoImagesDialogData {
     source: 'preview';
     sections: TwoImagesSection[];
     previewLang: 'en' | 'ar';
+    title?: string;
 }
 
 @Component({
@@ -21,13 +26,26 @@ export interface TwoImagesDialogData {
   templateUrl: './two-images.html',
   styleUrl: './two-images.scss',
 })
-export class TwoImages implements OnInit {
+export class TwoImages implements OnInit, OnDestroy {
     private readonly dialogConfig = inject(DynamicDialogConfig<TwoImagesDialogData>, { optional: true });
+    private readonly route = inject(ActivatedRoute);
+    private readonly solutionSectionsService = inject(SolutionSectionsService);
+    private readonly solutionsPageService = inject(SolutionsPageService);
+    private readonly messageService = inject(MessageService, { optional: true });
+
+    private cardId = 0;
+    private dirObserver: MutationObserver | null = null;
+    private queryParamSub: Subscription | null = null;
+    private routeLang: 'en' | 'ar' | null = null;
+    private sourceSections: SolutionSectionDto[] | null = null;
 
     isPreviewMode = false;
     isRtl = false;
+    pageTitle = 'Data Solutions';
 
-    sections: TwoImagesSection[] = [
+    sections: TwoImagesSection[] = [];
+
+    private readonly fallbackSections: TwoImagesSection[] = [
         {
             title: 'Intelligent Backup',
             images: [
@@ -92,7 +110,128 @@ export class TwoImages implements OnInit {
         if (dialogData?.source === 'preview') {
             this.isPreviewMode = true;
             this.isRtl = dialogData.previewLang === 'ar';
-            this.sections = dialogData.sections;
+            this.pageTitle = dialogData.title || this.pageTitle;
+            this.sections = this.formatSections(dialogData.sections);
+            return;
         }
+
+        this.routeLang = this.resolveRouteLang(this.route.snapshot.queryParamMap.get('lang'));
+        this.observeDirectionChanges();
+        this.observeQueryLangChanges();
+
+        this.cardId = Number(this.route.snapshot.paramMap.get('cardId'));
+        if (!this.cardId) {
+            this.sections = this.formatSections(this.fallbackSections);
+            this.applyCurrentLanguage();
+            return;
+        }
+
+        const routeState = window.history.state as { title?: string; sections?: SolutionSectionDto[] };
+        this.pageTitle = routeState.title || this.pageTitle;
+        const lang = this.getCurrentLang();
+        this.isRtl = lang === 'ar';
+        this.loadCardTitle(this.cardId, lang);
+        if (routeState.sections?.length) {
+            this.sourceSections = routeState.sections;
+            this.populateSections(this.sourceSections, lang);
+            return;
+        }
+        this.loadSections(this.cardId, lang);
+    }
+
+    ngOnDestroy(): void {
+        this.dirObserver?.disconnect();
+        this.dirObserver = null;
+        this.queryParamSub?.unsubscribe();
+        this.queryParamSub = null;
+    }
+
+    private loadSections(cardId: number, lang: 'en' | 'ar'): void {
+        this.solutionSectionsService.getByCardId(cardId).subscribe({
+            next: (sections) => {
+                this.sourceSections = sections;
+                this.populateSections(sections, lang);
+            },
+            error: () => {
+                this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load solution details.' });
+            }
+        });
+    }
+
+    private populateSections(sections: SolutionSectionDto[], lang: 'en' | 'ar'): void {
+        this.sections = [...sections]
+            .sort((a, b) => a.displayOrder - b.displayOrder)
+            .map((section, index) => ({
+                title: lang === 'ar' ? section.titleAr : section.titleEn,
+                images: [
+                    { src: section.imageUrl1 ?? '', alt: lang === 'ar' ? section.titleAr : section.titleEn },
+                    { src: section.imageUrl2 ?? '', alt: lang === 'ar' ? section.titleAr : section.titleEn }
+                ].filter((image) => image.src),
+                paragraphs: [this.formatBrief(lang === 'ar' ? section.paragraphAr : section.paragraphEn)].filter(Boolean),
+                reverse: index % 2 !== 0
+            }));
+    }
+
+    private formatSections(sections: TwoImagesSection[]): TwoImagesSection[] {
+        return sections.map((section) => ({
+            ...section,
+            paragraphs: section.paragraphs.map((paragraph) => this.formatBrief(paragraph))
+        }));
+    }
+
+    private formatBrief(value: string): string {
+        return value.replace(/\.\s+/g, '.\n\n');
+    }
+
+    private loadCardTitle(cardId: number, lang: 'en' | 'ar'): void {
+        this.solutionsPageService.get().subscribe({
+            next: (data) => {
+                const card = data?.solutionCards.find((item) => item.id === cardId);
+                if (!card) return;
+                this.pageTitle = lang === 'ar' ? card.groupNameAr : card.groupNameEn;
+            }
+        });
+    }
+
+    private getCurrentLang(): 'en' | 'ar' {
+        if (this.routeLang) return this.routeLang;
+        return document.documentElement.getAttribute('dir') === 'rtl' ? 'ar' : 'en';
+    }
+
+    private applyCurrentLanguage(): void {
+        const lang = this.getCurrentLang();
+        this.isRtl = lang === 'ar';
+        if (this.cardId) {
+            this.loadCardTitle(this.cardId, lang);
+        }
+        if (this.sourceSections?.length) {
+            this.populateSections(this.sourceSections, lang);
+        }
+    }
+
+    private resolveRouteLang(value: string | null): 'en' | 'ar' | null {
+        if (value === 'ar') return 'ar';
+        if (value === 'en') return 'en';
+        return null;
+    }
+
+    private observeQueryLangChanges(): void {
+        this.queryParamSub = this.route.queryParamMap.subscribe((params) => {
+            this.routeLang = this.resolveRouteLang(params.get('lang'));
+            this.applyCurrentLanguage();
+        });
+    }
+
+    private observeDirectionChanges(): void {
+        this.dirObserver = new MutationObserver(() => {
+            if (!this.routeLang) {
+                this.applyCurrentLanguage();
+            }
+        });
+
+        this.dirObserver.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['dir']
+        });
     }
 }

@@ -352,6 +352,466 @@ select {
     overflow: hidden;
 }
 
+.page-hidden * {
+    animation: none !important;
+    transition: none !important;
+}
+
+// Public site motion layer
+// Animations are gated on body:not(.app-loading-lock) so they only play
+// after the loading screen has fully faded out.
+body:not(.app-loading-lock) :where(
+    .home-page,
+    .partners-page,
+    .services-page,
+    .solutions-page,
+    .solution-detail,
+    .contact-page:not(.page-hidden),
+    .hero-section:not(.page-hidden)
+) {
+    animation: public-page-fade 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+body:not(.app-loading-lock) .wes-navbar {
+    animation: public-nav-drop 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+body:not(.app-loading-lock) .wes-navbar :where(.navbar-brand, .navbar-toggler, .nav-item) {
+    animation: public-item-rise 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+body:not(.app-loading-lock) .wes-navbar .navbar-brand {
+    animation-delay: 0.04s;
+}
+
+body:not(.app-loading-lock) .wes-navbar .navbar-toggler,
+body:not(.app-loading-lock) .wes-navbar .nav-item:nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+body:not(.app-loading-lock) .wes-navbar .nav-item:nth-child(2) {
+    animation-delay: 0.12s;
+}
+
+body:not(.app-loading-lock) .wes-navbar .nav-item:nth-child(3) {
+    animation-delay: 0.16s;
+}
+
+body:not(.app-loading-lock) .wes-navbar .nav-item:nth-child(4) {
+    animation-delay: 0.2s;
+}
+
+body:not(.app-loading-lock) .wes-navbar .nav-item:nth-child(5) {
+    animation-delay: 0.24s;
+}
+
+body:not(.app-loading-lock) .wes-navbar .nav-item:nth-child(n + 6) {
+    animation-delay: 0.28s;
+}
+
+.wes-navbar :where(.navbar-brand, .nav-link, .btn-language, .navbar-toggler) {
+    transition:
+        transform 0.24s ease,
+        color 0.24s ease,
+        border-color 0.24s ease,
+        background-color 0.24s ease,
+        box-shadow 0.24s ease;
+}
+
+.wes-navbar :where(.navbar-brand, .nav-link, .btn-language, .navbar-toggler):where(:hover, :focus-visible) {
+    transform: translateY(-2px);
+}
+
+.wes-navbar :where(.navbar-brand, .nav-link, .btn-language, .navbar-toggler):active {
+    transform: translateY(0) scale(0.98);
+}
+
+.wes-navbar .navbar-toggler-line {
+    transition:
+        transform 0.24s ease,
+        opacity 0.24s ease;
+}
+
+.wes-navbar .navbar-toggler[aria-expanded='true'] .navbar-toggler-line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.wes-navbar .navbar-toggler[aria-expanded='true'] .navbar-toggler-line:nth-child(2) {
+    opacity: 0;
+}
+
+.wes-navbar .navbar-toggler[aria-expanded='true'] .navbar-toggler-line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+.wes-navbar .navbar-collapse.show {
+    animation: public-menu-open 0.26s ease both;
+    transform-origin: top center;
+}
+
+body:not(.app-loading-lock) :where(
+    .home-page .hero-title,
+    .partners-page .page-title,
+    .services-page .hero-label,
+    .solutions-page .hero__title,
+    .solution-detail__title,
+    .contact-hero h1,
+    .hero-section .intro h1
+) {
+    animation: public-title-rise 0.62s 0.08s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+body:not(.app-loading-lock) :where(
+    .home-page .hero-text,
+    .partners-page .page-subtitle,
+    .services-page .hero-text,
+    .solutions-page .hero__text,
+    .solution-detail .breadcrumb,
+    .contact-hero p,
+    .hero-section .intro p
+) {
+    animation: public-item-rise 0.58s 0.16s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+body:not(.app-loading-lock) :where(.home-page .hero-actions, .contact-content, .stats-section, .cards, .team-grid) {
+    animation: public-item-rise 0.58s 0.24s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+body:not(.app-loading-lock) :where(.section-title-wrap, .team-content h2) {
+    animation: public-title-rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+body:not(.app-loading-lock) :where(
+    .home-page .solution-card,
+    .solutions-page .solution-card,
+    .partners-page .partner-card,
+    .home-page .home-partner-card,
+    .services-page .service-row,
+    .solution-detail .solution-block,
+    .contact-page .info-block,
+    .contact-page .form-block,
+    .contact-page .visit-block,
+    .hero-section .info-card,
+    .hero-section .number-card,
+    .hero-section .team-card
+) {
+    animation: public-card-rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    transition:
+        transform 0.28s ease,
+        box-shadow 0.28s ease,
+        filter 0.28s ease;
+}
+
+:where(
+    .home-page .solution-card,
+    .solutions-page .solution-card,
+    .partners-page .partner-card,
+    .home-page .home-partner-card,
+    .services-page .service-row,
+    .solution-detail .solution-block,
+    .contact-page .info-block,
+    .contact-page .form-block,
+    .contact-page .visit-block,
+    .hero-section .info-card,
+    .hero-section .team-card
+):where(:hover, :focus-within) {
+    transform: translateY(-4px);
+    filter: saturate(1.04);
+}
+
+:where(
+    .home-page .solution-card,
+    .solutions-page .solution-card,
+    .services-page .service-image,
+    .solution-detail .solution-block__media,
+    .solution-detail .image-pair__item,
+    .hero-section .info-card,
+    .hero-section .team-card
+) img {
+    transition:
+        transform 0.55s ease,
+        filter 0.55s ease;
+}
+
+:where(
+    .home-page .solution-card,
+    .solutions-page .solution-card,
+    .services-page .service-image,
+    .solution-detail .solution-block__media,
+    .solution-detail .image-pair__item,
+    .hero-section .info-card,
+    .hero-section .team-card
+):hover img {
+    transform: scale(1.045);
+    filter: saturate(1.08);
+}
+
+:where(
+    .home-page .solution-card,
+    .solutions-page .solution-card
+):hover .solution-content h3 span {
+    animation: public-arrow-nudge 0.42s ease both;
+}
+
+:where(
+    .contact-page .form-field,
+    .contact-page .submit-button,
+    .footer-links a,
+    .footer-contact a,
+    .footer-bottom-links a,
+    .footer-social a
+) {
+    transition:
+        transform 0.22s ease,
+        color 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease,
+        background-color 0.22s ease;
+}
+
+:where(.contact-page .form-field):focus {
+    animation: public-focus-pulse 0.38s ease both;
+}
+
+:where(.contact-page .submit-button, .footer-links a, .footer-contact a, .footer-bottom-links a, .footer-social a):where(:hover, :focus-visible) {
+    transform: translateY(-2px);
+}
+
+:where(
+    .hero-light,
+    .hero-blur,
+    .hero__bg,
+    .solution-detail__glow,
+    .contact-section__glow,
+    .hero-glow
+) {
+    animation: public-glow-drift 7s ease-in-out infinite alternate;
+}
+
+:where(.hero-light-right, .hero-blur-right, .hero__bg--right-glow, .solution-detail__glow--right, .contact-section__glow--right, .hero-glow-right) {
+    animation-delay: -2.5s;
+}
+
+:where(.hero-blur-bottom, .hero__bg--bottom-glow, .solution-detail__glow--bottom, .contact-section__glow--bottom, .hero-glow-bottom) {
+    animation-delay: -4s;
+}
+
+body:not(.app-loading-lock) .wes-footer {
+    animation: public-footer-rise 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+body:not(.app-loading-lock) .wes-footer :where(.footer-brand-col, .footer-links-col, .footer-contact-col, .footer-bottom-col) {
+    animation: public-card-rise 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+body:not(.app-loading-lock) .wes-footer .footer-brand-col {
+    animation-delay: 0.06s;
+}
+
+body:not(.app-loading-lock) .wes-footer .footer-links-col {
+    animation-delay: 0.12s;
+}
+
+body:not(.app-loading-lock) .wes-footer .footer-contact-col {
+    animation-delay: 0.18s;
+}
+
+body:not(.app-loading-lock) .wes-footer .footer-bottom-col {
+    animation-delay: 0.24s;
+}
+
+:where(
+    .solutions-section .row > * .solution-card,
+    .solutions-section .row > *,
+    .partners-grid > *,
+    .partners-strip > *,
+    .services-grid > *,
+    .solution-detail__sections > *,
+    .numbers-grid > *,
+    .cards > *,
+    .team-grid > *
+):nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+:where(
+    .solutions-section .row > * .solution-card,
+    .solutions-section .row > *,
+    .partners-grid > *,
+    .partners-strip > *,
+    .services-grid > *,
+    .solution-detail__sections > *,
+    .numbers-grid > *,
+    .cards > *,
+    .team-grid > *
+):nth-child(2) {
+    animation-delay: 0.14s;
+}
+
+:where(
+    .solutions-section .row > * .solution-card,
+    .solutions-section .row > *,
+    .partners-grid > *,
+    .partners-strip > *,
+    .services-grid > *,
+    .solution-detail__sections > *,
+    .numbers-grid > *,
+    .cards > *,
+    .team-grid > *
+):nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+:where(
+    .solutions-section .row > * .solution-card,
+    .solutions-section .row > *,
+    .partners-grid > *,
+    .partners-strip > *,
+    .services-grid > *,
+    .solution-detail__sections > *,
+    .numbers-grid > *,
+    .cards > *,
+    .team-grid > *
+):nth-child(n + 4) {
+    animation-delay: 0.26s;
+}
+
+.solutions-section .row > *:nth-child(1) .solution-card {
+    animation-delay: 0.08s;
+}
+
+.solutions-section .row > *:nth-child(2) .solution-card {
+    animation-delay: 0.14s;
+}
+
+.solutions-section .row > *:nth-child(3) .solution-card {
+    animation-delay: 0.2s;
+}
+
+.solutions-section .row > *:nth-child(n + 4) .solution-card {
+    animation-delay: 0.26s;
+}
+
+@keyframes public-page-fade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes public-nav-drop {
+    from {
+        opacity: 0;
+        transform: translateY(-14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes public-title-rise {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes public-item-rise {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes public-card-rise {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes public-footer-rise {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes public-menu-open {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scaleY(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+    }
+}
+
+@keyframes public-arrow-nudge {
+    0% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(7px);
+    }
+
+    100% {
+        transform: translateX(4px);
+    }
+}
+
+@keyframes public-focus-pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.01);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes public-glow-drift {
+    from {
+        filter: blur(120px) saturate(1);
+    }
+
+    to {
+        filter: blur(128px) saturate(1.12);
+    }
+}
+
 // Shared dashboard responsiveness guards
 @media (max-width: 992px) {
     .dashboard,
@@ -377,5 +837,523 @@ select {
     .p-dialog {
         margin: 0 0.5rem;
         width: calc(100vw - 1rem) !important;
+    }
+}
+
+// Dashboard motion layer
+:where(
+    .dashboard,
+    .dashboard-home-page:not(.page-hidden),
+    .dashboard-about-us-page:not(.page-hidden),
+    .dashboard-solutions-page:not(.page-hidden),
+    .dashboard-solutions-access-page:not(.page-hidden),
+    .dashboard-services-page:not(.page-hidden),
+    .dashboard-partners-page:not(.page-hidden),
+    .dashboard-contact-us-page:not(.page-hidden)
+) {
+    animation: dashboard-page-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.solutions-access-page:not(.page-hidden) {
+    animation: dashboard-page-rise 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.solutions-access-page .page-header {
+    animation: dashboard-slide-down 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.solutions-access-page :where(.solutions-tabs, .editor-card) {
+    animation: dashboard-card-reveal 0.55s 0.08s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.solutions-access-page :where(.editor-bottom, .service-row, .add-section-btn) {
+    animation: dashboard-item-reveal 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.solutions-access-page .service-row:nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+.solutions-access-page .service-row:nth-child(2) {
+    animation-delay: 0.14s;
+}
+
+.solutions-access-page .service-row:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+.solutions-access-page .service-row:nth-child(n + 4) {
+    animation-delay: 0.26s;
+}
+
+.solutions-access-page :where(.back-link, .menu-btn, .preview-btn, .save-btn, .add-section-btn) {
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
+}
+
+.solutions-access-page :where(.back-link, .menu-btn, .preview-btn, .save-btn, .add-section-btn):where(:hover, :focus-visible) {
+    transform: translateY(-2px);
+    filter: saturate(1.08);
+}
+
+.solutions-access-page :where(.back-link, .menu-btn, .preview-btn, .save-btn, .add-section-btn):active {
+    transform: translateY(0) scale(0.97);
+}
+
+.solutions-access-page :where(.service-row, .editor-card) {
+    transition:
+        transform 0.28s ease,
+        box-shadow 0.28s ease,
+        border-color 0.28s ease;
+}
+
+.solutions-access-page .service-row:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(45, 46, 131, 0.08);
+}
+
+.solutions-access-page .section-actions-menu {
+    animation: dashboard-menu-pop 0.18s ease both;
+    transform-origin: top right;
+}
+
+.solutions-access-page [dir='rtl'] .section-actions-menu {
+    transform-origin: top left;
+}
+
+.solutions-access-page .service-row__media img {
+    transition:
+        transform 0.45s ease,
+        filter 0.45s ease;
+}
+
+.solutions-access-page .service-row__media:hover img {
+    transform: scale(1.035);
+    filter: saturate(1.06);
+}
+
+.solutions-access-page .add-section-btn:hover i {
+    animation: dashboard-plus-spark 0.42s ease both;
+}
+
+.solutions-access-page :where(.p-tab) {
+    transition:
+        color 0.24s ease,
+        border-color 0.24s ease,
+        transform 0.24s ease;
+}
+
+.solutions-access-page :where(.p-tab:hover, .p-tab-active) {
+    transform: translateY(-1px);
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) app-dashboard-page-header {
+    animation: dashboard-slide-down 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+    display: block;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.editor-card, .home-tabs, .about-tabs, .solutions-tabs, .services-tabs, .partners-tabs, .contact-tabs) {
+    animation: dashboard-card-reveal 0.55s 0.08s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.editor-top, .editor-bottom, .hero-fields, .text-box, .service-row, .solution-card, .partner-card, .team-card, .add-section-btn, .add-group-card, .add-partner-card, .add-member) {
+    animation: dashboard-item-reveal 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.text-box, .service-row, .solution-card, .partner-card, .team-card):nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.text-box, .service-row, .solution-card, .partner-card, .team-card):nth-child(2) {
+    animation-delay: 0.14s;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.text-box, .service-row, .solution-card, .partner-card, .team-card):nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.text-box, .service-row, .solution-card, .partner-card, .team-card):nth-child(n + 4) {
+    animation-delay: 0.26s;
+}
+
+:where(.stats-grid, .sections-grid, .activity-list) > * {
+    animation: dashboard-item-reveal 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+:where(.stats-grid, .sections-grid, .activity-list) > *:nth-child(1) {
+    animation-delay: 0.08s;
+}
+
+:where(.stats-grid, .sections-grid, .activity-list) > *:nth-child(2) {
+    animation-delay: 0.14s;
+}
+
+:where(.stats-grid, .sections-grid, .activity-list) > *:nth-child(3) {
+    animation-delay: 0.2s;
+}
+
+:where(.stats-grid, .sections-grid, .activity-list) > *:nth-child(n + 4) {
+    animation-delay: 0.26s;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.icon-btn, .edit-btn, .menu-btn, .delete-btn, .team-more, .preview-btn, .save-btn, .add-section-btn, .add-group-card, .add-partner-card, .add-member) {
+    transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        filter 0.22s ease;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.icon-btn, .edit-btn, .menu-btn, .delete-btn, .team-more, .preview-btn, .save-btn, .add-section-btn, .add-group-card, .add-partner-card, .add-member):where(:hover, :focus-visible) {
+    transform: translateY(-2px);
+    filter: saturate(1.08);
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.icon-btn, .edit-btn, .menu-btn, .delete-btn, .team-more, .preview-btn, .save-btn, .add-section-btn, .add-group-card, .add-partner-card, .add-member):active {
+    transform: translateY(0) scale(0.97);
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.text-box, .service-row, .solution-card, .partner-card, .team-card, .editor-card) {
+    transition:
+        transform 0.28s ease,
+        box-shadow 0.28s ease,
+        border-color 0.28s ease;
+}
+
+:where(
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.text-box, .service-row, .solution-card, .partner-card, .team-card):hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 24px rgba(45, 46, 131, 0.08);
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.field-input, .content-input, .form-control, .number-input):focus {
+    animation: dashboard-focus-pulse 0.45s ease both;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.section-actions-menu, .solution-actions-menu, .team-actions-menu) {
+    animation: dashboard-menu-pop 0.18s ease both;
+    transform-origin: top right;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where([dir='rtl'] .section-actions-menu, [dir='rtl'] .solution-actions-menu, [dir='rtl'] .team-actions-menu) {
+    transform-origin: top left;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.solution-card__media img, .service-row__media img, .partner-card__logo img, .team-card img, .upload-preview, .media-preview) {
+    transition:
+        transform 0.45s ease,
+        filter 0.45s ease;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.solution-card__media:hover img, .service-row__media:hover img, .partner-card__logo:hover img, .team-card:hover img, .upload-area:hover .upload-preview) {
+    transform: scale(1.035);
+    filter: saturate(1.06);
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.add-group-card:hover .add-group-icon, .add-member:hover .add-member__plus, .add-section-btn:hover i, .add-partner-card:hover i) {
+    animation: dashboard-plus-spark 0.42s ease both;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.p-tab) {
+    transition:
+        color 0.24s ease,
+        border-color 0.24s ease,
+        transform 0.24s ease;
+}
+
+:where(
+    .dashboard-home-page,
+    .dashboard-about-us-page,
+    .dashboard-solutions-page,
+    .dashboard-solutions-access-page,
+    .dashboard-services-page,
+    .dashboard-partners-page,
+    .dashboard-contact-us-page
+) :where(.p-tab:hover, .p-tab-active) {
+    transform: translateY(-1px);
+}
+
+@keyframes dashboard-page-rise {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes dashboard-slide-down {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes dashboard-card-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.985);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes dashboard-item-reveal {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes dashboard-menu-pop {
+    from {
+        opacity: 0;
+        transform: translateY(-4px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes dashboard-focus-pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    45% {
+        transform: scale(1.006);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes dashboard-plus-spark {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    50% {
+        transform: rotate(90deg) scale(1.12);
+    }
+
+    100% {
+        transform: rotate(90deg) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :where(
+        .dashboard,
+        .dashboard-home-page,
+        .dashboard-about-us-page,
+        .dashboard-solutions-page,
+        .dashboard-solutions-access-page,
+        .solutions-access-page,
+        .dashboard-services-page,
+        .dashboard-partners-page,
+        .dashboard-contact-us-page,
+        .home-page,
+        .partners-page,
+        .services-page,
+        .solutions-page,
+        .solution-detail,
+        .contact-page,
+        .hero-section,
+        .wes-navbar,
+        .wes-footer,
+        .dashboard *,
+        .dashboard-home-page *,
+        .dashboard-about-us-page *,
+        .dashboard-solutions-page *,
+        .dashboard-solutions-access-page *,
+        .solutions-access-page *,
+        .dashboard-services-page *,
+        .dashboard-partners-page *,
+        .dashboard-contact-us-page *,
+        .home-page *,
+        .partners-page *,
+        .services-page *,
+        .solutions-page *,
+        .solution-detail *,
+        .contact-page *,
+        .hero-section *,
+        .wes-navbar *,
+        .wes-footer *
+    ) {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.001ms !important;
     }
 }

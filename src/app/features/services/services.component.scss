@@ -27,8 +27,7 @@
 
 .hero-image-wrap {
   position: absolute;
-  inset: 0 0 auto;
-  height: 341px;
+  inset: 0;
   overflow: hidden;
 
   &::after {
@@ -168,7 +167,7 @@
     margin: 0;
     color: v.$white;
     font-size: 18px;
-    font-weight: 400;
+    font-weight: 300;
     line-height: 1.5;
     white-space: pre-line;
 
@@ -233,12 +232,6 @@
   .hero {
     min-height: 341px;
     padding-top: v.$navbar-content-spacing-mobile;
-  }
-
-  .hero-image-wrap,
-  .hero-image-backdrop,
-  .hero-image {
-    height: 341px;
   }
 
   .hero-label {

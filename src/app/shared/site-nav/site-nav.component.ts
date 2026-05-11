@@ -46,6 +46,10 @@ export class SiteNavComponent implements OnInit {
         return currentLang === 'ar';
     }
 
+    get isSupportArabic(): boolean {
+        return this.pageStatusService.supportArabic();
+    }
+
     isPageEnabled(key: PublicPageKey): boolean {
         return this.pageStatuses[key];
     }

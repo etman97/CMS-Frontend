@@ -68,10 +68,6 @@ export const routes: Routes = [
                 loadComponent: () => import('./features/auth/login/login.component').then(m => m.LoginComponent)
             },
             {
-                path: 'register',
-                loadComponent: () => import('./features/auth/register/register.component').then(m => m.RegisterComponent)
-            },
-            {
                 path: '',
                 redirectTo: 'login',
                 pathMatch: 'full'
@@ -114,6 +110,10 @@ export const routes: Routes = [
             {
                 path: 'dashboard/contact-us',
                 loadComponent: () => import('./features/dashboard/pages/dashboard-contact-us/dashboard-contact-us.component').then(m => m.DashboardContactUsComponent)
+            },
+            {
+                path: 'dashboard/users',
+                loadComponent: () => import('./features/dashboard/pages/dashboard-users/dashboard-users.component').then(m => m.DashboardUsersComponent)
             }
         ]
     },

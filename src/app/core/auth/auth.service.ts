@@ -33,6 +33,11 @@ export interface RegisterRequest {
     lastName: string;
 }
 
+export interface UpdatePasswordRequest {
+    email: string;
+    newPassword: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
     private readonly apiUrl = `${environment.apiUrl}/auth`;
@@ -66,6 +71,14 @@ export class AuthService {
                 }
             })
         );
+    }
+
+    registerUser(request: RegisterRequest): Observable<AuthResponse> {
+        return this.http.post<AuthResponse>(`${this.apiUrl}/register`, request);
+    }
+
+    updatePassword(request: UpdatePasswordRequest): Observable<AuthResponse> {
+        return this.http.put<AuthResponse>(`${this.apiUrl}/update-password`, request);
     }
 
     logout(): void {

@@ -1,0 +1,247 @@
+<p-toast></p-toast>
+
+<div class="users-page">
+    <div class="page-header">
+        <h1>User Management</h1>
+        <p>Manage users and credentials for the CMS dashboard</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+        <button class="tab" [class.tab--active]="activeTab === 'add-user'" (click)="switchTab('add-user')">
+            <i class="bi bi-person-plus"></i>
+            Add User
+        </button>
+        <button class="tab" [class.tab--active]="activeTab === 'update-password'" (click)="switchTab('update-password')">
+            <i class="bi bi-key"></i>
+            Update Password
+        </button>
+    </div>
+
+    <!-- Add User Tab -->
+    @if (activeTab === 'add-user') {
+        <div class="form-card">
+            <div class="form-card__header">
+                <div class="form-card__icon">
+                    <i class="bi bi-person-plus"></i>
+                </div>
+                <div>
+                    <h2>Add New User</h2>
+                    <p>Create a new account for dashboard access</p>
+                </div>
+            </div>
+
+            <form (ngSubmit)="onSubmit()" class="user-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input
+                            type="text"
+                            id="firstName"
+                            class="form-input"
+                            [class.is-invalid]="firstNameInvalid"
+                            placeholder="Enter first name"
+                            [(ngModel)]="firstName"
+                            name="firstName"
+                            [disabled]="loading()" />
+                        @if (firstNameInvalid) {
+                            <span class="validation-msg">First name is required.</span>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input
+                            type="text"
+                            id="lastName"
+                            class="form-input"
+                            [class.is-invalid]="lastNameInvalid"
+                            placeholder="Enter last name"
+                            [(ngModel)]="lastName"
+                            name="lastName"
+                            [disabled]="loading()" />
+                        @if (lastNameInvalid) {
+                            <span class="validation-msg">Last name is required.</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input
+                        type="email"
+                        id="email"
+                        class="form-input"
+                        [class.is-invalid]="emailInvalid || emailPatternInvalid"
+                        placeholder="user&#64;example.com"
+                        [(ngModel)]="email"
+                        name="email"
+                        autocomplete="off"
+                        [disabled]="loading()" />
+                    @if (emailInvalid) {
+                        <span class="validation-msg">Email is required.</span>
+                    } @else if (emailPatternInvalid) {
+                        <span class="validation-msg">Please enter a valid email address.</span>
+                    }
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                [type]="showPassword ? 'text' : 'password'"
+                                id="password"
+                                class="form-input"
+                                [class.is-invalid]="passwordInvalid || passwordTooShort"
+                                placeholder="Min 6 characters"
+                                [(ngModel)]="password"
+                                name="password"
+                                autocomplete="new-password"
+                                [disabled]="loading()" />
+                            <button type="button" class="password-toggle" (click)="togglePassword()">
+                                <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
+                            </button>
+                        </div>
+                        @if (passwordInvalid) {
+                            <span class="validation-msg">Password is required.</span>
+                        } @else if (passwordTooShort) {
+                            <span class="validation-msg">Password must be at least 6 characters.</span>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                [type]="showConfirmPassword ? 'text' : 'password'"
+                                id="confirmPassword"
+                                class="form-input"
+                                [class.is-invalid]="confirmPasswordInvalid || passwordsMismatch"
+                                placeholder="Repeat password"
+                                [(ngModel)]="confirmPassword"
+                                name="confirmPassword"
+                                autocomplete="new-password"
+                                [disabled]="loading()" />
+                            <button type="button" class="password-toggle" (click)="toggleConfirmPassword()">
+                                <i class="bi" [class.bi-eye]="!showConfirmPassword" [class.bi-eye-slash]="showConfirmPassword"></i>
+                            </button>
+                        </div>
+                        @if (confirmPasswordInvalid) {
+                            <span class="validation-msg">Please confirm the password.</span>
+                        } @else if (passwordsMismatch) {
+                            <span class="validation-msg">Passwords do not match.</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit" [disabled]="loading()">
+                        @if (loading()) {
+                            <i class="bi bi-arrow-repeat spin"></i>
+                            Creating User...
+                        } @else {
+                            <i class="bi bi-person-plus"></i>
+                            Create User
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+    }
+
+    <!-- Update Password Tab -->
+    @if (activeTab === 'update-password') {
+        <div class="form-card">
+            <div class="form-card__header">
+                <div class="form-card__icon form-card__icon--key">
+                    <i class="bi bi-key"></i>
+                </div>
+                <div>
+                    <h2>Update Password</h2>
+                    <p>Reset a user's password by their email address</p>
+                </div>
+            </div>
+
+            <form (ngSubmit)="onUpdatePassword()" class="user-form">
+                <div class="form-group">
+                    <label for="upEmail">User Email</label>
+                    <input
+                        type="email"
+                        id="upEmail"
+                        class="form-input"
+                        [class.is-invalid]="upEmailInvalid || upEmailPatternInvalid"
+                        placeholder="user&#64;example.com"
+                        [(ngModel)]="upEmail"
+                        name="upEmail"
+                        autocomplete="off"
+                        [disabled]="upLoading()" />
+                    @if (upEmailInvalid) {
+                        <span class="validation-msg">Email is required.</span>
+                    } @else if (upEmailPatternInvalid) {
+                        <span class="validation-msg">Please enter a valid email address.</span>
+                    }
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="upNewPassword">New Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                [type]="upShowPassword ? 'text' : 'password'"
+                                id="upNewPassword"
+                                class="form-input"
+                                [class.is-invalid]="upPasswordInvalid || upPasswordTooShort"
+                                placeholder="Min 6 characters"
+                                [(ngModel)]="upNewPassword"
+                                name="upNewPassword"
+                                autocomplete="new-password"
+                                [disabled]="upLoading()" />
+                            <button type="button" class="password-toggle" (click)="upTogglePassword()">
+                                <i class="bi" [class.bi-eye]="!upShowPassword" [class.bi-eye-slash]="upShowPassword"></i>
+                            </button>
+                        </div>
+                        @if (upPasswordInvalid) {
+                            <span class="validation-msg">New password is required.</span>
+                        } @else if (upPasswordTooShort) {
+                            <span class="validation-msg">Password must be at least 6 characters.</span>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label for="upConfirmPassword">Confirm New Password</label>
+                        <div class="password-wrapper">
+                            <input
+                                [type]="upShowConfirmPassword ? 'text' : 'password'"
+                                id="upConfirmPassword"
+                                class="form-input"
+                                [class.is-invalid]="upConfirmInvalid || upPasswordsMismatch"
+                                placeholder="Repeat new password"
+                                [(ngModel)]="upConfirmPassword"
+                                name="upConfirmPassword"
+                                autocomplete="new-password"
+                                [disabled]="upLoading()" />
+                            <button type="button" class="password-toggle" (click)="upToggleConfirmPassword()">
+                                <i class="bi" [class.bi-eye]="!upShowConfirmPassword" [class.bi-eye-slash]="upShowConfirmPassword"></i>
+                            </button>
+                        </div>
+                        @if (upConfirmInvalid) {
+                            <span class="validation-msg">Please confirm the new password.</span>
+                        } @else if (upPasswordsMismatch) {
+                            <span class="validation-msg">Passwords do not match.</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit" [disabled]="upLoading()">
+                        @if (upLoading()) {
+                            <i class="bi bi-arrow-repeat spin"></i>
+                            Updating Password...
+                        } @else {
+                            <i class="bi bi-key"></i>
+                            Update Password
+                        }
+                    </button>
+                </div>
+            </form>
+        </div>
+    }
+</div>

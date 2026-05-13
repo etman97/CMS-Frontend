@@ -59,6 +59,12 @@
                 <span>Contact Us</span>
                 }
             </a>
+            <a routerLink="/dashboard/users" routerLinkActive="active" class="nav-item" (click)="onNavItemClick()">
+                <i class="bi bi-person-plus"></i>
+                @if (!sidebarCollapsed) {
+                <span>Users</span>
+                }
+            </a>
         </nav>
     </aside>
 

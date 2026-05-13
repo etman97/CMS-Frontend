@@ -50,7 +50,7 @@
 }
 
 .hero-title {
-  font-size: clamp(52px, 5vw, 80px);
+  font-size: clamp(50px, 5vw, 78px);
   font-weight: 700;
   line-height: 1.2;
   max-width: 1100px;
@@ -265,7 +265,7 @@
     align-items: flex-start !important;
   }
 
-  .hero-title { font-size: 56px; }
+  .hero-title { font-size: 54px; }
   .hero-text  { font-size: 20px; }
 
   .partners-strip {
@@ -283,7 +283,7 @@
     padding: $navbar-content-spacing-tablet 0 72px;
   }
 
-  .hero-title { font-size: 46px; }
+  .hero-title { font-size: 44px; }
   .hero-text  { font-size: 18px; }
 
   .hero-light-left {
@@ -319,7 +319,7 @@
     padding: $navbar-content-spacing-mobile 0 56px;
   }
 
-  .hero-title { font-size: 36px; }
+  .hero-title { font-size: 34px; }
   .hero-text  { font-size: 16px; }
 
   .section-title-wrap {
@@ -378,7 +378,7 @@
   }
 
   .hero-title {
-    font-size: 32px;
+    font-size: 30px;
   }
 
   .hero-text {

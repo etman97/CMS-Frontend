@@ -7,38 +7,20 @@
 
     <!-- Error Message -->
     @if (errorMessage()) {
-      <div class="error-message">{{ errorMessage() }}</div>
+    <div class="error-message">{{ errorMessage() }}</div>
     }
 
     <form (ngSubmit)="onSubmit()">
       <div class="mb-3">
-        <input
-          type="email"
-          class="form-control"
-          placeholder="Email"
-          aria-label="Email"
-          [(ngModel)]="email"
-          name="email"
-          autocomplete="email"
-        />
+        <input type="email" class="form-control" placeholder="Email" aria-label="Email" [(ngModel)]="email" name="email"
+          autocomplete="email" />
       </div>
 
       <div class="mb-3 password-wrapper">
-        <input
-          [type]="showPassword ? 'text' : 'password'"
-          class="form-control pe-5"
-          placeholder="Password"
-          aria-label="Password"
-          [(ngModel)]="password"
-          name="password"
-          autocomplete="current-password"
-        />
-        <button
-          type="button"
-          class="password-toggle"
-          (click)="togglePassword()"
-          aria-label="Toggle password visibility"
-        >
+        <input [type]="showPassword ? 'text' : 'password'" class="form-control pe-5" placeholder="Password"
+          aria-label="Password" [(ngModel)]="password" name="password" autocomplete="current-password" />
+        <button type="button" class="password-toggle" (click)="togglePassword()"
+          aria-label="Toggle password visibility">
           <i class="bi" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"></i>
         </button>
       </div>
@@ -48,14 +30,6 @@
           {{ loading() ? 'Logging in...' : 'Login' }}
         </button>
       </div>
-
-      <div class="text-center">
-        <a routerLink="/auth/forgot-password" class="forgot-link">Forgot Password ?</a>
-      </div>
     </form>
-
-    <div class="auth-footer">
-      <p>Don't have an account? <a routerLink="/auth/register">Create one</a></p>
-    </div>
   </div>
 </div>

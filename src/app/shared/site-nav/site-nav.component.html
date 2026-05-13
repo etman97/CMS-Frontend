@@ -25,8 +25,8 @@
     <div class="collapse navbar-collapse" [class.show]="isMenuOpen" id="wesNavbar">
       <ul class="navbar-nav wes-nav-list align-items-lg-center">
         @for (item of navItems; track item.key) {
-          <li class="nav-item">
-            @if (isPageEnabled(item.key)) {
+          @if (isPageEnabled(item.key)) {
+            <li class="nav-item">
               <a
                 class="nav-link"
                 [routerLink]="item.route"
@@ -36,10 +36,8 @@
               >
                 {{ item.labelKey | translate }}
               </a>
-            } @else {
-              <span class="nav-link nav-link--disabled" aria-disabled="true">{{ item.labelKey | translate }}</span>
-            }
-          </li>
+            </li>
+          }
         }
         @if (isSupportArabic) {
           <li class="nav-item nav-item--language mt-3 mt-lg-0">

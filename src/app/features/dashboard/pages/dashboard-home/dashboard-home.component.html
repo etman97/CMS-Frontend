@@ -30,6 +30,14 @@
                     @if (heroIsVideo && heroImageUrl) {
                         <video class="editor-card__video-bg" [src]="heroImageUrl" autoplay loop muted playsinline></video>
                     }
+                    @if (isUploadingImage) {
+                        <div class="editor-card__upload-overlay">
+                            <div class="upload-loader">
+                                <div class="upload-loader__spinner"></div>
+                                <span class="upload-loader__text">Uploading...</span>
+                            </div>
+                        </div>
+                    }
                     <div class="panel-tools">
                         <button type="button" class="icon-btn" aria-label="Upload image or video"
                             (click)="topImageInputEn.click()" [disabled]="isUploadingImage">
@@ -117,6 +125,14 @@
                     [class.editor-card--has-image]="heroImageUrl">
                     @if (heroIsVideo && heroImageUrl) {
                         <video class="editor-card__video-bg" [src]="heroImageUrl" autoplay loop muted playsinline></video>
+                    }
+                    @if (isUploadingImage) {
+                        <div class="editor-card__upload-overlay">
+                            <div class="upload-loader">
+                                <div class="upload-loader__spinner"></div>
+                                <span class="upload-loader__text">جاري الرفع...</span>
+                            </div>
+                        </div>
                     }
                     <div class="panel-tools">
                         <button type="button" class="icon-btn" aria-label="Upload image or video"

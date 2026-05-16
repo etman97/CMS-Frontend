@@ -26,6 +26,31 @@
               <i class="bi bi-linkedin footer-social-icon"></i>
             </a>
           }
+          @if (twitterUrl) {
+            <a [href]="twitterUrl" target="_blank" rel="noopener noreferrer" aria-label="Twitter / X">
+              <i class="bi bi-twitter-x footer-social-icon"></i>
+            </a>
+          }
+          @if (instagramUrl) {
+            <a [href]="instagramUrl" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <i class="bi bi-instagram footer-social-icon"></i>
+            </a>
+          }
+          @if (tiktokUrl) {
+            <a [href]="tiktokUrl" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+              <i class="bi bi-tiktok footer-social-icon"></i>
+            </a>
+          }
+          @if (youtubeUrl) {
+            <a [href]="youtubeUrl" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+              <i class="bi bi-youtube footer-social-icon"></i>
+            </a>
+          }
+          @if (whatsappUrl) {
+            <a [href]="whatsappUrl" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
+              <i class="bi bi-whatsapp footer-social-icon"></i>
+            </a>
+          }
         </div>
 
         <p class="footer-copy mt-4 mb-0">

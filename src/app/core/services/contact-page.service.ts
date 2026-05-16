@@ -14,6 +14,11 @@ export interface ContactPageDto {
     locationUrl: string;
     facebookUrl: string | null;
     linkedInUrl: string | null;
+    twitterUrl: string | null;
+    instagramUrl: string | null;
+    tiktokUrl: string | null;
+    youtubeUrl: string | null;
+    whatsappUrl: string | null;
     heroImageUrl: string | null;
 }
 

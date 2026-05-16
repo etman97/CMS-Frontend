@@ -55,6 +55,46 @@
               </span>
               <span class="info-text">{{ address }}</span>
             </div>
+
+            @if (hasSocialLinks) {
+              <div class="social-icons">
+                @if (facebookUrl) {
+                  <a [href]="facebookUrl" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="Facebook">
+                    <i class="bi bi-facebook"></i>
+                  </a>
+                }
+                @if (linkedInUrl) {
+                  <a [href]="linkedInUrl" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="LinkedIn">
+                    <i class="bi bi-linkedin"></i>
+                  </a>
+                }
+                @if (twitterUrl) {
+                  <a [href]="twitterUrl" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="Twitter / X">
+                    <i class="bi bi-twitter-x"></i>
+                  </a>
+                }
+                @if (instagramUrl) {
+                  <a [href]="instagramUrl" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="Instagram">
+                    <i class="bi bi-instagram"></i>
+                  </a>
+                }
+                @if (tiktokUrl) {
+                  <a [href]="tiktokUrl" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="TikTok">
+                    <i class="bi bi-tiktok"></i>
+                  </a>
+                }
+                @if (youtubeUrl) {
+                  <a [href]="youtubeUrl" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="YouTube">
+                    <i class="bi bi-youtube"></i>
+                  </a>
+                }
+                @if (whatsappUrl) {
+                  <a [href]="whatsappUrl" target="_blank" rel="noopener noreferrer" class="social-icon-link" aria-label="WhatsApp">
+                    <i class="bi bi-whatsapp"></i>
+                  </a>
+                }
+              </div>
+            }
           </section>
 
           <section class="form-block" aria-labelledby="message-title">

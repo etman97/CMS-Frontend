@@ -37,6 +37,11 @@ export class SiteFooterComponent implements OnInit {
     address = '';
     facebookUrl = '';
     linkedInUrl = '';
+    twitterUrl = '';
+    instagramUrl = '';
+    tiktokUrl = '';
+    youtubeUrl = '';
+    whatsappUrl = '';
 
     ngOnInit(): void {
         this.pageStatusService.getStatuses().subscribe((statuses) => {
@@ -49,6 +54,11 @@ export class SiteFooterComponent implements OnInit {
             this.address = data?.address ?? '';
             this.facebookUrl = data?.facebookUrl ?? '';
             this.linkedInUrl = data?.linkedInUrl ?? '';
+            this.twitterUrl = data?.twitterUrl ?? '';
+            this.instagramUrl = data?.instagramUrl ?? '';
+            this.tiktokUrl = data?.tiktokUrl ?? '';
+            this.youtubeUrl = data?.youtubeUrl ?? '';
+            this.whatsappUrl = data?.whatsappUrl ?? '';
         });
     }
 

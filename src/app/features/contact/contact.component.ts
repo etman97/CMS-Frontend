@@ -61,6 +61,17 @@ export class ContactComponent implements OnInit, OnDestroy {
     locationUrl = '';
     safeLocationUrl: SafeResourceUrl | null = null;
     heroImageUrl: string | null = null;
+    facebookUrl: string | null = null;
+    linkedInUrl: string | null = null;
+    twitterUrl: string | null = null;
+    instagramUrl: string | null = null;
+    tiktokUrl: string | null = null;
+    youtubeUrl: string | null = null;
+    whatsappUrl: string | null = null;
+
+    get hasSocialLinks(): boolean {
+        return !!(this.facebookUrl || this.linkedInUrl || this.twitterUrl || this.instagramUrl || this.tiktokUrl || this.youtubeUrl || this.whatsappUrl);
+    }
 
     ngOnInit(): void {
         this.routeLang = this.resolveRouteLang(this.route.snapshot.queryParamMap.get('lang'));
@@ -130,6 +141,13 @@ export class ContactComponent implements OnInit, OnDestroy {
         const normalizedMapUrl = this.normalizeMapUrl(this.locationUrl);
         this.safeLocationUrl = normalizedMapUrl ? this.sanitizer.bypassSecurityTrustResourceUrl(normalizedMapUrl) : null;
         this.heroImageUrl = data.heroImageUrl ?? null;
+        this.facebookUrl = data.facebookUrl ?? null;
+        this.linkedInUrl = data.linkedInUrl ?? null;
+        this.twitterUrl = data.twitterUrl ?? null;
+        this.instagramUrl = data.instagramUrl ?? null;
+        this.tiktokUrl = data.tiktokUrl ?? null;
+        this.youtubeUrl = data.youtubeUrl ?? null;
+        this.whatsappUrl = data.whatsappUrl ?? null;
     }
 
     private normalizeMapUrl(value: string): string {
@@ -203,7 +221,12 @@ export class ContactComponent implements OnInit, OnDestroy {
                 locationUrl: '',
                 heroImageUrl: null,
                 facebookUrl: null,
-                linkedInUrl: null
+                linkedInUrl: null,
+                twitterUrl: null,
+                instagramUrl: null,
+                tiktokUrl: null,
+                youtubeUrl: null,
+                whatsappUrl: null
             },
             lang
         );

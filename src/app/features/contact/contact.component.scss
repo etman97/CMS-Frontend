@@ -243,6 +243,37 @@ a.info-text:hover {
   text-decoration: underline;
 }
 
+.social-icons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.social-icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: $secondary;
+  color: $white;
+  font-size: 20px;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    background: rgba($white, 0.15);
+    transform: translateY(-2px);
+  }
+
+  &:focus-visible {
+    outline: 2px solid rgba($white, 0.7);
+    outline-offset: 2px;
+  }
+}
+
 .contact-page[dir='rtl'] {
   input[type='tel'] {
     direction: rtl;

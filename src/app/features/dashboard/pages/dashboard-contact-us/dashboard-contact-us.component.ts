@@ -10,7 +10,7 @@ import { DashboardPageHeaderComponent } from '../../components/dashboard-page-he
 import { ContactComponent, ContactDialogData } from '../../../contact/contact.component';
 
 type ContactLang = 'en' | 'ar';
-type ContactFieldKey = 'introDescriptionEn' | 'introDescriptionAr' | 'phone' | 'email' | 'address' | 'locationUrl' | 'facebookUrl' | 'linkedInUrl';
+type ContactFieldKey = 'introDescriptionEn' | 'introDescriptionAr' | 'phone' | 'email' | 'address' | 'locationUrl' | 'facebookUrl' | 'linkedInUrl' | 'twitterUrl' | 'instagramUrl' | 'tiktokUrl' | 'youtubeUrl' | 'whatsappUrl';
 
 @Component({
     selector: 'app-dashboard-contact-us',
@@ -46,6 +46,11 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
     locationUrl = '';
     facebookUrl = '';
     linkedInUrl = '';
+    twitterUrl = '';
+    instagramUrl = '';
+    tiktokUrl = '';
+    youtubeUrl = '';
+    whatsappUrl = '';
     private readonly englishPattern = /^[A-Za-z0-9\s.,!?'"():;&%+\-_/–—‘’“”]+$/;
     private readonly mixedLanguagePattern = /^[A-Za-z\u0600-\u06FF\u0660-\u06690-9\s.,!?'"():;&%+\-_/،؛؟٪ـ–—‘’“”]+$/;
     private readonly phonePattern = /^[0-9+\-\s()]{6,20}$/;
@@ -90,6 +95,11 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
         this.locationUrl = data.locationUrl;
         this.facebookUrl = data.facebookUrl ?? '';
         this.linkedInUrl = data.linkedInUrl ?? '';
+        this.twitterUrl = data.twitterUrl ?? '';
+        this.instagramUrl = data.instagramUrl ?? '';
+        this.tiktokUrl = data.tiktokUrl ?? '';
+        this.youtubeUrl = data.youtubeUrl ?? '';
+        this.whatsappUrl = data.whatsappUrl ?? '';
         this.heroImageUrl = data.heroImageUrl;
         this.persistedHeroImageUrl = data.heroImageUrl;
     }
@@ -172,6 +182,7 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
     }
 
     showRequiredError(field: ContactFieldKey): boolean {
+        if (this.isSocialField(field)) return false;
         return (this.attemptedSave || !!this.touchedFields[field]) && !this.getFieldValue(field).trim();
     }
 
@@ -191,16 +202,27 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
         if (field === 'email') {
             return lang === 'ar' ? '\u064a\u0631\u062c\u0649 \u0625\u062f\u062e\u0627\u0644 \u0628\u0631\u064a\u062f \u0625\u0644\u0643\u062a\u0631\u0648\u0646\u064a \u0635\u062d\u064a\u062d.' : 'Please enter a valid email address.';
         }
-        if (field === 'locationUrl' || field === 'facebookUrl' || field === 'linkedInUrl') {
+        if (field === 'locationUrl' || this.isSocialField(field)) {
             return lang === 'ar' ? '\u064a\u0631\u062c\u0649 \u0625\u062f\u062e\u0627\u0644 \u0631\u0627\u0628\u0637 \u0635\u062d\u064a\u062d.' : 'Please enter a valid URL.';
         }
 
         return lang === 'ar' ? '\u064a\u0631\u062c\u0649 \u0625\u062f\u062e\u0627\u0644 \u0646\u0635 \u0639\u0631\u0628\u064a \u0623\u0648 \u0625\u0646\u062c\u0644\u064a\u0632\u064a \u0641\u0642\u0637.' : 'Please enter English text only.';
     }
 
+    private readonly socialFields: ContactFieldKey[] = ['facebookUrl', 'linkedInUrl', 'twitterUrl', 'instagramUrl', 'tiktokUrl', 'youtubeUrl', 'whatsappUrl'];
+
+    private isSocialField(field: ContactFieldKey): boolean {
+        return this.socialFields.includes(field);
+    }
+
     private areRequiredFieldsValid(): boolean {
-        const fields: ContactFieldKey[] = ['introDescriptionEn', 'introDescriptionAr', 'phone', 'email', 'address', 'locationUrl', 'facebookUrl', 'linkedInUrl'];
-        return fields.every((field) => this.getFieldValue(field).trim() && this.isFieldPatternValid(field));
+        const requiredFields: ContactFieldKey[] = ['introDescriptionEn', 'introDescriptionAr', 'phone', 'email', 'address', 'locationUrl'];
+        const requiredValid = requiredFields.every((field) => this.getFieldValue(field).trim() && this.isFieldPatternValid(field));
+        const socialValid = this.socialFields.every((field) => {
+            const value = this.getFieldValue(field).trim();
+            return !value || this.isFieldPatternValid(field);
+        });
+        return requiredValid && socialValid;
     }
 
     private getFieldValue(field: ContactFieldKey): string {
@@ -212,7 +234,12 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
             address: this.address,
             locationUrl: this.locationUrl,
             facebookUrl: this.facebookUrl,
-            linkedInUrl: this.linkedInUrl
+            linkedInUrl: this.linkedInUrl,
+            twitterUrl: this.twitterUrl,
+            instagramUrl: this.instagramUrl,
+            tiktokUrl: this.tiktokUrl,
+            youtubeUrl: this.youtubeUrl,
+            whatsappUrl: this.whatsappUrl
         };
 
         return fieldMap[field] ?? '';
@@ -240,8 +267,6 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
         }
 
         const normalizedLocationUrl = this.normalizeMapUrl(this.locationUrl);
-        const normalizedFacebookUrl = this.facebookUrl.trim();
-        const normalizedLinkedInUrl = this.linkedInUrl.trim();
 
         const payload: ContactPageDto = {
             isActive: this.isActive,
@@ -251,8 +276,13 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
             email: this.email,
             address: this.address,
             locationUrl: normalizedLocationUrl,
-            facebookUrl: normalizedFacebookUrl,
-            linkedInUrl: normalizedLinkedInUrl,
+            facebookUrl: this.facebookUrl.trim() || null,
+            linkedInUrl: this.linkedInUrl.trim() || null,
+            twitterUrl: this.twitterUrl.trim() || null,
+            instagramUrl: this.instagramUrl.trim() || null,
+            tiktokUrl: this.tiktokUrl.trim() || null,
+            youtubeUrl: this.youtubeUrl.trim() || null,
+            whatsappUrl: this.whatsappUrl.trim() || null,
             heroImageUrl: this.heroImageUrl
         };
 
@@ -289,8 +319,6 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
         }
 
         const normalizedLocationUrl = this.normalizeMapUrl(this.locationUrl);
-        const normalizedFacebookUrl = this.facebookUrl.trim();
-        const normalizedLinkedInUrl = this.linkedInUrl.trim();
 
         const dto: ContactPageDto = {
             isActive: this.isActive,
@@ -300,8 +328,13 @@ export class DashboardContactUsComponent implements OnInit, OnDestroy {
             email: this.email,
             address: this.address,
             locationUrl: normalizedLocationUrl,
-            facebookUrl: normalizedFacebookUrl,
-            linkedInUrl: normalizedLinkedInUrl,
+            facebookUrl: this.facebookUrl.trim() || null,
+            linkedInUrl: this.linkedInUrl.trim() || null,
+            twitterUrl: this.twitterUrl.trim() || null,
+            instagramUrl: this.instagramUrl.trim() || null,
+            tiktokUrl: this.tiktokUrl.trim() || null,
+            youtubeUrl: this.youtubeUrl.trim() || null,
+            whatsappUrl: this.whatsappUrl.trim() || null,
             heroImageUrl: this.persistedHeroImageUrl
         };
 

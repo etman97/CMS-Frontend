@@ -3,6 +3,7 @@ import { ActivatedRoute, RouterLink } from '@angular/router';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { ButtonDirection, HomePageDto, HomePageService } from '../../core/services/home-page.service';
+import { isVideoUrl } from '../../shared/utils/media.utils';
 import { SolutionsPageDto, SolutionsPageService } from '../../core/services/solutions-page.service';
 import { PageStatusService } from '../../core/services/page-status.service';
 import { PartnersPageService } from '../../core/services/partners-page.service';
@@ -43,6 +44,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     secondaryButtonDirection: ButtonDirection = 'Internal';
     secondaryButtonLink: string | null = null;
     heroBackgroundImageStyle: string | null = null;
+    heroVideoUrl: string | null = null;
+    heroIsVideo = false;
     isRtl = false;
     isPreviewMode = false;
     showSolutions = false;
@@ -153,7 +156,14 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.secondaryButtonDirection = data.secondaryButton?.direction ?? 'Internal';
         this.secondaryButtonLink = this.resolveButtonLink(data.secondaryButton);
 
-        this.heroBackgroundImageStyle = this.buildHeroBackgroundStyle(data.heroImageUrl);
+        this.heroIsVideo = isVideoUrl(data.heroImageUrl);
+        if (this.heroIsVideo) {
+            this.heroVideoUrl = data.heroImageUrl;
+            this.heroBackgroundImageStyle = null;
+        } else {
+            this.heroVideoUrl = null;
+            this.heroBackgroundImageStyle = this.buildHeroBackgroundStyle(data.heroImageUrl);
+        }
     }
 
     private resolveButtonLink(button: HomePageDto['primaryButton'] | null | undefined): string | null {

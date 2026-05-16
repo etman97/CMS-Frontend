@@ -24,14 +24,18 @@
 
         <p-tabpanels>
             <p-tabpanel value="en">
-                <div class="editor-card" [style.background-image]="heroImageUrl ? 'url(' + heroImageUrl + ')' : null"
+                <div class="editor-card"
+                    [style.background-image]="heroImageUrl && !heroIsVideo ? 'url(' + heroImageUrl + ')' : null"
                     [class.editor-card--has-image]="heroImageUrl">
+                    @if (heroIsVideo && heroImageUrl) {
+                        <video class="editor-card__video-bg" [src]="heroImageUrl" autoplay loop muted playsinline></video>
+                    }
                     <div class="panel-tools">
-                        <button type="button" class="icon-btn" aria-label="Upload image"
+                        <button type="button" class="icon-btn" aria-label="Upload image or video"
                             (click)="topImageInputEn.click()" [disabled]="isUploadingImage">
                             <i class="bi bi-upload"></i>
                         </button>
-                        <input #topImageInputEn type="file" accept="image/png,image/jpeg,image/webp" hidden
+                        <input #topImageInputEn type="file" accept="image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime" hidden
                             (change)="onTopImageSelected($event)" />
                         <button type="button" class="icon-btn" aria-label="Add link">
                             <i class="bi bi-link-45deg"></i>
@@ -108,14 +112,18 @@
             </p-tabpanel>
 
             <p-tabpanel value="ar">
-                <div class="editor-card" [style.background-image]="heroImageUrl ? 'url(' + heroImageUrl + ')' : null"
+                <div class="editor-card"
+                    [style.background-image]="heroImageUrl && !heroIsVideo ? 'url(' + heroImageUrl + ')' : null"
                     [class.editor-card--has-image]="heroImageUrl">
+                    @if (heroIsVideo && heroImageUrl) {
+                        <video class="editor-card__video-bg" [src]="heroImageUrl" autoplay loop muted playsinline></video>
+                    }
                     <div class="panel-tools">
-                        <button type="button" class="icon-btn" aria-label="Upload image"
+                        <button type="button" class="icon-btn" aria-label="Upload image or video"
                             (click)="topImageInputAr.click()" [disabled]="isUploadingImage">
                             <i class="bi bi-upload rtl-flip"></i>
                         </button>
-                        <input #topImageInputAr type="file" accept="image/png,image/jpeg,image/webp" hidden
+                        <input #topImageInputAr type="file" accept="image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime" hidden
                             (change)="onTopImageSelected($event)" />
                         <button type="button" class="icon-btn" aria-label="Add link">
                             <i class="bi bi-link-45deg rtl-flip"></i>

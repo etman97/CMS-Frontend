@@ -1,6 +1,9 @@
 <div class="home-page" (click)="onPreviewSurfaceClick($event)">
 <!-- Hero -->
 <header class="hero-section d-flex align-items-center" [style.background]="heroBackgroundImageStyle">
+  @if (heroIsVideo && heroVideoUrl) {
+    <video class="hero-video-bg" [src]="heroVideoUrl" autoplay loop muted playsinline></video>
+  }
   <div class="hero-overlay"></div>
   <div class="hero-light hero-light-left"></div>
   <div class="hero-light hero-light-right"></div>

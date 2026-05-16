@@ -14,10 +14,20 @@
   padding: $navbar-content-spacing-desktop 0 96px;
 }
 
+.hero-video-bg {
+  height: 100%;
+  inset: 0;
+  object-fit: cover;
+  position: absolute;
+  width: 100%;
+  z-index: 0;
+}
+
 .hero-overlay {
   position: absolute;
   inset: 0;
   background: rgba(0, 0, 0, 0.1);
+  z-index: 1;
 }
 
 .hero-light {

@@ -10,6 +10,7 @@ import { DashboardPageHeaderComponent } from '../../components/dashboard-page-he
 import { HomeComponent, HomeDialogData } from '../../../home/home.component';
 import { HomeButtonDialogComponent } from './dialogs/home-button-dialog/home-button-dialog.component';
 import { HomeButtonDialogResult } from './dialogs/home-button-dialog/home-button-dialog.model';
+import { isVideoFile, isVideoUrl } from '../../../../shared/utils/media.utils';
 
 type HomeButtonKey = 'primary' | 'secondary';
 type HomeFieldKey =
@@ -55,6 +56,7 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
     secondaryButton: ButtonConfigDto = { en: '', ar: '', direction: 'Internal', selectedTab: null, externalUrl: null };
 
     heroImageUrl: string | null = null;
+    heroIsVideo = false;
     private persistedHeroImageUrl: string | null = null;
     private localPreviewUrl: string | null = null;
     private readonly englishPattern = /^[A-Za-z0-9\s.,!?'"():;&%+\-_/–—‘’“”]+$/;
@@ -96,6 +98,7 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
         this.secondaryButton = { ...data.secondaryButton };
         this.heroImageUrl = data.heroImageUrl;
         this.persistedHeroImageUrl = data.heroImageUrl;
+        this.heroIsVideo = isVideoUrl(data.heroImageUrl);
     }
 
     onTopImageSelected(event: Event): void {
@@ -104,8 +107,11 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
         if (!file) return;
 
         const previousImageUrl = this.heroImageUrl;
+        const previousIsVideo = this.heroIsVideo;
+        const fileIsVideo = isVideoFile(file);
 
         this.isUploadingImage = true;
+        this.heroIsVideo = fileIsVideo;
         this.revokeLocalPreviewUrl();
         this.localPreviewUrl = URL.createObjectURL(file);
         this.heroImageUrl = this.localPreviewUrl;
@@ -114,25 +120,34 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
         this.mediaService.upload(file, 'cms/home').subscribe({
             next: (res) => {
                 this.persistedHeroImageUrl = res.url;
+                this.heroIsVideo = isVideoUrl(res.url) || fileIsVideo;
                 this.isUploadingImage = false;
                 input.value = '';
-                this.messageService.add({ severity: 'success', summary: 'Uploaded', detail: 'Image uploaded successfully.' });
-                this.swapToRemoteImageWhenReady(res.url);
+                this.messageService.add({ severity: 'success', summary: 'Uploaded', detail: 'File uploaded successfully.' });
+                this.swapToRemoteWhenReady(res.url);
                 this.cdr.detectChanges();
             },
             error: () => {
                 this.revokeLocalPreviewUrl();
                 this.heroImageUrl = previousImageUrl;
+                this.heroIsVideo = previousIsVideo;
                 this.persistedHeroImageUrl = previousImageUrl;
                 this.isUploadingImage = false;
                 input.value = '';
-                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Image upload failed.' });
+                this.messageService.add({ severity: 'error', summary: 'Error', detail: 'File upload failed.' });
                 this.cdr.detectChanges();
             }
         });
     }
 
-    private swapToRemoteImageWhenReady(url: string): void {
+    private swapToRemoteWhenReady(url: string): void {
+        if (this.heroIsVideo) {
+            this.heroImageUrl = url;
+            this.revokeLocalPreviewUrl();
+            this.cdr.detectChanges();
+            return;
+        }
+
         const img = new Image();
         img.onload = () => {
             this.heroImageUrl = url;
@@ -140,7 +155,6 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
             this.cdr.detectChanges();
         };
         img.onerror = () => {
-            this.messageService.add({ severity: 'warn', summary: 'Warning', detail: 'Image uploaded but preview is not ready yet.' });
             this.cdr.detectChanges();
         };
         img.src = url;
@@ -179,12 +193,12 @@ export class DashboardHomeComponent implements OnInit, OnDestroy {
             'heroTitleEn',
             'heroContentEn',
             'primaryButtonEn',
-            'secondaryButtonEn',
-            'heroTitleAr',
-            'heroContentAr',
-            'primaryButtonAr',
-            'secondaryButtonAr'
+            'secondaryButtonEn'
         ];
+
+        if (this.supportArabic) {
+            fields.push('heroTitleAr', 'heroContentAr', 'primaryButtonAr', 'secondaryButtonAr');
+        }
 
         return fields.every((field) => {
             const value = this.getRequiredFieldValue(field).trim();

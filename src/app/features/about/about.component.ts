@@ -168,21 +168,21 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isRtl = lang === 'ar';
 
         if (lang === 'ar') {
-            this.aboutUsContent = data.aboutUsContentAr;
-            this.subContent = data.subContentAr;
-            this.whyUsContent = data.whyUsContentAr;
+            this.aboutUsContent = this.formatBrief(data.aboutUsContentAr);
+            this.subContent = this.formatBrief(data.subContentAr);
+            this.whyUsContent = this.formatBrief(data.whyUsContentAr);
             this.numbersSubtitle = data.numbersSubtitleAr;
-            this.missionContent = data.missionContentAr;
-            this.visionContent = data.visionContentAr;
-            this.leadershipContent = data.leadershipContentAr;
+            this.missionContent = this.formatBrief(data.missionContentAr);
+            this.visionContent = this.formatBrief(data.visionContentAr);
+            this.leadershipContent = this.formatBrief(data.leadershipContentAr);
         } else {
-            this.aboutUsContent = data.aboutUsContentEn;
-            this.subContent = data.subContentEn;
-            this.whyUsContent = data.whyUsContentEn;
+            this.aboutUsContent = this.formatBrief(data.aboutUsContentEn);
+            this.subContent = this.formatBrief(data.subContentEn);
+            this.whyUsContent = this.formatBrief(data.whyUsContentEn);
             this.numbersSubtitle = data.numbersSubtitleEn;
-            this.missionContent = data.missionContentEn;
-            this.visionContent = data.visionContentEn;
-            this.leadershipContent = data.leadershipContentEn;
+            this.missionContent = this.formatBrief(data.missionContentEn);
+            this.visionContent = this.formatBrief(data.visionContentEn);
+            this.leadershipContent = this.formatBrief(data.leadershipContentEn);
         }
 
         this.numberOfEmployees = this.normalizeCount(data.numberOfEmployees);
@@ -332,6 +332,10 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private getLangFromDocumentDir(): 'en' | 'ar' {
         return document.documentElement.getAttribute('dir') === 'rtl' ? 'ar' : 'en';
+    }
+
+    private formatBrief(value: string): string {
+        return value.replace(/\.\s+/g, '.\n\n');
     }
 
     private observeQueryLangChanges(): void {

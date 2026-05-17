@@ -129,6 +129,7 @@
     font-size: 18px;
     line-height: 1.5;
     color: $white;
+    white-space: pre-line;
   }
 }
 
@@ -159,6 +160,7 @@
   font-size: 18px;
   line-height: 1.6;
   color: $white;
+  white-space: pre-line;
 }
 
 .numbers-grid {
@@ -265,6 +267,7 @@
   font-size: 18px;
   line-height: 1.5;
   color: $white;
+  white-space: pre-line;
 }
 
 .team-section {
@@ -301,6 +304,40 @@
   border-radius: 16px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.04);
+  cursor: default;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    border: 1px solid rgba($white, 0.08);
+    z-index: 3;
+    transition: border-color 0.4s ease;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $secondary 0%, #a0a0ff 100%);
+    z-index: 4;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &:hover::before {
+    border-color: rgba($white, 0.2);
+  }
+
+  &:hover::after {
+    transform: scaleX(1);
+  }
 }
 
 .team-card__image {
@@ -309,16 +346,90 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+  .team-card:hover & {
+    transform: scale(1.07);
+  }
 }
 
 .team-card__overlay {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 152px;
-  backdrop-filter: blur(4px);
-  background: linear-gradient(180deg, rgba(45, 46, 131, 0.1) 0%, rgba(45, 46, 131, 0.5) 100%);
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(45, 46, 131, 0.95) 0%,
+    rgba(45, 46, 131, 0.6) 40%,
+    rgba(45, 46, 131, 0.1) 70%,
+    transparent 100%
+  );
+  transition: opacity 0.4s ease;
+
+  .team-card:hover & {
+    opacity: 0;
+  }
+}
+
+.team-card__hover-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px;
+  background: linear-gradient(
+    160deg,
+    rgba(45, 46, 131, 0.92) 0%,
+    rgba(20, 20, 80, 0.97) 100%
+  );
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
+  backdrop-filter: blur(6px);
+
+  .team-card:hover & {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.team-card__hover-name {
+  margin: 0 0 4px;
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: $white;
+}
+
+.team-card__role {
+  margin: 0 0 12px;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: rgba($white, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.team-card__divider {
+  width: 32px;
+  height: 2px;
+  background: linear-gradient(90deg, $secondary 0%, #a0a0ff 100%);
+  margin-bottom: 14px;
+  border-radius: 2px;
+}
+
+.team-card__bio {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.6;
+  color: rgba($white, 0.85);
+  white-space: pre-line;
 }
 
 .team-card__content {
@@ -327,32 +438,21 @@
   right: 0;
   bottom: 0;
   z-index: 1;
-  padding: 12px;
+  padding: 20px 16px;
   color: $white;
 
   h3 {
     margin: 0;
     font-family: 'Inter', sans-serif;
     font-size: 20px;
-    font-weight: 500;
-    line-height: 1.5;
+    font-weight: 600;
+    line-height: 1.4;
+    transition: opacity 0.3s ease;
+
+    .team-card:hover & {
+      opacity: 0;
+    }
   }
-}
-
-.team-card__role {
-  margin: 4px 0 0;
-  font-family: 'Inter', sans-serif;
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.5;
-}
-
-.team-card__bio {
-  margin: 4px 0 0;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 1.5;
 }
 
 .about-page--preview {
@@ -374,11 +474,26 @@
   }
 
   .team-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .info-card {
     min-height: 420px;
+  }
+}
+
+@media (hover: none) {
+  .team-card__hover-panel {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .team-card__content h3 {
+    opacity: 0;
+  }
+
+  .team-card__overlay {
+    opacity: 0;
   }
 }
 

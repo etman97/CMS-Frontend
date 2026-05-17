@@ -36,7 +36,6 @@
 
       <div class="numbers" #numbersSection>
         <h2>{{ getLabel('wesInNumbers') }}</h2>
-        <p class="numbers-subtitle">{{ numbersSubtitle }}</p>
         <div class="numbers-grid">
           <div class="number-card">
             <div class="number">+{{ displayedNumberOfProducts }}</div>
@@ -122,7 +121,11 @@
             <div class="team-card__overlay"></div>
             <div class="team-card__content">
               <h3>{{ isRtl ? member.nameAr : member.nameEn }}</h3>
+            </div>
+            <div class="team-card__hover-panel">
+              <p class="team-card__hover-name">{{ isRtl ? member.nameAr : member.nameEn }}</p>
               <p class="team-card__role">{{ isRtl ? member.jobTitleAr : member.jobTitleEn }}</p>
+              <div class="team-card__divider"></div>
               <p class="team-card__bio">{{ isRtl ? member.briefAr : member.briefEn }}</p>
             </div>
           </article>

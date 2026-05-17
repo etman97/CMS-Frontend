@@ -46,6 +46,9 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
     missionContent = '';
     visionContent = '';
     leadershipContent = '';
+    missionTitle = '';
+    visionTitle = '';
+    leadershipTitle = '';
 
     numberOfEmployees = 0;
     numberOfProducts = 0;
@@ -175,6 +178,9 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
             this.missionContent = this.formatBrief(data.missionContentAr);
             this.visionContent = this.formatBrief(data.visionContentAr);
             this.leadershipContent = this.formatBrief(data.leadershipContentAr);
+            this.missionTitle = data.missionTitleAr;
+            this.visionTitle = data.visionTitleAr;
+            this.leadershipTitle = data.leadershipTitleAr;
         } else {
             this.aboutUsContent = this.formatBrief(data.aboutUsContentEn);
             this.subContent = this.formatBrief(data.subContentEn);
@@ -183,6 +189,9 @@ export class AboutComponent implements OnInit, AfterViewInit, OnDestroy {
             this.missionContent = this.formatBrief(data.missionContentEn);
             this.visionContent = this.formatBrief(data.visionContentEn);
             this.leadershipContent = this.formatBrief(data.leadershipContentEn);
+            this.missionTitle = data.missionTitleEn;
+            this.visionTitle = data.visionTitleEn;
+            this.leadershipTitle = data.leadershipTitleEn;
         }
 
         this.numberOfEmployees = this.normalizeCount(data.numberOfEmployees);

@@ -21,13 +21,19 @@ type AboutTextFieldKey =
     | 'missionContentEn'
     | 'visionContentEn'
     | 'leadershipContentEn'
+    | 'missionTitleEn'
+    | 'visionTitleEn'
+    | 'leadershipTitleEn'
     | 'aboutUsContentAr'
     | 'subContentAr'
     | 'whyUsContentAr'
     | 'numbersSubtitleAr'
     | 'missionContentAr'
     | 'visionContentAr'
-    | 'leadershipContentAr';
+    | 'leadershipContentAr'
+    | 'missionTitleAr'
+    | 'visionTitleAr'
+    | 'leadershipTitleAr';
 
 type AboutNumberFieldKey = 'numberOfEmployees' | 'numberOfProducts' | 'numberOfClients' | 'numberOfPartners';
 type AboutFieldKey = AboutTextFieldKey | AboutNumberFieldKey;
@@ -64,6 +70,9 @@ export class DashboardAboutUsComponent implements OnInit, OnDestroy {
     missionContentEn = '';
     visionContentEn = '';
     leadershipContentEn = '';
+    missionTitleEn = '';
+    visionTitleEn = '';
+    leadershipTitleEn = '';
 
     // AR fields
     aboutUsContentAr = '';
@@ -73,6 +82,9 @@ export class DashboardAboutUsComponent implements OnInit, OnDestroy {
     missionContentAr = '';
     visionContentAr = '';
     leadershipContentAr = '';
+    missionTitleAr = '';
+    visionTitleAr = '';
+    leadershipTitleAr = '';
 
     // Numbers
     numberOfEmployees = 0;
@@ -140,6 +152,9 @@ export class DashboardAboutUsComponent implements OnInit, OnDestroy {
         this.missionContentEn = data.missionContentEn;
         this.visionContentEn = data.visionContentEn;
         this.leadershipContentEn = data.leadershipContentEn;
+        this.missionTitleEn = data.missionTitleEn;
+        this.visionTitleEn = data.visionTitleEn;
+        this.leadershipTitleEn = data.leadershipTitleEn;
         this.aboutUsContentAr = data.aboutUsContentAr;
         this.subContentAr = data.subContentAr;
         this.whyUsContentAr = data.whyUsContentAr;
@@ -147,6 +162,9 @@ export class DashboardAboutUsComponent implements OnInit, OnDestroy {
         this.missionContentAr = data.missionContentAr;
         this.visionContentAr = data.visionContentAr;
         this.leadershipContentAr = data.leadershipContentAr;
+        this.missionTitleAr = data.missionTitleAr;
+        this.visionTitleAr = data.visionTitleAr;
+        this.leadershipTitleAr = data.leadershipTitleAr;
         this.numberOfEmployees = data.numberOfEmployees;
         this.numberOfProducts = data.numberOfProducts;
         this.numberOfClients = data.numberOfClients;
@@ -476,15 +494,21 @@ export class DashboardAboutUsComponent implements OnInit, OnDestroy {
             'subContentEn',
             'whyUsContentEn',
             'numbersSubtitleEn',
+            'missionTitleEn',
             'missionContentEn',
+            'visionTitleEn',
             'visionContentEn',
+            'leadershipTitleEn',
             'leadershipContentEn',
             'aboutUsContentAr',
             'subContentAr',
             'whyUsContentAr',
             'numbersSubtitleAr',
+            'missionTitleAr',
             'missionContentAr',
+            'visionTitleAr',
             'visionContentAr',
+            'leadershipTitleAr',
             'leadershipContentAr'
         ];
 
@@ -520,13 +544,19 @@ export class DashboardAboutUsComponent implements OnInit, OnDestroy {
             missionContentEn: this.missionContentEn,
             visionContentEn: this.visionContentEn,
             leadershipContentEn: this.leadershipContentEn,
+            missionTitleEn: this.missionTitleEn,
+            visionTitleEn: this.visionTitleEn,
+            leadershipTitleEn: this.leadershipTitleEn,
             aboutUsContentAr: this.aboutUsContentAr,
             subContentAr: this.subContentAr,
             whyUsContentAr: this.whyUsContentAr,
             numbersSubtitleAr: this.numbersSubtitleAr,
             missionContentAr: this.missionContentAr,
             visionContentAr: this.visionContentAr,
-            leadershipContentAr: this.leadershipContentAr
+            leadershipContentAr: this.leadershipContentAr,
+            missionTitleAr: this.missionTitleAr,
+            visionTitleAr: this.visionTitleAr,
+            leadershipTitleAr: this.leadershipTitleAr
         };
 
         return fieldMap[field] ?? '';
@@ -570,6 +600,9 @@ export class DashboardAboutUsComponent implements OnInit, OnDestroy {
             missionContentEn: this.missionContentEn,
             visionContentEn: this.visionContentEn,
             leadershipContentEn: this.leadershipContentEn,
+            missionTitleEn: this.missionTitleEn,
+            visionTitleEn: this.visionTitleEn,
+            leadershipTitleEn: this.leadershipTitleEn,
             aboutUsContentAr: this.aboutUsContentAr,
             subContentAr: this.subContentAr,
             whyUsContentAr: this.whyUsContentAr,
@@ -577,6 +610,9 @@ export class DashboardAboutUsComponent implements OnInit, OnDestroy {
             missionContentAr: this.missionContentAr,
             visionContentAr: this.visionContentAr,
             leadershipContentAr: this.leadershipContentAr,
+            missionTitleAr: this.missionTitleAr,
+            visionTitleAr: this.visionTitleAr,
+            leadershipTitleAr: this.leadershipTitleAr,
             numberOfEmployees: this.numberOfEmployees,
             numberOfProducts: this.numberOfProducts,
             numberOfClients: this.numberOfClients,
@@ -629,6 +665,9 @@ export class DashboardAboutUsComponent implements OnInit, OnDestroy {
             missionContentEn: this.missionContentEn,
             visionContentEn: this.visionContentEn,
             leadershipContentEn: this.leadershipContentEn,
+            missionTitleEn: this.missionTitleEn,
+            visionTitleEn: this.visionTitleEn,
+            leadershipTitleEn: this.leadershipTitleEn,
             aboutUsContentAr: this.aboutUsContentAr,
             subContentAr: this.subContentAr,
             whyUsContentAr: this.whyUsContentAr,
@@ -636,6 +675,9 @@ export class DashboardAboutUsComponent implements OnInit, OnDestroy {
             missionContentAr: this.missionContentAr,
             visionContentAr: this.visionContentAr,
             leadershipContentAr: this.leadershipContentAr,
+            missionTitleAr: this.missionTitleAr,
+            visionTitleAr: this.visionTitleAr,
+            leadershipTitleAr: this.leadershipTitleAr,
             numberOfEmployees: this.numberOfEmployees,
             numberOfProducts: this.numberOfProducts,
             numberOfClients: this.numberOfClients,

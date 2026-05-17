@@ -86,8 +86,8 @@
                             </article>
 
                             <article class="text-box text-box--numbers">
-                                <h2>WES in numbers</h2>
-                              
+                                <input class="title-input" type="text" [(ngModel)]="numbersSubtitleEn" placeholder="WES in numbers" />
+
                                 <div class="numbers-grid">
                                     <label class="metric-field">
                                         <span>Number of employees</span>
@@ -140,7 +140,7 @@
                         <div class="row row-three-columns">
                             <article class="text-box text-box--media">
                                 <div class="box-head">
-                                    <h2>Our Mission</h2>
+                                    <input class="title-input" type="text" [(ngModel)]="missionTitleEn" placeholder="Our Mission" />
                                     <button type="button" class="edit-btn" aria-label="Edit mission" (click)="openEditSectionDialog('mission')">
                                         <i class="bi bi-pen"></i>
                                     </button>
@@ -171,7 +171,7 @@
 
                             <article class="text-box text-box--media">
                                 <div class="box-head">
-                                    <h2>Our Vision</h2>
+                                    <input class="title-input" type="text" [(ngModel)]="visionTitleEn" placeholder="Our Vision" />
                                     <button type="button" class="edit-btn" aria-label="Edit vision" (click)="openEditSectionDialog('vision')">
                                         <i class="bi bi-pen"></i>
                                     </button>
@@ -202,7 +202,7 @@
 
                             <article class="text-box text-box--media">
                                 <div class="box-head">
-                                    <h2>Leadership</h2>
+                                    <input class="title-input" type="text" [(ngModel)]="leadershipTitleEn" placeholder="Leadership" />
                                     <button type="button" class="edit-btn" aria-label="Edit leadership" (click)="openEditSectionDialog('leadership')">
                                         <i class="bi bi-pen"></i>
                                     </button>
@@ -342,18 +342,8 @@
                             </article>
 
                             <article class="text-box text-box--numbers">
-                                <h2>WES بالأرقام</h2>
-                                <textarea class="content-input" rows="2" [(ngModel)]="numbersSubtitleAr"
-                                    [class.is-invalid]="showRequiredError('numbersSubtitleAr') || showPatternError('numbersSubtitleAr')"
-                                    (ngModelChange)="markFieldTouched('numbersSubtitleAr')"
-                                    (input)="markFieldTouched('numbersSubtitleAr')"
-                                    (blur)="markFieldTouched('numbersSubtitleAr')"
-                                    placeholder="ادخل المحتوى، مثال: في WES نساعد الشركات على التعامل مع تحديات العصر الرقمي"></textarea>
-                                @if (showRequiredError('numbersSubtitleAr')) {
-                                    <span class="validation-message">{{ requiredMessage('ar') }}</span>
-                                } @else if (showPatternError('numbersSubtitleAr')) {
-                                    <span class="validation-message">{{ patternMessage('ar') }}</span>
-                                }
+                                <input class="title-input" type="text" [(ngModel)]="numbersSubtitleAr" placeholder="WES بالأرقام" />
+
                                 <div class="numbers-grid">
                                     <label class="metric-field">
                                         <span>عدد الموظفين</span>
@@ -406,7 +396,7 @@
                         <div class="row row-three-columns">
                             <article class="text-box text-box--media">
                                 <div class="box-head box-head--title-right">
-                                    <h2>مهمتنا</h2>
+                                    <input class="title-input" type="text" [(ngModel)]="missionTitleAr" placeholder="مهمتنا" />
                                     <button type="button" class="edit-btn" aria-label="Edit mission" (click)="openEditSectionDialog('mission')">
                                         <i class="bi bi-pen"></i>
                                     </button>
@@ -437,7 +427,7 @@
 
                             <article class="text-box text-box--media">
                                 <div class="box-head box-head--title-right">
-                                    <h2>رؤيتنا</h2>
+                                    <input class="title-input" type="text" [(ngModel)]="visionTitleAr" placeholder="رؤيتنا" />
                                     <button type="button" class="edit-btn" aria-label="Edit vision" (click)="openEditSectionDialog('vision')">
                                         <i class="bi bi-pen"></i>
                                     </button>
@@ -468,7 +458,7 @@
 
                             <article class="text-box text-box--media">
                                 <div class="box-head box-head--title-right">
-                                    <h2>القيادة</h2>
+                                    <input class="title-input" type="text" [(ngModel)]="leadershipTitleAr" placeholder="القيادة" />
                                     <button type="button" class="edit-btn" aria-label="Edit leadership" (click)="openEditSectionDialog('leadership')">
                                         <i class="bi bi-pen"></i>
                                     </button>

@@ -68,7 +68,7 @@
         <div class="card-body">
           <div class="card-title-row">
             <i class="bi bi-rocket-takeoff card-icon" aria-hidden="true"></i>
-            <h3>{{ getLabel('ourMission') }}</h3>
+            <h3>{{ missionTitle }}</h3>
           </div>
           <p>{{ missionContent }}</p>
         </div>
@@ -84,7 +84,7 @@
         <div class="card-body">
           <div class="card-title-row">
             <i class="bi bi-bullseye card-icon" aria-hidden="true"></i>
-            <h3>{{ getLabel('ourVision') }}</h3>
+            <h3>{{ visionTitle }}</h3>
           </div>
           <p>{{ visionContent }}</p>
         </div>
@@ -100,7 +100,7 @@
         <div class="card-body">
           <div class="card-title-row">
             <i class="bi bi-award card-icon card-icon--sm" aria-hidden="true"></i>
-            <h3>{{ getLabel('leadership') }}</h3>
+            <h3>{{ leadershipTitle }}</h3>
           </div>
           <p>{{ leadershipContent }}</p>
         </div>
@@ -121,6 +121,7 @@
             <div class="team-card__overlay"></div>
             <div class="team-card__content">
               <h3>{{ isRtl ? member.nameAr : member.nameEn }}</h3>
+              <p class="team-card__content-role">{{ isRtl ? member.jobTitleAr : member.jobTitleEn }}</p>
             </div>
             <div class="team-card__hover-panel">
               <p class="team-card__hover-name">{{ isRtl ? member.nameAr : member.nameEn }}</p>

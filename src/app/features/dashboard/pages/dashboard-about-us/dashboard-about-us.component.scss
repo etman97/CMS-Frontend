@@ -355,6 +355,29 @@
     }
 }
 
+.title-input {
+    background: transparent;
+    border: 0;
+    color: $primary;
+    display: block;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0 0 0.25rem;
+    padding: 0;
+    width: 100%;
+
+    &:focus {
+        box-shadow: none;
+        outline: none;
+    }
+
+    &::placeholder {
+        color: #ced4da;
+        opacity: 1;
+    }
+}
+
 .edit-btn {
     background: transparent;
     border: 0;

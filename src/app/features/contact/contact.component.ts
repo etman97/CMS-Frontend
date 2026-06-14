@@ -1,10 +1,13 @@
 import { Component, Injector, OnDestroy, OnInit, effect, inject } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import { DynamicDialogConfig } from 'primeng/dynamicdialog';
 import { Subscription } from 'rxjs';
 import { ContactPageDto, ContactPageService } from '../../core/services/contact-page.service';
+import { EmailjsService } from '../../core/services/emailjs.service';
 
 export interface ContactDialogData {
     source?: 'preview' | 'api';
@@ -15,15 +18,17 @@ export interface ContactDialogData {
 @Component({
     selector: 'app-contact',
     standalone: true,
-    imports: [],
+    imports: [FormsModule, ToastModule],
+    providers: [MessageService],
     templateUrl: './contact.component.html',
     styleUrl: './contact.component.scss'
 })
 export class ContactComponent implements OnInit, OnDestroy {
     private readonly route = inject(ActivatedRoute);
     private readonly contactPageService = inject(ContactPageService);
+    private readonly emailjsService = inject(EmailjsService);
     private readonly dialogConfig = inject(DynamicDialogConfig<ContactDialogData>, { optional: true });
-    private readonly messageService = inject(MessageService, { optional: true });
+    private readonly messageService = inject(MessageService);
     private readonly sanitizer = inject(DomSanitizer);
     private readonly injector = inject(Injector);
 
@@ -54,6 +59,13 @@ export class ContactComponent implements OnInit, OnDestroy {
     emailPlaceholder = '';
     messagePlaceholder = '';
     submitLabel = '';
+
+    firstName = '';
+    lastName = '';
+    formPhone = '';
+    formEmail = '';
+    message = '';
+    isSending = false;
 
     phone = '';
     email = '';
@@ -106,7 +118,7 @@ export class ContactComponent implements OnInit, OnDestroy {
         effect(() => {
             const err = this.contactPageService.error();
             if (!err) return;
-            this.messageService?.add({ severity: 'error', summary: 'Error', detail: 'Failed to load contact page data.' });
+            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Failed to load contact page data.' });
         }, { injector: this.injector });
 
         this.contactPageService.load();
@@ -248,10 +260,41 @@ export class ContactComponent implements OnInit, OnDestroy {
         }
     }
 
-    onContactSubmit(event: Event): void {
-        event.preventDefault();
-        if (this.isPreviewMode) {
-            event.stopPropagation();
+    onContactSubmit(form: NgForm): void {
+        if (this.isPreviewMode) return;
+
+        if (form.invalid) {
+            form.control.markAllAsTouched();
+            return;
         }
+
+        this.isSending = true;
+
+        this.emailjsService
+            .send({
+                firstName: this.firstName,
+                lastName: this.lastName,
+                phone: this.formPhone,
+                email: this.formEmail,
+                message: this.message
+            })
+            .then(() => {
+                this.messageService.add({
+                    severity: 'success',
+                    summary: this.isRtl ? 'تم الإرسال' : 'Sent',
+                    detail: this.isRtl ? 'تم إرسال رسالتك بنجاح!' : 'Your message was sent successfully!'
+                });
+                form.resetForm();
+            })
+            .catch(() => {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: this.isRtl ? 'خطأ' : 'Error',
+                    detail: this.isRtl ? 'حدث خطأ، يرجى المحاولة مجدداً.' : 'Something went wrong, please try again.'
+                });
+            })
+            .finally(() => {
+                this.isSending = false;
+            });
     }
 }

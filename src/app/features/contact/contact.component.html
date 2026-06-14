@@ -1,3 +1,5 @@
+<p-toast></p-toast>
+
 @if (isLoading) {
   <div class="page-loader">
     <div class="spinner"></div>
@@ -100,22 +102,66 @@
           <section class="form-block" aria-labelledby="message-title">
             <h2 id="message-title" class="section-title">{{ messageTitle }}</h2>
 
-            <form class="contact-form" (submit)="onContactSubmit($event)">
+            <form class="contact-form" #contactForm="ngForm" (ngSubmit)="onContactSubmit(contactForm)">
               <div class="contact-form__row">
-                <input type="text" class="form-field" [placeholder]="firstNamePlaceholder" [attr.aria-label]="firstNamePlaceholder" />
-                <input type="text" class="form-field" [placeholder]="lastNamePlaceholder" [attr.aria-label]="lastNamePlaceholder" />
+                <div class="form-field-wrap">
+                  <input type="text" class="form-field" [(ngModel)]="firstName" name="firstName"
+                    [placeholder]="firstNamePlaceholder" [attr.aria-label]="firstNamePlaceholder"
+                    required #firstNameField="ngModel"
+                    [class.form-field--invalid]="firstNameField.invalid && firstNameField.touched" />
+                  @if (firstNameField.invalid && firstNameField.touched) {
+                    <span class="form-error">{{ isRtl ? 'الاسم الأول مطلوب' : 'First name is required' }}</span>
+                  }
+                </div>
+                <div class="form-field-wrap">
+                  <input type="text" class="form-field" [(ngModel)]="lastName" name="lastName"
+                    [placeholder]="lastNamePlaceholder" [attr.aria-label]="lastNamePlaceholder"
+                    required #lastNameField="ngModel"
+                    [class.form-field--invalid]="lastNameField.invalid && lastNameField.touched" />
+                  @if (lastNameField.invalid && lastNameField.touched) {
+                    <span class="form-error">{{ isRtl ? 'اسم العائلة مطلوب' : 'Last name is required' }}</span>
+                  }
+                </div>
               </div>
 
               <div class="contact-form__row">
-                <input type="tel" class="form-field form-field--phone" [placeholder]="phonePlaceholder" [attr.aria-label]="phonePlaceholder" />
-                <input type="email" class="form-field form-field--email" [placeholder]="emailPlaceholder" [attr.aria-label]="emailPlaceholder" />
+                <div class="form-field-wrap">
+                  <input type="tel" class="form-field form-field--phone" [(ngModel)]="formPhone" name="formPhone"
+                    [placeholder]="phonePlaceholder" [attr.aria-label]="phonePlaceholder"
+                    required #phoneField="ngModel"
+                    [class.form-field--invalid]="phoneField.invalid && phoneField.touched" />
+                  @if (phoneField.invalid && phoneField.touched) {
+                    <span class="form-error">{{ isRtl ? 'رقم الهاتف مطلوب' : 'Phone number is required' }}</span>
+                  }
+                </div>
+                <div class="form-field-wrap">
+                  <input type="email" class="form-field form-field--email" [(ngModel)]="formEmail" name="formEmail"
+                    [placeholder]="emailPlaceholder" [attr.aria-label]="emailPlaceholder"
+                    required email #emailField="ngModel"
+                    [class.form-field--invalid]="emailField.invalid && emailField.touched" />
+                  @if (emailField.touched) {
+                    @if (emailField.errors?.['required']) {
+                      <span class="form-error">{{ isRtl ? 'البريد الإلكتروني مطلوب' : 'Email is required' }}</span>
+                    } @else if (emailField.errors?.['email']) {
+                      <span class="form-error">{{ isRtl ? 'البريد الإلكتروني غير صحيح' : 'Enter a valid email' }}</span>
+                    }
+                  }
+                </div>
               </div>
 
               <div class="contact-form__textarea-wrap">
-                <textarea class="form-field form-field--textarea" [placeholder]="messagePlaceholder" [attr.aria-label]="messagePlaceholder"></textarea>
+                <textarea class="form-field form-field--textarea" [(ngModel)]="message" name="message"
+                  [placeholder]="messagePlaceholder" [attr.aria-label]="messagePlaceholder"
+                  required #messageField="ngModel"
+                  [class.form-field--invalid]="messageField.invalid && messageField.touched"></textarea>
+                @if (messageField.invalid && messageField.touched) {
+                  <span class="form-error">{{ isRtl ? 'الرسالة مطلوبة' : 'Message is required' }}</span>
+                }
               </div>
 
-              <button type="submit" class="submit-button">{{ submitLabel }}</button>
+              <button type="submit" class="submit-button" [disabled]="isSending">
+                {{ isSending ? (isRtl ? 'جارٍ الإرسال...' : 'Sending...') : submitLabel }}
+              </button>
             </form>
           </section>
         </div>
